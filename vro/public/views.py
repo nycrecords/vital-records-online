@@ -11,11 +11,11 @@ from flask import (
 )
 from flask_login import login_required, login_user, logout_user
 
-from my_flask_app.extensions import login_manager
-from my_flask_app.public.forms import LoginForm
-from my_flask_app.user.forms import RegisterForm
-from my_flask_app.user.models import User
-from my_flask_app.utils import flash_errors
+from vro.extensions import login_manager
+from vro.public.forms import LoginForm
+from vro.user.forms import RegisterForm
+from vro.user.models import User
+from vro.utils import flash_errors
 
 blueprint = Blueprint("public", __name__, static_folder="../static")
 

@@ -1,5 +1,5 @@
 {
-  "name": "my_flask_app",
+  "name": "vro",
   "version": "1.0.0",
   "description": "A flasky app.",
   "scripts": {
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourGithubUsername/my_flask_app.git"
+    "url": "git+https://github.com/yourGithubUsername/vro.git"
   },
   "author": "First Last",
   "license": "MIT",
@@ -26,9 +26,9 @@
     "node": ">=14"
   },
   "bugs": {
-    "url": "https://github.com/yourGithubUsername/my_flask_app/issues"
+    "url": "https://github.com/yourGithubUsername/vro/issues"
   },
-  "homepage": "https://github.com/yourGithubUsername/my_flask_app#readme",
+  "homepage": "https://github.com/yourGithubUsername/vro#readme",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.0",
     "bootstrap": "^4.5.2",

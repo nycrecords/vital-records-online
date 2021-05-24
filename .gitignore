@@ -49,7 +49,7 @@ env/
 /node_modules/
 
 # webpack-built files
-/my_flask_app/static/build/
+/vro/static/build/
 
 # Configuration
 .env

@@ -1,5 +1,5 @@
 /*
- * Main Javascript file for my_flask_app.
+ * Main Javascript file for vro.
  *
  * This file bundles all of your javascript together using webpack.
  */

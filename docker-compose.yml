@@ -19,7 +19,7 @@ services:
         <<: *build_args
     environment:
       FLASK_APP: autoapp.py
-    image: "my_flask_app-development"
+    image: "vro-development"
     ports:
       - "5000:5000"
       - "2992:2992"
@@ -31,7 +31,7 @@ services:
       target: production
       args:
         <<: *build_args
-    image: "my_flask_app-production"
+    image: "vro-production"
     ports:
       - "5000:5000"
     environment:
@@ -51,7 +51,7 @@ services:
     environment:
       FLASK_ENV: production
       FLASK_DEBUG: 0
-    image: "my_flask_app-manage"
+    image: "vro-manage"
     stdin_open: true
     tty: true
     <<: *default_volumes

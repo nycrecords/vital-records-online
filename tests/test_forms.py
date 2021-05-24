@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """Test forms."""
 
-from my_flask_app.public.forms import LoginForm
-from my_flask_app.user.forms import RegisterForm
+from vro.public.forms import LoginForm
+from vro.user.forms import RegisterForm
 
 
 class TestRegisterForm:

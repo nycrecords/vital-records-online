@@ -6,8 +6,8 @@ import logging
 import pytest
 from webtest import TestApp
 
-from my_flask_app.app import create_app
-from my_flask_app.database import db as _db
+from vro.app import create_app
+from vro.database import db as _db
 
 from .factories import UserFactory
 
