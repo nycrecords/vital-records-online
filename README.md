@@ -1,6 +1,6 @@
-# My Flask App
+# Vital Records Online
 
-A flasky app.
+Vital Records Online.
 
 ## Docker Quickstart
 
