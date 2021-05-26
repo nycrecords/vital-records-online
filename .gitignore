@@ -58,3 +58,6 @@ env/
 *.db
 
 .idea
+
+# Compiled directory
+__pycache__/
