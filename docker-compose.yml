@@ -9,7 +9,6 @@ x-default-volumes: &default_volumes
     - ./:/app
     - node-modules:/app/node_modules
     - ./postgres-data:/var/lib/postgresql/data
-    - ./dev.db:/tmp/dev.db
 
 services:
   db:
@@ -60,21 +59,21 @@ services:
 #      LOG_LEVEL: info
 #      GUNICORN_WORKERS: 4
 #    <<: *default_volumes
-#
-#  manage:
-#    build:
-#      context: .
-#      target: development
-#      args:
-#        <<: *build_args
-#    entrypoint: flask
-#    environment:
-#      FLASK_ENV: production
-#      FLASK_DEBUG: 0
-#    image: "vro-manage"
-#    stdin_open: true
-#    tty: true
-#    <<: *default_volumes
+
+  manage:
+    build:
+      context: .
+      target: development
+      args:
+        <<: *build_args
+    entrypoint: flask
+    environment:
+      FLASK_ENV: production
+      FLASK_DEBUG: 0
+    image: "vro-manage"
+    stdin_open: true
+    tty: true
+    <<: *default_volumes
 
 volumes:
   node-modules:

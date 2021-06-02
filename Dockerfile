@@ -21,6 +21,7 @@ RUN npm install
 COPY webpack.config.js autoapp.py ./
 COPY vro vro
 COPY assets assets
+COPY .env.example .env
 RUN npm run-script build
 
 # ================================= PRODUCTION =================================
@@ -52,5 +53,4 @@ FROM builder AS development
 RUN pip install --no-cache -r requirements/dev.txt
 EXPOSE 2992
 EXPOSE 5000
-RUN flask db upgrade
 CMD [ "npm", "start" ]
