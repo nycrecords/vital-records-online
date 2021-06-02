@@ -8,9 +8,27 @@ x-default-volumes: &default_volumes
   volumes:
     - ./:/app
     - node-modules:/app/node_modules
+    - ./postgres-data:/var/lib/postgresql/data
     - ./dev.db:/tmp/dev.db
 
 services:
+  db:
+    image: postgres:11-alpine
+    ports:
+      - "5438:5432"
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    healthcheck:
+      test: [ "CMD-SHELL", "POSTGRES_PASSWORD=${POSTGRES_PASSWORD} pg_isready -U ${POSTGRES_USER} -h localhost -d ${POSTGRES_DB}" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    <<: *default_volumes
+
   flask-dev:
     build:
       context: .
@@ -20,41 +38,43 @@ services:
     environment:
       FLASK_APP: autoapp.py
     image: "vro-development"
+    depends_on:
+      - db
     ports:
       - "5000:5000"
       - "2992:2992"
     <<: *default_volumes
 
-  flask-prod:
-    build:
-      context: .
-      target: production
-      args:
-        <<: *build_args
-    image: "vro-production"
-    ports:
-      - "5000:5000"
-    environment:
-      FLASK_ENV: production
-      FLASK_DEBUG: 0
-      LOG_LEVEL: info
-      GUNICORN_WORKERS: 4
-    <<: *default_volumes
-
-  manage:
-    build:
-      context: .
-      target: development
-      args:
-        <<: *build_args
-    entrypoint: flask
-    environment:
-      FLASK_ENV: production
-      FLASK_DEBUG: 0
-    image: "vro-manage"
-    stdin_open: true
-    tty: true
-    <<: *default_volumes
+#  flask-prod:
+#    build:
+#      context: .
+#      target: production
+#      args:
+#        <<: *build_args
+#    image: "vro-production"
+#    ports:
+#      - "5000:5000"
+#    environment:
+#      FLASK_ENV: production
+#      FLASK_DEBUG: 0
+#      LOG_LEVEL: info
+#      GUNICORN_WORKERS: 4
+#    <<: *default_volumes
+#
+#  manage:
+#    build:
+#      context: .
+#      target: development
+#      args:
+#        <<: *build_args
+#    entrypoint: flask
+#    environment:
+#      FLASK_ENV: production
+#      FLASK_DEBUG: 0
+#    image: "vro-manage"
+#    stdin_open: true
+#    tty: true
+#    <<: *default_volumes
 
 volumes:
   node-modules:
