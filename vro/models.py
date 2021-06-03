@@ -2,13 +2,13 @@
 Models for Vital Records Online
 """
 
-from vro.database import db
+from vro.database import db, PkModel
 from vro.constants import (
     certificate_types,
     counties
 )
 
-class Certificate(db.Model):
+class Certificate(PkModel):
     """
     Define the Certificate class for the `certificates` table with the following columns:
 
@@ -20,7 +20,6 @@ class Certificate(db.Model):
     """
     __tablename__ = "certificates"
 
-    id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.Enum(*certificate_types.ALL, name='certificate_type'), nullable=False)
     county = db.Column(db.Enum(*counties.ALL, name='county'), nullable=False)
     year = db.Column(db.Integer)
