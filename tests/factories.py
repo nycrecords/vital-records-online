@@ -22,7 +22,7 @@ class BaseFactory(SQLAlchemyModelFactory):
 class CertificateFactory(BaseFactory):
     """Certificate factory."""
 
-    type = random.sample(certificate_types.ALL, 1)[0]
+    type_ = random.sample(certificate_types.ALL, 1)[0]
     county = random.sample(counties.ALL, 1)[0]
     year = random.randint(1000, 2000)
     number = str(random.randint(1, 10000))
