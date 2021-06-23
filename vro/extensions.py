@@ -10,6 +10,6 @@ from flask_wtf.csrf import CSRFProtect
 csrf_protect = CSRFProtect()
 db = SQLAlchemy()
 migrate = Migrate()
-cache = Cache()
+cache = Cache(config={"CACHE_TYPE": "SimpleCache"})
 debug_toolbar = DebugToolbarExtension()
 flask_static_digest = FlaskStaticDigest()

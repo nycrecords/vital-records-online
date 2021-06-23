@@ -14,6 +14,7 @@ from vro.extensions import (
     flask_static_digest,
     migrate,
 )
+from vro.models import Certificate
 
 
 def create_app(config_object="vro.settings"):
@@ -68,7 +69,8 @@ def register_shellcontext(app):
 
     def shell_context():
         """Shell context objects."""
-        return {"db": db}
+        return {"db": db,
+                "Certificate": Certificate}
 
     app.shell_context_processor(shell_context)
 
