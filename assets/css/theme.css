@@ -10755,14 +10755,12 @@ legend,
   left: 0;
   z-index: auto;
   opacity: 0.25;
-  background-image: url("../img/placeholder-1500x750.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
 }
 
 .banner-with-background.oculus::before {
-  background-image: url("../img/oculus.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;

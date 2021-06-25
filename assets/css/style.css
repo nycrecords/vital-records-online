@@ -2,85 +2,131 @@
    App specific CSS file.
    ========================================================================== */
 
-/* universal */
-
-html {
-  overflow-y: scroll;
+h1 {
+  line-height: 1;
+}
+h1 a {
+  color: #000;
+}
+h1 a:hover {
+  text-decoration: none;
+  color: #000;
 }
 
-body {
-  padding-top: 60px;
+.nav-pills .nav-link.active, .nav-pills .nav-link.active:hover {
+  text-decoration: none !important;
+  background-color: #181A7B !important;
+  color: white !important;
+}
+ a {
+  color: #181A7B;
 }
 
-section {
-  overflow: auto;
+ol.breadcrumb {
+  padding-left: 2px;
+}
+ol.breadcrumb li {
+  display: inline;
+}
+.names span {
+  margin-right: 5px;
+  padding-left: 2px;
+}
+#azindex {
+float: left;
+margin: 5px 0 5px 5px;
+padding: 0px 5px 25px 5px;
 }
 
-textarea {
-  resize: vertical;
+#index li {
+float: left;
+height: 2em;
+list-style-type: none;
+padding: 0;
+width: 2em;
 }
 
-.container-narrow{
-  margin: 0 auto;
-  max-width: 700px;
+#index a:link, #index a:visited {
+display: block;
+height: 2em;
+padding: 0.75em 0 0 0;
+text-align: center;
+width: 3em;
+}
+.input-group #startyear, #endyear {
+  width: 120px !important;
+  flex: none;
+  display: inline-block;
+}
+ul {
+  margin-left: -15px;
+}
+ul a {
+  color: #181A7B;
 }
 
-/* Forms */
-
-.navbar-form input[type="text"],
-.navbar-form input[type="password"] {
-  width: 180px;
+.subgroups-list {
+  list-style: none;
 }
 
-
-.form-register {
-  width: 50%;
+.description {
+  font-size: 12pt;
 }
 
-.form-register .form-control {
+.sidebar li {
+  list-style: none;
+  font-size: 10pt;
+  padding: 3px;
+}
+.large {
+  font-size: 20pt;
+  font-weight: 300;
+}
+
+.form-group, .form {
+  margin: 5px !important;
+}
+.center
+{
+    display: block;
+    text-align: center;
+}
+form
+{
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+.accordion-group .card {
+  background-color: #fff !important;
+}
+
+.pagination {
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    border-radius: .25rem;
+  }
+
+.page-item {
   position: relative;
-  font-size: 16px;
-  height: auto;
-  padding: 10px;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  display: block;
+  padding: .5rem .75rem;
+  margin-left: -1px;
+  line-height: 1.5;
+  color: #fff;
+  border: 1px solid #dee2e6;
 }
 
-/* footer */
-
-footer {
-  margin-top: 45px;
-  padding-top: 5px;
-  border-top: 1px solid #eaeaea;
-  color: #999999;
+.progress {
+  -webkit-border-radius: 0;
+     -moz-border-radius: 0;
+          border-radius: 0;
+  height: 2rem;
+  font-size: 1.167rem;
 }
 
-footer a {
-  color: #999999;
-}
-
-footer p {
-  float: right;
-  margin-right: 25px;
-}
-
-footer ul {
-  list-style: none;
-}
-
-footer ul li {
-  float: left;
-  margin-left: 10px;
-}
-
-footer .company {
-  float: left;
-  margin-left: 25px;
-}
-
-footer .footer-nav {
-  float: right;
-  margin-right: 25px;
-  list-style: none;
+.progress-bar {
+    text-align: left;
 }
