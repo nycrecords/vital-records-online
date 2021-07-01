@@ -6,7 +6,7 @@ from flask import url_for
 from vro.database import db, PkModel
 from vro.constants import (
     certificate_types,
-    counties,
+    counties
 )
 
 class Certificate(PkModel):
