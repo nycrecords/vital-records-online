@@ -1,4 +1,74 @@
 {% extends "base.html" %}
 
 {% block content %}
+<section class="py-3">
+    <div class="container">
+        <div class="row matrix-gutter px-2 pb-2 justify-content-between">
+            <div class="col-6"><h2>{{ num_results }} Vital Record Results</h2></div>
+        </div>
+        <form class="col-lg">
+            {{ form.csrf_token }}
+            <div class="section mx-2 mb-2">
+                <div class="row py-1 pr-3 pt-2">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            {{ form.certificate_type.label(class="control-label", for="certificate_type") }}
+                            {{ form.certificate_type(class="form-control browse-all-select") }}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mx-2">
+                        <div class="pt-1 text-center">
+                            <label>Year range:</label><br><small><b>1866</b></small>
+                            {{ form.year(class="span2 browse-all-year", type="number", min="1866", max="1949") }}
+                            <small><b>1949</b></small>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            {{ form.county.label(class="control-label", for="county") }}
+                            {{ form.county(class="form-control browse-all-select") }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-lg align-self-center">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col-lg">
+                <hr>
+            </div>
+        </div>
+        <div id="results">
+            {% include "public/_browse_all_results.html" %}
+        </div>
+    </div>
+    <!-- .row -->
+    <nav aria-label="Browse Results">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">5</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    </div>
+    <!-- .container -->
+</section>
 {% endblock %}

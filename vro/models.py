@@ -2,10 +2,11 @@
 Models for Vital Records Online
 """
 
+from flask import url_for
 from vro.database import db, PkModel
 from vro.constants import (
     certificate_types,
-    counties
+    counties,
 )
 
 class Certificate(PkModel):
@@ -30,3 +31,38 @@ class Certificate(PkModel):
         self.county = county
         self.year = year
         self.number = number
+
+
+    @property
+    def display_string(self):
+        """
+        A property to generate a string to identify each certificate with the following format:
+        <CERTIFICATE_TYPE>-<COUNTY>-<YEAR>-<CERTIFICATE_NUMBER>
+
+        :return: A string with the above format to be used in the Browse All page.
+        """
+        display_string = certificate_types.TYPES.get(self.type, "") + "-"
+        display_string += counties.COUNTIES.get(self.county, "") + "-"
+        display_string += str(self.year) + "-"
+        # Construct the certificate number as a 7 letter string with leading zeros
+        display_string += self.number.zfill(7)
+        return display_string
+
+
+    @property
+    def thumbnail(self):
+        """
+        A property that determines which thumbnail image to use based on county and certificate type.
+        Thumbnail images have the following file name format:
+        <COUNTY_INITIAL>_<CERTIFICATE_TYPE>.png
+
+        :return: The path to the thumbnail image.
+        """
+        county = counties.COUNTIES.get(self.county, "")
+        # Marriage Licenses will use the same thumbnail as marriage certificates
+        if self.type == certificate_types.MARRIAGE_LICENSE:
+            certificate_type = certificate_types.MARRIAGE
+        else:
+            certificate_type = self.type
+        thumbnail = url_for("static", filename="build/img/thumbnails/{}_{}.png".format(county, certificate_type))
+        return thumbnail

@@ -130,3 +130,11 @@ form
 .progress-bar {
     text-align: left;
 }
+
+.browse-all-select {
+    width: 250px !important;
+}
+
+.browse-all-year {
+    width: 200px !important;
+}
