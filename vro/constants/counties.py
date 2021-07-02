@@ -18,7 +18,7 @@ DROPDOWN = [
     (BRONX, "Bronx"),
     (MANHATTAN, "Manhattan"),
     (QUEENS, "Queens"),
-    (RICHMOND, "Staten Island (Richmond")
+    (RICHMOND, "Staten Island (Richmond)")
 ]
 
 ALL = frozenset((KINGS, QUEENS, BRONX, MANHATTAN, RICHMOND))
