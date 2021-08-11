@@ -138,3 +138,9 @@ form
 .browse-all-year {
     width: 200px !important;
 }
+
+.pdfobject-container {
+    height: 70rem;
+    width: 100%;
+    border: 1rem solid rgba(0, 0, 0, .1);
+}

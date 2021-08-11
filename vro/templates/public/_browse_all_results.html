@@ -2,7 +2,9 @@
     <div class="row px-2 py-2">
     {% for certificate in certificates_batched %}
         <div class="col-lg">
-            <a href="#"><img src="{{ certificate.thumbnail }}"></a>
+            <a href="{{ url_for('public.view_certificate', certificate_id=certificate.id) }}">
+                <img src="{{ certificate.thumbnail }}">
+            </a>
             <p class="small">{{ certificate.display_string }}</p>
         </div>
     {% endfor %}

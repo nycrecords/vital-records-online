@@ -18,6 +18,8 @@ class Certificate(PkModel):
     county      county, certificate county (e.g. "queens")
     year        integer, year certificate was issued
     number      varchar(10), certificate number
+    path_prefix varchar, path prefix of file in Azure Storage Container
+    filename    varchar, filename of certificate
     """
     __tablename__ = "certificates"
 
@@ -25,12 +27,16 @@ class Certificate(PkModel):
     county = db.Column(db.Enum(*counties.ALL, name="county"), nullable=False)
     year = db.Column(db.Integer)
     number = db.Column(db.String(10))
+    path_prefix = db.Column(db.String)
+    filename = db.Column(db.String)
 
-    def __init__(self, type_, county, year, number):
+    def __init__(self, type_, county, year, number, path_prefix, filename):
         self.type = type_
         self.county = county
         self.year = year
         self.number = number
+        self.path_prefix = path_prefix
+        self.filename = filename
 
 
     @property
@@ -41,12 +47,7 @@ class Certificate(PkModel):
 
         :return: A string with the above format to be used in the Browse All page.
         """
-        display_string = certificate_types.TYPES.get(self.type, "") + "-"
-        display_string += counties.COUNTIES.get(self.county, "") + "-"
-        display_string += str(self.year) + "-"
-        # Construct the certificate number as a 7 letter string with leading zeros
-        display_string += self.number.zfill(7)
-        return display_string
+        return self.filename[:-4]
 
 
     @property
@@ -66,3 +67,13 @@ class Certificate(PkModel):
             certificate_type = self.type
         thumbnail = url_for("static", filename="build/img/thumbnails/{}_{}.png".format(county, certificate_type))
         return thumbnail
+
+
+    @property
+    def certificate_number_string(self):
+        return self.number.zfill(7)
+
+
+    @property
+    def blob_name(self):
+        return self.path_prefix + self.filename

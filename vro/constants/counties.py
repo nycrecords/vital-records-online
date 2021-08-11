@@ -7,7 +7,7 @@ RICHMOND = "richmond"  # staten island
 COUNTIES = {
     KINGS: "K",
     QUEENS: "Q",
-    BRONX: "X",
+    BRONX: "B",
     MANHATTAN: "M",
     RICHMOND: "R"
 }

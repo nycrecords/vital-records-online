@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="py-3">
+    <div class="container">
+        <script
+                src="https://code.jquery.com/jquery-3.6.0.min.js"
+                integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+                crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.2.5/pdfobject.min.js"
+                integrity="sha512-K4UtqDEi6MR5oZo0YJieEqqsPMsrWa9rGDWMK2ygySdRQ+DtwmuBXAllehaopjKpbxrmXmeBo77vjA2ylTYhRA=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                let url = $("#blob-url").attr("href");
+                PDFObject.embed(url, "#pdf-viewer");
+            });
+        </script>
+
+        <div class="row">
+            <a href="{{ url }}" id="blob-url" hidden>{{ url }}</a>
+            <div class="col-lg-9">
+                <h1 class="h3">{{ certificate.display_string}}</h1>
+                <div id="pdf-viewer"></div>
+            </div>
+            <div class="col-lg-3 pt-2">
+                <br>
+                <p><b>Type</b>:
+                    {% if certificate.type == certificate_types.BIRTH %}
+                        Birth Certificate
+                    {% elif certificate.type == certificate_types.DEATH %}
+                        Death Certificate
+                    {% elif certificate.type == certificate_types.MARRIAGE %}
+                        Marriage Certificate
+                    {% elif certificate.type == certificate_types.MARRIAGE_LICENSE %}
+                        Marriage License
+                    {% endif %}
+                </p>
+                <p><b>Borough</b>:
+                    {% if certificate.county == counties.KINGS %}
+                        Brooklyn (Kings)
+                    {% elif certificate.county == counties.BRONX %}
+                        Bronx
+                    {% elif certificate.county == counties.MANHATTAN %}
+                        Manhattan
+                    {% elif certificate.county == counties.QUEENS %}
+                        Queens
+                    {% elif certificate.county == counties.RICHMOND %}
+                        Staten Island (Richmond)
+                    {% endif %}
+                </p>
+                <p><b>Year</b>: {{ certificate.year }} </p>
+                <p><b>Certificate</b>: {{ certificate.certificate_number_string }} </p>
+                <button class="btn btn-primary mt-3">Purchase Certified Copy</button>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
