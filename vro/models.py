@@ -65,16 +65,25 @@ class Certificate(PkModel):
             certificate_type = certificate_types.MARRIAGE
         else:
             certificate_type = self.type
-            print()
         thumbnail = url_for("static", filename="img/thumbnails/{}_{}.png".format(county, certificate_type))
         return thumbnail
 
 
     @property
     def certificate_number_string(self):
+        """
+        A property that generates a 7 digit string with certificate number and leading zeros.
+
+        :return: A 7 digit string with certificate number and leading zeros.
+        """
         return self.number.zfill(7)
 
 
     @property
     def blob_name(self):
+        """
+        A property that generates a certificate's Azure blob name by concatenating path_prefix and filename.
+
+        :return: The blob name used to generate blob SAS token and blob URL.
+        """
         return self.path_prefix + self.filename

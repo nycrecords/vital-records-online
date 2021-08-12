@@ -66,7 +66,12 @@ def browse_all_filter():
 @blueprint.route("/view/<certificate_id>", methods=["GET"])
 def view_certificate(certificate_id):
     """
+    This view function handles GET requests for the view certificate page.
+    Query for certificate based on certificate id.
+    Generate SAS token using the Azure Blob Storage SDK.
+    Generate blob URL to be used as the source for the PDF viewer.
 
+    :return: Template for view certificate page.
     """
     try:
         # Query for certificate
