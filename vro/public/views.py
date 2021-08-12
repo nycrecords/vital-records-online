@@ -79,6 +79,7 @@ def view_certificate(certificate_id):
                                       blob_name=certificate.blob_name,
                                       permission=BlobSasPermissions(read=True),
                                       expiry=datetime.utcnow() + timedelta(hours=1))
+
         # Generate blob URL
         url = "https://{0}.blob.core.windows.net/{1}/{2}?{3}".format(current_app.config['AZURE_STORAGE_ACCOUNT_NAME'],
                                                                      current_app.config['AZURE_CONTAINER_NAME'],
@@ -88,7 +89,7 @@ def view_certificate(certificate_id):
         return abort(404)
     except DataError:
         return abort(404)
-    return render_template("public/view_certificate.js.html",
+    return render_template("public/view_certificate.html",
                            certificate=certificate,
                            certificate_types=certificate_types,
                            counties=counties,

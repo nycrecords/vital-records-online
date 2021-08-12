@@ -1,8 +1,6 @@
 # ================================== BUILDER ===================================
 ARG INSTALL_PYTHON_VERSION=${INSTALL_PYTHON_VERSION:-PYTHON_VERSION_NOT_SET}
-ARG INSTALL_NODE_VERSION=${INSTALL_NODE_VERSION:-NODE_VERSION_NOT_SET}
 
-FROM node:${INSTALL_NODE_VERSION}-buster-slim AS node
 FROM python:${INSTALL_PYTHON_VERSION}-slim-buster AS builder
 
 WORKDIR /app
@@ -18,9 +16,8 @@ RUN pip install --no-cache -r requirements/prod.txt
 COPY package.json ./
 RUN npm install
 
-COPY webpack.config.js autoapp.py ./
+COPY autoapp.py ./
 COPY vro vro
-COPY assets assets
 COPY .env.example .env
 RUN npm run-script build
 

@@ -65,7 +65,8 @@ class Certificate(PkModel):
             certificate_type = certificate_types.MARRIAGE
         else:
             certificate_type = self.type
-        thumbnail = url_for("static", filename="build/img/thumbnails/{}_{}.png".format(county, certificate_type))
+            print()
+        thumbnail = url_for("static", filename="img/thumbnails/{}_{}.png".format(county, certificate_type))
         return thumbnail
 
 

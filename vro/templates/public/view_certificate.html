@@ -3,20 +3,6 @@
 {% block content %}
 <section class="py-3">
     <div class="container">
-        <script
-                src="https://code.jquery.com/jquery-3.6.0.min.js"
-                integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-                crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.2.5/pdfobject.min.js"
-                integrity="sha512-K4UtqDEi6MR5oZo0YJieEqqsPMsrWa9rGDWMK2ygySdRQ+DtwmuBXAllehaopjKpbxrmXmeBo77vjA2ylTYhRA=="
-                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                let url = $("#blob-url").attr("href");
-                PDFObject.embed(url, "#pdf-viewer");
-            });
-        </script>
-
         <div class="row">
             <a href="{{ url }}" id="blob-url" hidden>{{ url }}</a>
             <div class="col-lg-9">
@@ -51,9 +37,24 @@
                 </p>
                 <p><b>Year</b>: {{ certificate.year }} </p>
                 <p><b>Certificate</b>: {{ certificate.certificate_number_string }} </p>
-                <button class="btn btn-primary mt-3">Purchase Certified Copy</button>
+                {% if certificate.type == certificate_types.BIRTH %}
+                <a href="https://www1.nyc.gov/doittshoppingcart/birthCertificate.htm" class="btn btn-primary mt-3"
+                   target="_blank" rel="noopener noreferrer">Purchase Certified Copy</a>
+                {% elif certificate.type == certificate_types.DEATH %}
+                <a href="https://www1.nyc.gov/doittshoppingcart/deathCertificate.htm" class="btn btn-primary mt-3"
+                   target="_blank" rel="noopener noreferrer">Purchase Certified Copy</a>
+                {% elif certificate.type == certificate_types.MARRIAGE or certificate.type ==
+                certificate_types.MARRIAGE_LICENSE %}
+                <a href="https://www1.nyc.gov/doittshoppingcart/marriageCertificate.htm" class="btn btn-primary mt-3"
+                   target="_blank" rel="noopener noreferrer">Purchase Certified Copy</a>
+                {% endif %}
             </div>
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ static_url_for('static', filename='js/plugins/pdfobject/pdfobject.min.js') }}"></script>
+    <script src="{{ static_url_for('static', filename='js/public/view-certificate.js') }}"></script>
 {% endblock %}
