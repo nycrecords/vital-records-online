@@ -48,9 +48,6 @@ env/
 # npm
 /node_modules/
 
-# webpack-built files
-/vro/static/build/
-
 # Configuration
 .env
 

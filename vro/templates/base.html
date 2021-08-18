@@ -12,9 +12,12 @@
             Historical Vital Records of NYC
         {% endblock %}
     </title>
-    <!-- NYC Theme CSS -->
-    <link rel="stylesheet" href="{{ static_url_for('static', filename='build/main_css.bundle.css') }}">
-    <link rel="shortcut icon" href="{{ static_url_for('static', filename='build/img/favicon.ico') }}"/>
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ static_url_for('static', filename='css/plugins/bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ static_url_for('static', filename='css/plugins/fontawesome/all.min.css') }}">
+    <link rel="stylesheet" href="{{ static_url_for('static', filename='css/theme.css') }}">
+    <link rel="stylesheet" href="{{ static_url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ static_url_for('static', filename='img/favicon.ico') }}"/>
 
     {% block css %}{% endblock %}
 </head>
@@ -36,13 +39,15 @@
         }
     </script>
 
+    <!-- JS -->
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-    <!-- NYC template JS (RTL, search and language toggle, back to top)  -->
-    <script src="{{ static_url_for('static', filename='build/main_js.bundle.js') }}"></script>
+    <script src="{{ static_url_for('static', filename='js/plugins/jquery/jquery.min.js') }}"></script>
+    <script src="{{ static_url_for('static', filename='js/plugins/bootstrap/bootstrap.min.js') }}"></script>
+    <script src="{{ static_url_for('static', filename='js/plugins/nyc-core-framework/nyc-core-framework.js') }}"></script>
+    <script src="{{ static_url_for('static', filename='js/plugins/nyc-core-framework/responsive-table.js') }}"></script>
+    <script src="{{ static_url_for('static', filename='js/plugins/nyc-core-framework/validation.js') }}"></script>
 
     {% block js %}{% endblock %}
-
 </body>
 
 </html>

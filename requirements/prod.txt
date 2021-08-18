@@ -34,3 +34,6 @@ Flask-DebugToolbar==0.11.0
 
 # Environment variable parsing
 environs==9.3.2
+
+# Azure
+azure-storage-blob>=12.8.0

@@ -18,9 +18,8 @@ RUN pip install --no-cache -r requirements/prod.txt
 COPY package.json ./
 RUN npm install
 
-COPY webpack.config.js autoapp.py ./
+COPY autoapp.py ./
 COPY vro vro
-COPY assets assets
 COPY .env.example .env
 RUN npm run-script build
 
