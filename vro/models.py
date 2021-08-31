@@ -6,7 +6,8 @@ from flask import url_for
 from vro.database import db, PkModel
 from vro.constants import (
     certificate_types,
-    counties
+    counties,
+    months
 )
 
 class Certificate(PkModel):
@@ -93,3 +94,20 @@ class Certificate(PkModel):
         :return: The blob name used to generate blob SAS token and blob URL.
         """
         return self.path_prefix + self.filename
+
+
+    @property
+    def name(self):
+        return "{} {}".format(self.first_name, self.last_name) \
+            if self.first_name is not None else self.last_name
+
+
+    @property
+    def date(self):
+        if self.year and self.month and self.day and self.day.isnumeric():
+            return "{}-{}-{}".format(self.year, months.MONTHS.get(self.month, ""), self.day.zfill(2))
+        elif self.year and self.month:
+            return "{}-{}".format(self.year, months.MONTHS.get(self.month, ""))
+        elif self.year and self.day and self.day.isnumeric():
+            return "{}-00-{}".format(self.year, self.day.zfill(2))
+        else: return self.year

@@ -111,7 +111,7 @@ def view_certificate(certificate_id):
     """
     try:
         # Query for certificate
-        certificate = Certificate.query.filter_by(id=certificate_id).one()
+        certificate = Certificate.query.filter(Certificate.id==certificate_id, Certificate.filename.isnot(None)).one()
 
         # Generate SAS token
         sas_token = generate_blob_sas(account_name=current_app.config['AZURE_STORAGE_ACCOUNT_NAME'],
