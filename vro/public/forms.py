@@ -3,8 +3,9 @@ from wtforms import (
     SelectField,
     SubmitField,
     IntegerField,
+    StringField
 )
-from wtforms.validators import NumberRange
+from wtforms.validators import NumberRange, DataRequired
 from vro.constants import certificate_types, counties
 
 
@@ -24,3 +25,32 @@ class BrowseAllForm(Form):
 
     def __init__(self):
         super(BrowseAllForm, self).__init__()
+
+
+class SearchByNumberForm(Form):
+    """
+
+    """
+    certificate_type = SelectField("Certificate Type:*", choices=certificate_types.SEARCH_DROPDOWN, validators=[DataRequired()])
+    year = IntegerField("Year:", validators=[NumberRange(1866, 1949)], render_kw={"placeholder": "####"})
+    county = SelectField("Borough:", choices=counties.SEARCH_DROPDOWN)
+    number = IntegerField("Certificate Number:*", validators=[NumberRange(1, 9999999), DataRequired()], render_kw={"placeholder": "#######"})
+    submit = SubmitField("Search")
+
+    def __init__(self):
+        super(SearchByNumberForm, self).__init__()
+
+
+class SearchByNameForm(Form):
+    """
+
+    """
+    certificate_type = SelectField("Certificate Type:*", choices=certificate_types.SEARCH_DROPDOWN, validators=[DataRequired()])
+    last_name = StringField("Last Name:*", validators=[DataRequired()], render_kw={"placeholder": "#######"})
+    first_name = StringField("First Name:", render_kw={"placeholder": "#######"})
+    year = IntegerField("Year:", validators=[NumberRange(1866, 1949)], render_kw={"placeholder": "####"})
+    county = SelectField("Borough:", choices=counties.SEARCH_DROPDOWN)
+    submit = SubmitField("Search")
+
+    def __init__(self):
+        super(SearchByNameForm, self).__init__()

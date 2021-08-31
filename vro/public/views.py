@@ -1,14 +1,21 @@
 # -*- coding: utf-8 -*-
 """Public section, including homepage and signup."""
 from flask import (
-    current_app,
     abort,
     Blueprint,
-    render_template
+    current_app,
+    render_template,
+    redirect,
+    request,
+    url_for
 )
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import DataError
-from vro.public.forms import BrowseAllForm
+from vro.public.forms import (
+    BrowseAllForm,
+    SearchByNumberForm,
+    SearchByNameForm
+)
 from vro.models import Certificate
 from vro.constants import (
     certificate_types,
@@ -20,14 +27,43 @@ from azure.storage.blob import generate_blob_sas, BlobSasPermissions
 blueprint = Blueprint("public", __name__, static_folder="../static")
 
 
-@blueprint.route("/", methods=["GET", "POST"])
+@blueprint.route("/", methods=["GET"])
 def index():
     """
     Homepage for Vital Records Online
 
     :return: Template for the homepage
     """
-    return render_template("public/index.html")
+    search_by_number_form = SearchByNumberForm()
+    search_by_name_form = SearchByNameForm()
+    return render_template("public/index.html",
+                           search_by_number_form=search_by_number_form,
+                           search_by_name_form=search_by_name_form)
+
+
+@blueprint.route("/", methods=["POST"])
+def homepage_search():
+    """
+    """
+    if request.form["submit"] == "Search":
+        certificate_type = request.form["certificate_type"]
+        county = request.form["county"]
+        year = request.form["year"]
+        number = request.form["number"]
+        print(request.form)
+        print()
+        try:
+            certificate = Certificate.query.filter_by(type=certificate_type,
+                                                      county=county,
+                                                      year=year,
+                                                      number=str(number)).all()
+        except NoResultFound:
+            return abort(404)
+
+        if len(certificate) == 1:
+            return redirect(url_for("public.view_certificate", certificate_id=certificate[0].id))
+        elif len(certificate) > 1:
+            return redirect(url_for("public.view_certificate", certificate_id=certificate[0].id))
 
 
 @blueprint.route("/browse-all", methods=["GET"])
@@ -39,7 +75,7 @@ def browse_all():
     :return: Template for the browse all page and a list of certificates to display.
     """
     form = BrowseAllForm()
-    certificates = Certificate.query.order_by(Certificate.id.asc()).limit(50).all()
+    certificates = Certificate.query.filter(Certificate.filename.isnot(None)).order_by(Certificate.id.asc()).limit(50).all()
     return render_template("public/browse_all.html",
                            form=form,
                            certificates=certificates,

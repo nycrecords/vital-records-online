@@ -17,4 +17,10 @@ DROPDOWN = [
     (MARRIAGE, "Marriage Certificate")
 ]
 
+SEARCH_DROPDOWN = [
+    (BIRTH, "Birth Certificate"),
+    (DEATH, "Death Certificate"),
+    (MARRIAGE, "Marriage Certificate")
+]
+
 ALL = frozenset((BIRTH, DEATH, MARRIAGE, MARRIAGE_LICENSE))

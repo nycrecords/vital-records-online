@@ -6,103 +6,147 @@
         <div class="row">
             <div class="col-lg-12">
                 <p class="large text-center">The New York City Municipal Archives is undertaking a mass digitization
-                    project to provide online access to our 14.5 million historical birth, death, and marriage
-                    records. We can add one more sentence here, but should keep it short. </p>
+                    project to provide online access to our 13.3 million historical birth, death, and marriage
+                    records.</p>
             </div>
         </div>
     </div>
 </section>
-<section class="py-3 pb-1 bg-light">
+<section class="py-3 pb-1 bg-primary browsesearch">
     <div class="container">
         <div class="row px-1 matrix-gutter">
             <div class="col-md border-right">
-                <h3 class="text-center pb-1">Browse</h3>
+                <h3 class="text-center text-white pb-1">Browse</h3>
                 <div class="center">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <label class="control-label" for="exampleFormControlSelect1">Certificate Type:
-                                &nbsp;</label>
-                            <select class="form-control" style="width: 250px;" id="exampleFormControlSelect1">
-                                <option>ALL</option>
-                                <option>Birth Certificate</option>
-                                <option>Death Certificate</option>
-                                <option>Marriage Record</option>
-                            </select>
+                    <form>
+                        <div class="form-div">
+                            <div class="form-group">
+                                <label class="control-label" for="exampleFormControlSelect1">Certificate Type:
+                                    &nbsp;</label>
+                                <select class="form-control" style="width: 250px;" id="exampleFormControlSelect1">
+                                    <option>ALL</option>
+                                    <option>Birth Certificate</option>
+                                    <option>Death Certificate</option>
+                                    <option>Marriage Record</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-div">
+                            <div class="form-group">
+                                <label class="control-label" for="exampleFormControlSelect1">Borough: &nbsp;</label>
+                                <select class="form-control" style="width: 250px;" id="exampleFormControlSelect1">
+                                    <option>ALL</option>
+                                    <option>Brooklyn (Kings)</option>
+                                    <option>Bronx</option>
+                                    <option>Manhattan</option>
+                                    <option>Queens</option>
+                                    <option>Staten Island (Richmond)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div><br>
+                            <label>Year range:</label><br> <label><small><b>1866</b></small></label> <input id="ex2"
+                                                                                                            type="text"
+                                                                                                            class="span2"
+                                                                                                            value=""
+                                                                                                            data-slider-min="10"
+                                                                                                            data-slider-max="1000"
+                                                                                                            data-slider-step="5"
+                                                                                                            data-slider-value="[250,450]"/>
+                            <label><small><b>1949</b></small></label>
+                        </div>
+                        <div class="text-center pt-4">
+                            <a class="btn btn-info" href="/"> Browse </a>
                         </div>
                     </form>
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <label class="control-label" for="exampleFormControlSelect1">Borough: &nbsp;</label>
-                            <select class="form-control" style="width: 250px;" id="exampleFormControlSelect1">
-                                <option>ALL</option>
-                                <option>Brooklyn (Kings)</option>
-                                <option>Bronx</option>
-                                <option>Manhattan</option>
-                                <option>Queens</option>
-                                <option>Staten Island (Richmond)</option>
-                            </select>
-                        </div>
-                    </form>
-                    <div>
-                        <label>Year range:</label><br> <small><b>1866</b></small> <input id="ex2" type="text"
-                                                                                         class="span2" value=""
-                                                                                         data-slider-min="10"
-                                                                                         data-slider-max="1000"
-                                                                                         data-slider-step="5"
-                                                                                         data-slider-value="[250,450]"/>
-                        <small><b>1949</b></small>
-                    </div>
-                    <div class="text-center pt-4">
-                        <a class="btn btn-primary" href="/"> Browse </a>
-                    </div>
                 </div>
             </div>
             <!-- .col -->
-            <div class="col-md">
-                <h3 class="text-center pb-1">Search</h3>
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="control-label" for="exampleFormControlSelect1">Certificate Type:*
-                            &nbsp;</label>
-                        <select class="form-control" style="width: 250px;" id="exampleFormControlSelect1">
-                            <option>Birth Certificate</option>
-                            <option>Death Certificate</option>
-                            <option>Marriage Record</option>
-                        </select>
-                    </div>
-                </form>
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="control-label" for="exampleFormControlSelect1">Borough:* &nbsp;</label>
-                        <select class="form-control" style="width: 250px;" id="exampleFormControlSelect1">
-                            <option>Brooklyn (Kings)</option>
-                            <option>Bronx</option>
-                            <option>Manhattan</option>
-                            <option>Queens</option>
-                            <option>Staten Island (Richmond)</option>
-                        </select>
-                    </div>
-                </form>
-                <form>
-                    <div class="form-group">
-                        <label for="exampleFormControlInput1">Certificate Number:* &nbsp; <sup><a
-                                href="/genealogical-research"><i class="fa fas fa-question"></i></a></sup></label>
-                        <input type="email" class="form-control" id="exampleFormControlInput1"
-                               placeholder="#######">
-                    </div>
-                </form>
-
-                <form>
-                    <div class="form-group">
-                        <label for="exampleFormControlInput1">Year:* </label>
-                        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="####">
-                    </div>
-                </form>
-                <div class="text-center pt-3">
-                    <a class="btn btn-primary" href="/"> Search </a>
+            <div class="col-md text-center">
+                <h3 class="text-center text-white pb-1">Search</h3>
+                <select id="form-type-select" class="form-select" aria-label="Search By Selection">
+                    <option selected value="number">Certificate Number</option>
+                    <option value="name">Last Name</option>
+                </select>
+                <br>
+                <div class="center">
+                    <form method="post" role="form" id="search-by-number-form">
+                        {{ search_by_number_form.csrf_token }}
+                        <div class="form-div">
+                            <div class="form-group">
+                                {{ search_by_number_form.certificate_type.label(class="control-label",
+                                for="certificate_type") }}
+                                {{ search_by_number_form.certificate_type(class="form-control browse-all-select") }}
+                            </div>
+                        </div>
+                        <div class="form-div">
+                            <div class="form-group">
+                                {{ search_by_number_form.number.label(class="control-label", for="number") }}
+                                {{ search_by_number_form.number(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-div">
+                            <div class="form-group">
+                                {{ search_by_number_form.county.label(class="control-label", for="county") }}
+                                {{ search_by_number_form.county(class="form-control browse-all-select") }}
+                            </div>
+                        </div>
+                        <div class="form-div">
+                            <div class="form-group">
+                                {{ search_by_number_form.year.label(class="control-label", for="year") }}
+                                {{ search_by_number_form.year(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="text-center pt-3 pb-1">
+                            {{ search_by_number_form.submit(class="btn btn-info") }}
+                        </div>
+                        <small class="pt-1 text-white">Not sure where to start? Read our <a href="/">search tips</a> for
+                            finding vital records.</small>
+                    </form>
+                    <form method="post" role="form" id="search-by-name-form" hidden>
+                        {{ search_by_name_form.csrf_token }}
+                        <div class="form-div">
+                            <div class="form-group">
+                                {{ search_by_name_form.certificate_type.label(class="control-label",
+                                for="certificate_type")
+                                }}
+                                {{ search_by_name_form.certificate_type(class="form-control browse-all-select") }}
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-div">
+                            <div class="form-group">
+                                {{ search_by_name_form.last_name.label(class="control-label", for="number") }}
+                                {{ search_by_name_form.last_name(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-div">
+                            <div class="form-group">
+                                {{ search_by_name_form.first_name.label(class="control-label", for="number") }}
+                                {{ search_by_name_form.first_name(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-div">
+                            <div class="form-group">
+                                {{ search_by_name_form.county.label(class="control-label", for="county") }}
+                                {{ search_by_name_form.county(class="form-control browse-all-select") }}
+                            </div>
+                        </div>
+                        <div class="form-div">
+                            <div class="form-group">
+                                {{ search_by_name_form.year.label(class="control-label", for="year") }}
+                                {{ search_by_name_form.year(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="text-center pt-3 pb-1">
+                            {{ search_by_name_form.submit(class="btn btn-info") }}
+                        </div>
+                        <small class="pt-1 text-white">Not sure where to start? Read our <a href="/">search tips</a> for
+                            finding vital records.</small>
+                    </form>
                 </div>
+                <!-- .col -->
             </div>
-            <!-- .col -->
         </div>
     </div>
     <!-- .container -->
@@ -123,46 +167,52 @@
     <!-- .container -->
 </section>
 <section class="featured-panel device-lg">
-    <div class="card bg-dark">
-        <img class="card-img opacity-40 full-opacity-on-device" src="{{ static_url_for('static', filename='img/ebbets-field.jpg') }}"
-             alt="Card image">
-        <div class="card-img-overlay d-flex px-0">
-            <div class="container align-self-center text-center">
-                <h3 class="bg-dark py-1 text-white">More from the NYC Municipal Archives</h3>
-                <div class="row text-center text-white">
-                    <div class="col-lg-4 py-3">
-                        <h4>Digital Collections</h4>
-                        <p>
-                            View more than 1 million digitized items
-                        </p>
-                        <a class="btn btn-info" href="http://nycma.lunaimaging.com/">Digital Collections</a>
-                    </div>
-                    <!-- .col -->
-                    <div class="col-lg-4 py-3">
-                        <h4>For the Record Blog</h4>
-                        <p>
-                            Read highlights from the archives
-                        </p>
-                        <a class="btn btn-info" href="https://www.archives.nyc/blog">For the Record</a>
-                    </div>
-                    <!-- .col -->
-
-                    <div class="col-lg-4 py-3">
-                        <h4>Support the Archives</h4>
-                        <p>
-                            Donate, adopt an item, or purchase prints
-                        </p>
-                        <a class="btn btn-info" href="https://www1.nyc.gov/site/records/about/donate.page">Donate
-                            Now</a>
-                    </div>
-                    <!-- .col -->
+    <div class="card pt-2 bg-dark overlay-gradient-y-primary">
+        <div class="container align-self-center text-center">
+            <h3 class="py-1 text-white">More from the NYC Municipal Archives</h3>
+            <div class="row text-center text-white">
+                <div class="col-lg-3 py-3">
+                    <h4>Digital Collections</h4>
+                    <p>
+                        View more than 1 million digitized items
+                    </p>
+                    <a class="btn btn-info" href="http://nycma.lunaimaging.com/">Digital Collections</a>
+                </div>
+                <!-- .col -->
+                <div class="col-lg-3 py-3">
+                    <h4>For the Record Blog</h4>
+                    <p>
+                        Read highlights from the archives
+                    </p>
+                    <a class="btn btn-info" href="https://www.archives.nyc/blog">For the Record</a>
+                </div>
+                <!-- .col -->
+                <div class="col-lg-3 py-3">
+                    <h4>Collection Guides</h4>
+                    <p>
+                        Learn about our <br> collections
+                    </p>
+                    <a class="btn btn-info" href="https://a860-collectionguides.nyc.gov/">Collection Guides</a>
+                </div>
+                <div class="col-lg-3 py-3">
+                    <h4>Support the Archives</h4>
+                    <p>
+                        Donate, adopt an item, or purchase prints
+                    </p>
+                    <a class="btn btn-info" href="https://www1.nyc.gov/site/records/about/donate.page">Donate Now</a>
                 </div>
                 <!-- .col -->
             </div>
-            <!-- .row -->
+            <!-- .col -->
         </div>
-        <!-- .container -->
+        <!-- .row -->
+    </div>
+    <!-- .container -->
     </div>
     <!-- .card -->
 </section>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ static_url_for('static', filename='js/public/search.js') }}"></script>
 {% endblock %}

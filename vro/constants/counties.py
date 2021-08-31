@@ -21,4 +21,12 @@ DROPDOWN = [
     (RICHMOND, "Staten Island (Richmond)")
 ]
 
+SEARCH_DROPDOWN = [
+    (KINGS, "Brooklyn (Kings)"),
+    (BRONX, "Bronx"),
+    (MANHATTAN, "Manhattan"),
+    (QUEENS, "Queens"),
+    (RICHMOND, "Staten Island (Richmond)")
+]
+
 ALL = frozenset((KINGS, QUEENS, BRONX, MANHATTAN, RICHMOND))

@@ -25,8 +25,14 @@ class Certificate(PkModel):
 
     type = db.Column(db.Enum(*certificate_types.ALL, name="certificate_type"), nullable=False)
     county = db.Column(db.Enum(*counties.ALL, name="county"), nullable=False)
+    month = db.Column(db.String)
+    day = db.Column(db.String)
     year = db.Column(db.Integer)
     number = db.Column(db.String(10))
+    first_name = db.Column(db.String(64))
+    last_name = db.Column(db.String(64))
+    age = db.Column(db.String(10))
+    soundex = db.Column(db.String(4))
     path_prefix = db.Column(db.String)
     filename = db.Column(db.String)
 
