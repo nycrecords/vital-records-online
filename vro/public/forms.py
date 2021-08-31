@@ -46,8 +46,8 @@ class SearchByNameForm(Form):
 
     """
     certificate_type = SelectField("Certificate Type:*", choices=certificate_types.SEARCH_DROPDOWN, validators=[DataRequired()])
-    last_name = StringField("Last Name:*", validators=[DataRequired()], render_kw={"placeholder": "#######"})
-    first_name = StringField("First Name:", render_kw={"placeholder": "#######"})
+    last_name = StringField("Last Name:*", validators=[DataRequired()])
+    first_name = StringField("First Name:")
     year = IntegerField("Year:", validators=[NumberRange(1866, 1949)], render_kw={"placeholder": "####"})
     county = SelectField("Borough:", choices=counties.SEARCH_DROPDOWN)
     submit = SubmitField("Search")

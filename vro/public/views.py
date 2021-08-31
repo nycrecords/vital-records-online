@@ -46,24 +46,50 @@ def homepage_search():
     """
     """
     if request.form["submit"] == "Search":
-        certificate_type = request.form["certificate_type"]
-        county = request.form["county"]
-        year = request.form["year"]
-        number = request.form["number"]
-        print(request.form)
-        print()
+        filter_by_kwargs = {}
+        filter_args = []
+        for name, value, col in [
+            ("type", request.form.get("type", ""), Certificate.type),
+            ("county", request.form.get("county", ""), Certificate.county),
+            ("year", request.form.get("year", ""), Certificate.year),
+            ("number", request.form.get("number", ""), Certificate.number),
+            ("first_name", request.form.get("first_name", ""), Certificate.first_name),
+            ("last_name", request.form.get("last_name", ""), Certificate.last_name)
+        ]:
+            if value:
+                if name in ("first_name", "last_name"):
+                    filter_args.append(
+                        col.ilike(value)
+                    )
+                else:
+                    filter_by_kwargs[name] = value
         try:
-            certificate = Certificate.query.filter_by(type=certificate_type,
-                                                      county=county,
-                                                      year=year,
-                                                      number=str(number)).all()
-        except NoResultFound:
+            results = Certificate.query.filter_by(**filter_by_kwargs).filter(*filter_args, Certificate.filename.isnot(None))
+            print(results)
+            print()
+        except:
             return abort(404)
 
-        if len(certificate) == 1:
-            return redirect(url_for("public.view_certificate", certificate_id=certificate[0].id))
-        elif len(certificate) > 1:
-            return redirect(url_for("public.view_certificate", certificate_id=certificate[0].id))
+        if len(results) == 1:
+            return redirect(url_for("public.view_certificate", certificate_id=results[0].id))
+        elif len(results) > 1:
+            return redirect(url_for("public.results"))
+
+
+@blueprint.route("/results", methods=["GET"])
+def results():
+    """
+    This view function handles GET requests for the Browse All page.
+    A query is made for the initial page of certificates shown.
+
+    :return: Template for the browse all page and a list of certificates to display.
+    """
+    form = BrowseAllForm()
+    certificates=[]
+    return render_template("public/browse_all.html",
+                           form=form,
+                           certificates=certificates,
+                           num_results=len(certificates))
 
 
 @blueprint.route("/browse-all", methods=["GET"])
@@ -137,19 +163,28 @@ def view_certificate(certificate_id):
                            url=url)
 
 
-@blueprint.route("/archives-holdings", methods=["GET", "POST"])
-def archives_holdings():
-    return render_template("public/archives_holdings.html")
-
-
-@blueprint.route("/search", methods=["GET", "POST"])
+@blueprint.route("/search", methods=["GET"])
 def search():
+    search_by_number_form = SearchByNumberForm()
+    search_by_name_form = SearchByNameForm()
+    return render_template("public/search.html",
+                           search_by_number_form=search_by_number_form,
+                           search_by_name_form=search_by_name_form)
+
+
+@blueprint.route("/search", methods=["POST"])
+def search_post():
     return render_template("public/search.html")
 
 
-@blueprint.route("/genealogical-research", methods=["GET", "POST"])
-def genealogical_research():
-    return render_template("public/genealogical_research.html")
+@blueprint.route("/digital-vital-records", methods=["GET", "POST"])
+def digital_vital_records():
+    return render_template("public/digital_vital_records.html")
+
+
+@blueprint.route("/conducting-research", methods=["GET", "POST"])
+def conducting_research():
+    return render_template("public/conducting_research.html")
 
 
 @blueprint.route("/about/")
