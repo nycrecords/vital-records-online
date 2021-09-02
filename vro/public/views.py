@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Public section, including homepage and signup."""
+from vro.extensions import db
 from flask import (
     abort,
     Blueprint,
@@ -9,6 +10,8 @@ from flask import (
     request,
     url_for
 )
+from sqlalchemy.sql import func
+from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import DataError
 from vro.public.forms import (
@@ -37,11 +40,14 @@ def index():
     browse_all_form = BrowseAllForm()
     search_by_number_form = SearchByNumberForm()
     search_by_name_form = SearchByNameForm()
+    year_range = db.session.query(func.max(Certificate.year).label("year_max"),
+                                   func.min(Certificate.year).label("year_min")).one()
     return render_template("public/index.html",
                            browse_all_form=browse_all_form,
                            search_by_number_form=search_by_number_form,
-                           search_by_name_form=search_by_name_form)
-
+                           search_by_name_form=search_by_name_form,
+                           year_range_min=year_range.year_min,
+                           year_range_max=year_range.year_max)
 
 @blueprint.route("/", methods=["POST"])
 def homepage_search():

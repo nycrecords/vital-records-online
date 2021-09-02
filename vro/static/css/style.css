@@ -174,3 +174,11 @@ ul a {
 #slider-range .ui-slider-range {
     background: #a9a9a9;
 }
+
+#slider-range {
+    margin: 2rem 3rem;
+}
+
+#year-range{
+    background-color: #ffffff;
+}

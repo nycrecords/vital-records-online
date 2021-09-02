@@ -31,13 +31,13 @@
                             {{ browse_all_form.county.label(class="control-label", for="county") }}
                             {{ browse_all_form.county(class="form-control browse-all-select") }}
                         </div>
-                        <div><br>
+                        <div class="form-div">
+                            <br>
                             {{ browse_all_form.year_range.label(class="control-label", for="year_range") }}
                             {{ browse_all_form.year_range(class="form-control", id="year-range", readonly=true ) }}
-
-                            <div id="slider-range"></div>
                         </div>
-                        <div class="text-center pt-4">
+                        <div id="slider-range"></div>
+                        <div class="text-center">
                             <input class="btn btn-info" id="browse" name="browse" type="submit" value="Browse">
                         </div>
                     </form>
@@ -157,9 +157,9 @@
         $(function () {
             $("#slider-range").slider({
                 range: true,
-                min: 1866,
-                max: 1949,
-                values: [1866, 1949],
+                min: parseInt("{{ year_range_min }}"),
+                max: parseInt("{{ year_range_max }}"),
+                values: [parseInt("{{ year_range_min }}"), parseInt("{{ year_range_max }}")],
                 slide: function (event, ui) {
                     $("#year-range").val(ui.values[0] + " - " + ui.values[1]);
                 }
