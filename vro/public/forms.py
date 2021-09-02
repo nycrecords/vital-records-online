@@ -19,7 +19,7 @@ class BrowseAllForm(Form):
     county: a select dropdown with options for all supported counties.
     """
     certificate_type = SelectField("Certificate Type:", choices=certificate_types.DROPDOWN)
-    year = IntegerField("Year Range", validators=[NumberRange(1866, 1949)])
+    year_range = StringField("Year Range:")
     county = SelectField("Borough:", choices=counties.DROPDOWN)
     submit = SubmitField("Update")
 

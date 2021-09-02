@@ -18,49 +18,27 @@
             <div class="col-md border-right">
                 <h3 class="text-center text-white pb-1">Browse</h3>
                 <div class="center">
-                    <form>
+                    <form method="post" role="form" id="browse-all-form">
+                        {{ browse_all_form.csrf_token }}
                         <div class="form-div">
                             <div class="form-group">
-                                <label class="control-label" for="exampleFormControlSelect1">Certificate Type:
-                                    &nbsp;</label>
-                                <select class="form-control" style="width: 250px;" id="exampleFormControlSelect1">
-                                    <option>ALL</option>
-                                    <option>Birth Certificate</option>
-                                    <option>Death Certificate</option>
-                                    <option>Marriage Record</option>
-                                </select>
+                                {{ browse_all_form.certificate_type.label(class="control-label",
+                                for="certificate_type") }}
+                                {{ browse_all_form.certificate_type(class="form-control browse-all-select") }}
                             </div>
                         </div>
                         <div class="form-div">
-                            <div class="form-group">
-                                <label class="control-label" for="exampleFormControlSelect1">Borough: &nbsp;</label>
-                                <select class="form-control" style="width: 250px;" id="exampleFormControlSelect1">
-                                    <option>ALL</option>
-                                    <option>Brooklyn (Kings)</option>
-                                    <option>Bronx</option>
-                                    <option>Manhattan</option>
-                                    <option>Queens</option>
-                                    <option>Staten Island (Richmond)</option>
-                                </select>
-                            </div>
+                            {{ browse_all_form.county.label(class="control-label", for="county") }}
+                            {{ browse_all_form.county(class="form-control browse-all-select") }}
                         </div>
                         <div><br>
-                            <label for="year-range">Year range:</label>
-                            <input type="text" id="year-range" readonly style="border:0; font-weight:bold;">
+                            {{ browse_all_form.year_range.label(class="control-label", for="year_range") }}
+                            {{ browse_all_form.year_range(class="form-control", id="year-range", readonly=true ) }}
 
                             <div id="slider-range"></div>
-<!--                            <label>Year range:</label><br> <label><small><b>1866</b></small></label> <input id="ex2"-->
-<!--                                                                                                            type="text"-->
-<!--                                                                                                            class="span2"-->
-<!--                                                                                                            value=""-->
-<!--                                                                                                            data-slider-min="10"-->
-<!--                                                                                                            data-slider-max="1000"-->
-<!--                                                                                                            data-slider-step="5"-->
-<!--                                                                                                            data-slider-value="[250,450]"/>-->
-<!--                            <label><small><b>1949</b></small></label>-->
                         </div>
                         <div class="text-center pt-4">
-                            <a class="btn btn-info" href="/"> Browse </a>
+                            <input class="btn btn-info" id="browse" name="browse" type="submit" value="Browse">
                         </div>
                     </form>
                 </div>

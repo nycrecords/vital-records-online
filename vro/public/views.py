@@ -34,9 +34,11 @@ def index():
 
     :return: Template for the homepage
     """
+    browse_all_form = BrowseAllForm()
     search_by_number_form = SearchByNumberForm()
     search_by_name_form = SearchByNameForm()
     return render_template("public/index.html",
+                           browse_all_form=browse_all_form,
                            search_by_number_form=search_by_number_form,
                            search_by_name_form=search_by_name_form)
 
@@ -120,6 +122,15 @@ def browse_all_filter():
     :return: Template for browse all page and an updated list of certificates based on the filters.
     """
     form = BrowseAllForm()
+    page = request.args.get('page', 1, type=int)
+    certificate_type = request.form.get("type", "")
+    county = request.form.get("county", "")
+    year_range = request.form.get("year", "")
+    Certificate.query.filter(Certificate.filename.isnot(None),
+                             Certificate.type == certificate_type,
+                             Certificate.county == county,
+                             Certificate.year.between("", "")).order_by(Certificate.id.asc()).paginate(
+        page=page, per_page=50)
     # Certificate.query.filter_by(**filter_by_kwargs).filter(*filter_args, Certificate.filename.isnot(None))
     return render_template("public/browse_all.html",
                            form=form,
