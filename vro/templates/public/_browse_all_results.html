@@ -1,4 +1,4 @@
-{% for certificates_batched in certificates | batch(5) %}
+{% for certificates_batched in certificates.items | batch(5) %}
     <div class="row px-2 py-2">
     {% for certificate in certificates_batched %}
         <div class="col-lg">

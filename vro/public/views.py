@@ -101,11 +101,13 @@ def browse_all():
     :return: Template for the browse all page and a list of certificates to display.
     """
     form = BrowseAllForm()
-    certificates = Certificate.query.filter(Certificate.filename.isnot(None)).order_by(Certificate.id.asc()).limit(50).all()
+    page = request.args.get('page', 1, type=int)
+    certificates = Certificate.query.filter(Certificate.filename.isnot(None)).order_by(Certificate.id.asc()).paginate(
+        page=page, per_page=50)
     return render_template("public/browse_all.html",
                            form=form,
                            certificates=certificates,
-                           num_results=len(certificates))
+                           num_results=format(certificates.total, ",d"))
 
 
 @blueprint.route("/browse-all", methods=["POST"])
@@ -118,7 +120,7 @@ def browse_all_filter():
     :return: Template for browse all page and an updated list of certificates based on the filters.
     """
     form = BrowseAllForm()
-    certificates = Certificate.query.limit(50).all()
+    # Certificate.query.filter_by(**filter_by_kwargs).filter(*filter_args, Certificate.filename.isnot(None))
     return render_template("public/browse_all.html",
                            form=form,
                            certificates=certificates,

@@ -149,10 +149,12 @@ ul a {
   background: url("/static/img/certificate-background.jpg") no-repeat center center fixed;
   background-blend-mode: multiply;
 }
+
 .browsesearch small a {
   color: #e6ecf7;
   font-weight: 600;
 }
+
 .browsesearch label {
   color: white;
   font-weight: 600;
@@ -161,9 +163,14 @@ ul a {
 .form-select {
   max-width: 200px !important;
 }
+
 .form-div {
     display: inline-block;
     margin-left: auto;
     margin-right: auto;
     text-align: left;
+}
+
+#slider-range .ui-slider-range {
+    background: #a9a9a9;
 }

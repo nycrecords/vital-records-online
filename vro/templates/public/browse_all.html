@@ -49,23 +49,54 @@
     <!-- .row -->
     <nav aria-label="Browse Results">
         <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
-                </a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">4</a></li>
-            <li class="page-item"><a class="page-link" href="#">5</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </li>
+            <a href="{{ url_for('public.browse_all', page=certificates.prev_num) }}"
+               class="btn btn-outline-dark
+       {% if certificates.page == 1 %}disabled{% endif %}">
+                &laquo;
+            </a>
+
+            {% for page_num in certificates.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=5) %}
+
+            {% if page_num %}
+            <!-- Check for the active page and set the link to "Active"-->
+            {% if certificates.page == page_num %}
+            <a href="{{ url_for('public.browse_all', page=page_num) }}"
+               class="btn btn-dark">
+                {{ page_num }}
+            </a>
+            {% else %}
+            <a href="{{ url_for('public.browse_all', page=page_num) }}"
+               class="btn btn-outline-dark">
+                {{ page_num }}
+            </a>
+            {% endif %}
+            {% else %}
+            ...
+            {% endif %}
+            {% endfor %}
+
+            <a href="{{ url_for('public.browse_all', page=certificates.next_num) }}"
+               class="btn btn-outline-dark
+       {% if certificates.page == certificates.pages %}disabled{% endif %}">
+                &raquo;
+            </a>
+            <!--            <li class="page-item">-->
+            <!--                <a class="page-link" href="#" aria-label="Previous">-->
+            <!--                    <span aria-hidden="true">&laquo;</span>-->
+            <!--                    <span class="sr-only">Previous</span>-->
+            <!--                </a>-->
+            <!--            </li>-->
+            <!--            <li class="page-item"><a class="page-link" href="#">1</a></li>-->
+            <!--            <li class="page-item"><a class="page-link" href="#">2</a></li>-->
+            <!--            <li class="page-item"><a class="page-link" href="#">3</a></li>-->
+            <!--            <li class="page-item"><a class="page-link" href="#">4</a></li>-->
+            <!--            <li class="page-item"><a class="page-link" href="#">5</a></li>-->
+            <!--            <li class="page-item">-->
+            <!--                <a class="page-link" href="#" aria-label="Next">-->
+            <!--                    <span aria-hidden="true">&raquo;</span>-->
+            <!--                    <span class="sr-only">Next</span>-->
+            <!--                </a>-->
+            <!--            </li>-->
         </ul>
     </nav>
     </div>

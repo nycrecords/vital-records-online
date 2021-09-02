@@ -45,15 +45,19 @@
                             </div>
                         </div>
                         <div><br>
-                            <label>Year range:</label><br> <label><small><b>1866</b></small></label> <input id="ex2"
-                                                                                                            type="text"
-                                                                                                            class="span2"
-                                                                                                            value=""
-                                                                                                            data-slider-min="10"
-                                                                                                            data-slider-max="1000"
-                                                                                                            data-slider-step="5"
-                                                                                                            data-slider-value="[250,450]"/>
-                            <label><small><b>1949</b></small></label>
+                            <label for="year-range">Year range:</label>
+                            <input type="text" id="year-range" readonly style="border:0; font-weight:bold;">
+
+                            <div id="slider-range"></div>
+<!--                            <label>Year range:</label><br> <label><small><b>1866</b></small></label> <input id="ex2"-->
+<!--                                                                                                            type="text"-->
+<!--                                                                                                            class="span2"-->
+<!--                                                                                                            value=""-->
+<!--                                                                                                            data-slider-min="10"-->
+<!--                                                                                                            data-slider-max="1000"-->
+<!--                                                                                                            data-slider-step="5"-->
+<!--                                                                                                            data-slider-value="[250,450]"/>-->
+<!--                            <label><small><b>1949</b></small></label>-->
                         </div>
                         <div class="text-center pt-4">
                             <a class="btn btn-info" href="/"> Browse </a>
@@ -171,4 +175,19 @@
 
 {% block js %}
     <script src="{{ static_url_for('static', filename='js/public/search.js') }}"></script>
+    <script>
+        $(function () {
+            $("#slider-range").slider({
+                range: true,
+                min: 1866,
+                max: 1949,
+                values: [1866, 1949],
+                slide: function (event, ui) {
+                    $("#year-range").val(ui.values[0] + " - " + ui.values[1]);
+                }
+            });
+            $("#year-range").val($("#slider-range").slider("values", 0) +
+                " - " + $("#slider-range").slider("values", 1));
+        });
+    </script>
 {% endblock %}
