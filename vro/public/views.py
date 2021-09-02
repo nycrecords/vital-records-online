@@ -131,7 +131,7 @@ def browse_all_filter():
     page = request.args.get('page', 1, type=int)
     certificate_type = request.form.get("type", "")
     county = request.form.get("county", "")
-    year_range = request.form.get("year", "")
+    year_range = request.form.get("year_range", "")
     Certificate.query.filter(Certificate.filename.isnot(None),
                              Certificate.type == certificate_type,
                              Certificate.county == county,

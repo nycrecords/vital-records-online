@@ -18,7 +18,7 @@
             <div class="col-md border-right">
                 <h3 class="text-center text-white pb-1">Browse</h3>
                 <div class="center">
-                    <form method="post" role="form" id="browse-all-form">
+                    <form action="{{ url_for('public.browse_all_filter') }}" method="post"  role="form" id="browse-all-form">
                         {{ browse_all_form.csrf_token }}
                         <div class="form-div">
                             <div class="form-group">
