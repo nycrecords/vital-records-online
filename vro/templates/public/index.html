@@ -18,7 +18,8 @@
             <div class="col-md border-right">
                 <h3 class="text-center text-white pb-1">Browse</h3>
                 <div class="center">
-                    <form action="{{ url_for('public.browse_all_filter') }}" method="post"  role="form" id="browse-all-form">
+                    <form action="{{ url_for('public.browse_all_filter') }}" method="post" role="form"
+                          id="browse-all-form">
                         {{ browse_all_form.csrf_token }}
                         <div class="form-div">
                             <div class="form-group">
@@ -52,7 +53,8 @@
                 </select>
                 <br>
                 <div class="center">
-                    <form method="post" role="form" id="search-by-number-form">
+                    <form action="{{ url_for('public.browse_all_filter') }}" method="post" role="form"
+                          id="search-by-number-form">
                         {{ search_by_number_form.csrf_token }}
                         <div class="form-div">
                             <div class="form-group">
@@ -82,10 +84,12 @@
                         <div class="text-center pt-3 pb-1">
                             {{ search_by_number_form.submit(class="btn btn-info") }}
                         </div>
-                        <small class="pt-1 text-white">Not sure where to start? Read our <a href="{{ url_for('public.search') }}">search tips</a> for
+                        <small class="pt-1 text-white">Not sure where to start? Read our <a
+                                href="{{ url_for('public.search') }}">search tips</a> for
                             finding vital records.</small>
                     </form>
-                    <form method="post" role="form" id="search-by-name-form" hidden>
+                    <form action="{{ url_for('public.browse_all_filter') }}" method="post" role="form"
+                          id="search-by-name-form" hidden>
                         {{ search_by_name_form.csrf_token }}
                         <div class="form-div">
                             <div class="form-group">
@@ -152,20 +156,20 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{{ static_url_for('static', filename='js/public/search.js') }}"></script>
-    <script>
-        $(function () {
-            $("#slider-range").slider({
-                range: true,
-                min: parseInt("{{ year_range_min }}"),
-                max: parseInt("{{ year_range_max }}"),
-                values: [parseInt("{{ year_range_min }}"), parseInt("{{ year_range_max }}")],
-                slide: function (event, ui) {
-                    $("#year-range").val(ui.values[0] + " - " + ui.values[1]);
-                }
-            });
-            $("#year-range").val($("#slider-range").slider("values", 0) +
-                " - " + $("#slider-range").slider("values", 1));
+<script src="{{ static_url_for('static', filename='js/public/search.js') }}"></script>
+<script>
+    $(function () {
+        $("#slider-range").slider({
+            range: true,
+            min: parseInt("{{ year_range_min }}"),
+            max: parseInt("{{ year_range_max }}"),
+            values: [parseInt("{{ year_range_min }}"), parseInt("{{ year_range_max }}")],
+            slide: function (event, ui) {
+                $("#year-range").val(ui.values[0] + " - " + ui.values[1]);
+            }
         });
-    </script>
+        $("#year-range").val($("#slider-range").slider("values", 0) +
+            " - " + $("#slider-range").slider("values", 1));
+    });
+</script>
 {% endblock %}

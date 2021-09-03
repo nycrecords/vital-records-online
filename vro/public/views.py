@@ -49,40 +49,6 @@ def index():
                            year_range_min=year_range.year_min,
                            year_range_max=year_range.year_max)
 
-@blueprint.route("/", methods=["POST"])
-def homepage_search():
-    """
-    """
-    if request.form["submit"] == "Search":
-        filter_by_kwargs = {}
-        filter_args = []
-        for name, value, col in [
-            ("type", request.form.get("type", ""), Certificate.type),
-            ("county", request.form.get("county", ""), Certificate.county),
-            ("year", request.form.get("year", ""), Certificate.year),
-            ("number", request.form.get("number", ""), Certificate.number),
-            ("first_name", request.form.get("first_name", ""), Certificate.first_name),
-            ("last_name", request.form.get("last_name", ""), Certificate.last_name)
-        ]:
-            if value:
-                if name in ("first_name", "last_name"):
-                    filter_args.append(
-                        col.ilike(value)
-                    )
-                else:
-                    filter_by_kwargs[name] = value
-        try:
-            results = Certificate.query.filter_by(**filter_by_kwargs).filter(*filter_args, Certificate.filename.isnot(None))
-            print(results)
-            print()
-        except:
-            return abort(404)
-
-        if len(results) == 1:
-            return redirect(url_for("public.view_certificate", certificate_id=results[0].id))
-        elif len(results) > 1:
-            return redirect(url_for("public.results"))
-
 
 @blueprint.route("/results", methods=["GET"])
 def results():
@@ -129,19 +95,47 @@ def browse_all_filter():
     """
     form = BrowseAllForm()
     page = request.args.get('page', 1, type=int)
-    certificate_type = request.form.get("type", "")
-    county = request.form.get("county", "")
-    year_range = request.form.get("year_range", "")
-    Certificate.query.filter(Certificate.filename.isnot(None),
-                             Certificate.type == certificate_type,
-                             Certificate.county == county,
-                             Certificate.year.between("", "")).order_by(Certificate.id.asc()).paginate(
-        page=page, per_page=50)
-    # Certificate.query.filter_by(**filter_by_kwargs).filter(*filter_args, Certificate.filename.isnot(None))
+
+    filter_by_kwargs = {}
+    filter_args = []
+    for name, value, col in [
+        ("type", request.form.get("certificate_type", ""), Certificate.type),
+        ("number", request.form.get("number", ""), Certificate.number),
+        ("county", request.form.get("county", ""), Certificate.county),
+        ("year", request.form.get("year", ""), Certificate.year),
+        ("year_range", request.form.get("year_range", ""), Certificate.year),
+        ("number", request.form.get("number", ""), Certificate.number),
+        ("first_name", request.form.get("first_name", ""), Certificate.first_name),
+        ("last_name", request.form.get("last_name", ""), Certificate.last_name)
+    ]:
+        if value:
+            if name in ("first_name", "last_name"):
+                filter_args.append(
+                    col.ilike(value)
+                )
+            elif name == "year_range":
+                year_range = [int(year) for year in value.split() if year.isdigit()]
+                filter_args.append(
+                    col.between(year_range[0], year_range[1])
+                )
+            else:
+                filter_by_kwargs[name] = value
+
+    certificates = Certificate.query.filter_by(**filter_by_kwargs).filter(
+        Certificate.filename.isnot(None),
+        *filter_args,
+    ).order_by(Certificate.id.asc()).paginate(
+        page=page,
+        per_page=50
+    )
+
+    if certificates.total == 1:
+        return redirect(url_for("public.view_certificate", certificate_id=certificates.items[0].id))
+
     return render_template("public/browse_all.html",
                            form=form,
                            certificates=certificates,
-                           num_results=len(certificates))
+                           num_results=format(certificates.total, ",d"))
 
 
 @blueprint.route("/view/<certificate_id>", methods=["GET"])
