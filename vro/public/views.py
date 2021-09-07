@@ -11,7 +11,6 @@ from flask import (
     url_for
 )
 from sqlalchemy.sql import func
-from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import DataError
 from vro.public.forms import (
@@ -74,12 +73,18 @@ def browse_all():
 
     :return: Template for the browse all page and a list of certificates to display.
     """
+    year_range = db.session.query(func.max(Certificate.year).label("year_max"),
+                                   func.min(Certificate.year).label("year_min")).one()
     form = BrowseAllForm()
     page = request.args.get('page', 1, type=int)
     certificates = Certificate.query.filter(Certificate.filename.isnot(None)).order_by(Certificate.id.asc()).paginate(
         page=page, per_page=50)
     return render_template("public/browse_all.html",
                            form=form,
+                           year_range_min=year_range.year_min,
+                           year_range_max=year_range.year_max,
+                           year_min_value=year_range.year_min,
+                           year_max_value=year_range.year_max,
                            certificates=certificates,
                            num_results=format(certificates.total, ",d"))
 
@@ -93,8 +98,10 @@ def browse_all_filter():
 
     :return: Template for browse all page and an updated list of certificates based on the filters.
     """
+    year_range_query = db.session.query(func.max(Certificate.year).label("year_max"),
+                                   func.min(Certificate.year).label("year_min")).one()
     form = BrowseAllForm()
-    page = request.args.get('page', 1, type=int)
+    page = request.form.get('page', 1, type=int)
 
     filter_by_kwargs = {}
     filter_args = []
@@ -118,6 +125,8 @@ def browse_all_filter():
                 filter_args.append(
                     col.between(year_range[0], year_range[1])
                 )
+            elif name == "type" and value == 'marriage':
+                filter_args.append(col.in_(['marriage', 'marriage_license']))
             else:
                 filter_by_kwargs[name] = value
 
@@ -129,11 +138,19 @@ def browse_all_filter():
         per_page=50
     )
 
+    form.certificate_type.data = request.form.get("certificate_type", "")
+    form.county.data = request.form.get("county", "")
+    form.year_range.data = request.form.get("year_range", "")
+
     if certificates.total == 1:
         return redirect(url_for("public.view_certificate", certificate_id=certificates.items[0].id))
 
     return render_template("public/browse_all.html",
                            form=form,
+                           year_range_min=year_range_query.year_min,
+                           year_range_max=year_range_query.year_max,
+                           year_min_value=year_range[0],
+                           year_max_value=year_range[1],
                            certificates=certificates,
                            num_results=format(certificates.total, ",d"))
 

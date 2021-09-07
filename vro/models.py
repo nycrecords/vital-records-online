@@ -9,6 +9,7 @@ from vro.constants import (
     counties,
     months
 )
+from sqlalchemy.sql import func
 
 class Certificate(PkModel):
     """

@@ -3,9 +3,10 @@ from wtforms import (
     SelectField,
     SubmitField,
     IntegerField,
-    StringField
+    StringField,
 )
 from wtforms.validators import NumberRange, DataRequired
+from wtforms.widgets import HiddenInput
 from vro.constants import certificate_types, counties
 
 
@@ -21,7 +22,8 @@ class BrowseAllForm(Form):
     certificate_type = SelectField("Certificate Type:", choices=certificate_types.DROPDOWN)
     year_range = StringField("Year Range:")
     county = SelectField("Borough:", choices=counties.DROPDOWN)
-    submit = SubmitField("Update")
+    page = IntegerField(widget=HiddenInput())
+    submit_field = SubmitField("Update")
 
     def __init__(self):
         super(BrowseAllForm, self).__init__()
