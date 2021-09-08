@@ -8,6 +8,11 @@
             <p class="small">{{ certificate.display_string }}</p>
         </div>
     {% endfor %}
+    {% if certificates_batched | length < 5 %}
+        {% for col in range(5 - certificates_batched | length) %}
+            <div class="col-lg"></div>
+        {% endfor %}
+    {% endif %}
     </div>
     <br>
 {% endfor %}
