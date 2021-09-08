@@ -187,3 +187,7 @@ ul a {
 .btn-dark {
     color: white !important;
 }
+
+.btn-outline-dark:hover {
+    color: white !important;
+}

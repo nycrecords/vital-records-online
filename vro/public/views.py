@@ -49,22 +49,6 @@ def index():
                            year_range_max=year_range.year_max)
 
 
-@blueprint.route("/results", methods=["GET"])
-def results():
-    """
-    This view function handles GET requests for the Browse All page.
-    A query is made for the initial page of certificates shown.
-
-    :return: Template for the browse all page and a list of certificates to display.
-    """
-    form = BrowseAllForm()
-    certificates=[]
-    return render_template("public/browse_all.html",
-                           form=form,
-                           certificates=certificates,
-                           num_results=len(certificates))
-
-
 @blueprint.route("/browse-all", methods=["GET"])
 def browse_all():
     """
@@ -149,8 +133,8 @@ def browse_all_filter():
                            form=form,
                            year_range_min=year_range_query.year_min,
                            year_range_max=year_range_query.year_max,
-                           year_min_value=year_range[0],
-                           year_max_value=year_range[1],
+                           year_min_value=year_range[0] if request.form.get("year_range", "") else year_range_query.year_min,
+                           year_max_value=year_range[1] if request.form.get("year_range", "") else year_range_query.year_max,
                            certificates=certificates,
                            num_results=format(certificates.total, ",d"))
 
@@ -168,6 +152,13 @@ def view_certificate(certificate_id):
     try:
         # Query for certificate
         certificate = Certificate.query.filter(Certificate.id==certificate_id, Certificate.filename.isnot(None)).one()
+        if certificate.type == "marriage":
+            spouse_certificate = Certificate.query.filter(Certificate.filename == certificate.filename,
+                                                          Certificate.id != certificate.id,
+                                                          Certificate.soundex != certificate.soundex).first()
+            spouse_name = spouse_certificate.name
+        else:
+            spouse_name = ""
 
         # Generate SAS token
         sas_token = generate_blob_sas(account_name=current_app.config['AZURE_STORAGE_ACCOUNT_NAME'],
@@ -190,7 +181,8 @@ def view_certificate(certificate_id):
                            certificate=certificate,
                            certificate_types=certificate_types,
                            counties=counties,
-                           url=url)
+                           url=url,
+                           spouse_name=spouse_name)
 
 
 @blueprint.route("/search", methods=["GET"])
