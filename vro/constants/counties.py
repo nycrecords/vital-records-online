@@ -30,7 +30,7 @@ DROPDOWN = [
 ]
 
 SEARCH_DROPDOWN = [
-    (KINGS, "Kings (Brooklyn"),
+    (KINGS, "Kings (Brooklyn)"),
     (BRONX, "Bronx"),
     (MANHATTAN, "Manhattan"),
     (QUEENS, "Queens"),

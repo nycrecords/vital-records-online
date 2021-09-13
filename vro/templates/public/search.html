@@ -7,8 +7,9 @@
             <div class="col-lg-12">
                 <h2 class="pb-2">Search</h2>
                 <H3>By Certificate Number</h3>
-                <p>Searching by certificate number is the easiest way to find your desired record. Certficate numbers
-                    repeat in each certificate type, year, and borough.</p>
+                <p>If you know the certificate number, this is the fastest way to locate a vital record. Note that
+                    certificate numbering restarts at 0000001 annually for each borough and you must limit by borough
+                    and year to retrieve a unique record.</p>
                 <div class="col-md text-center">
                     <form action="{{ url_for('public.browse_all') }}" method="get" role="form" id="search-by-number-form">
                         <div class="form-horizontal form-div">
@@ -41,28 +42,29 @@
                         </div>
                     </form>
                 </div>
+                <h4>Finding Certificate Numbers</h4>
+                <p>Indexes of the birth, death, and marriage records contain certificate numbers, and can be searched
+                    on:</p>
+                <small>
+                    <ul>
+                        <li><a href="https://www.ancestry.com/cs/newyork">Ancestry</a></li>
+                        <li><a href="https://www.germangenealogygroup.com/">German Genealogy Group</a></li>
+                        <li><a href="https://italiangen.org/">Italian Genealogical Group</a></li>
+                        <li><a href="https://archive.org/details/nycmarriageindex">Internet Archive</a> (marriage
+                            licenses only)
+                        </li>
+                    </ul>
+                </small><br>
                 <hr>
             </div>
             <div class="col-lg pt-2">
                 <h3>By Name</h3>
                 <p>Searching by name is in beta mode, and may not produce accurate results. Marriage licenses are not
-                    yet indexed by name, so no marriage licenses will be returned in name search results.<br>
-                    <small>Search tips:
-                        <ul>
-                            <li>Certificate numbering restarts at one for each borough, every year.</li>
-                            <li>Search by any spelling or pronunciation variations of names.</li>
-                            <li>The year on the certificate represents the date the document was filed with the City
-                                agency, not necessarily the year of the birth, death, or marriage.
-                            </li>
-                            <li>Use a range of years.</li>
-                            <li>Use the mother’s maiden name to narrow searches on birth certificates.</li>
-                            <li>Note: approximately 25% of all births before 1909 were not reported and never issued a
-                                birth certificate.
-                            </li>
-                            <li>Marriage certificates and licenses use the brides maiden name not married name.</li>
-                            <li>The date of birth or age of death is useful in determining the correct individual.</li>
-                        </ul>
-                    </small>
+                    yet indexed by name; marriage licenses will not be returned in name search results.<br>
+                <p>The searchable index used for this site was created by the Long Island Genealogy Federation by
+                    transcribing original indexes (which may have been inaccurately transcribed from original
+                    certificates). Future phases of the <i>Historical Vital Records of NYC</i> project
+                    may include opportunities for crowd-sourcing to improve and correct the index.</p>
                 <div class="col-md text-center">
                     <form action="{{ url_for('public.browse_all') }}" method="get" role="form" id="search-by-name-form">
                         <div class="form-horizontal form-div">
@@ -103,6 +105,26 @@
                     </form>
                 </div>
             </div>
+            <br>
+            <small>Search tips:
+                <ul>
+                    <li>Certificate numbering restarts at 0000001 for each borough*</li>
+                    <li>Try alternate name spellings if necessary</li>
+                    <li>The year on the certificate represents the date the document was filed with the City agency,
+                        not necessarily the year of the birth, death, or marriage event
+                    </li>
+                    <li>Use the mother’s maiden name to narrow searches for birth certificates</li>
+                    <li>Note: approximately 25% of all births before 1909 were not reported to the Health Department
+                        so there will not be a record on file
+                    </li>
+                    <li>Marriage certificates and licenses are indexed by the bride’s maiden name not married name
+                    </li>
+                    <li>The date of birth or age at time of death is useful in identifying the correct individual
+                    </li>
+                    <br>
+                    &nbsp;&nbsp; * One exception: Manhattan records were continuously numbered from 1881-1887
+                </ul>
+            </small>
         </div>
     </div>
 </section>

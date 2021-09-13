@@ -6,8 +6,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <p class="large text-center">The New York City Municipal Archives is undertaking a mass digitization
-                    project to provide online access to our 13.3 million historical birth, death, and marriage
-                    records.</p>
+                    project to provide online access to 13.3 million historical birth, death, and marriage records.</p>
             </div>
         </div>
     </div>
@@ -83,7 +82,7 @@
                             <button id="homepage-search-number" class="btn btn-info">Search</button>
                         </div>
                         <small class="pt-1 text-white">Not sure where to start? Read our <a
-                                href="{{ url_for('public.search') }}">search tips</a> for
+                                href="{{ url_for('public.search') }}">*search tips*</a> for
                             finding vital records.</small>
                     </form>
                     <form action="{{ url_for('public.browse_all') }}" method="get" role="form"
@@ -124,8 +123,8 @@
                         <div class="text-center pt-3 pb-1">
                             <button id="homepage-search-name" class="btn btn-info">Search</button>
                         </div>
-                        <small class="pt-1 text-white">Not sure where to start? Read our <a href="/">search tips</a> for
-                            finding vital records.</small>
+                        <small class="pt-1 text-white">Not sure where to start? Read our <a
+                                href="{{ url_for('public.search') }}">*search tips*</a> for finding vital records.</small>
                     </form>
                 </div>
                 <!-- .col -->
@@ -135,6 +134,24 @@
     <!-- .container -->
 </section>
 <section class="py-5">
+    <div class="container py-2 px-2 bg-light">
+        <div class="row">
+            <div class="col-lg mb-3 mb-lg-0">
+                <h2 class="pb-1">Research Assistance</h2>
+                <p><i>Learn about the collection</i><br>Read the <a href="/">Guide to the Vital Records Collection</a>,
+                    which details the history of vital records-keeping in New York City, the scope of the collections,
+                    and additional resources for research. Still have questions? <a
+                            href="https://www1.nyc.gov/site/records/about/contact-vital-records-center.page">Contact
+                        us.</a></p>
+                <p><i>Still can't find a vital record?</i><br> Fill out the <a href="/">Vital Records Order Form</a>,
+                    and we will conduct a search. If the record is located, we will digitize on demand. If not, we will
+                    provide a certified <i>not found</i> letter.</p>
+            </div>
+        </div>
+    </div>
+    <!-- .container -->
+</section>
+<section class="pt-1 pb-5">
     <div class="container">
         <div class="row">
             <div class="col-lg mb-3 mb-lg-0">
