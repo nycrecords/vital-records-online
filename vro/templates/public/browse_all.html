@@ -6,8 +6,11 @@
         <div class="row matrix-gutter px-2 pb-2 justify-content-between">
             <div class="col-6"><h2>{{ num_results }} Vital Record Results</h2></div>
         </div>
-        <form class="col-lg" action="{{ url_for('public.browse_all_filter') }}" method="post" role="form" id="browse-all-form">
-            {{ form.csrf_token }}
+        <form class="col-lg" action="{{ url_for('public.browse_all') }}" method="get" role="form" id="browse-all-form">
+            {{ form.year() }}
+            {{ form.number() }}
+            {{ form.last_name() }}
+            {{ form.first_name() }}
             {{ form.page() }}
             <div class="section mx-2 mb-2">
                 <div class="row py-1 pt-2">
@@ -33,11 +36,26 @@
                 </div>
                 <div class="row text-center">
                     <div class="col-lg align-self-center">
-                        {{ form.submit_field(class="btn btn-info") }}
+                        <button class="btn btn-info">Update</button>
                     </div>
                 </div>
             </div>
         </form>
+        {% if remove_filters %}
+            <div class="row">
+                <div class="col-lg">
+                    <hr>
+                </div>
+            </div>
+            <div class="row py-2">
+                <div class="col-lg">
+                    <small class="pr-2">Remove Filters:</small>
+                    {% for key, value in remove_filters.items() %}
+                        <span class="border border-light px-2 pt-1 pb-1 small"><b>{{ value }}</b> <a class="remove-filter" href="">&nbsp;X&nbsp;</a></span>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
         <div class="row">
             <div class="col-lg">
                 <hr>
@@ -56,7 +74,7 @@
                 &laquo;
             </a>
 
-            {% for page_num in certificates.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=5) %}
+            {% for page_num in certificates.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=4) %}
 
             {% if page_num %}
             <!-- Check for the active page and set the link to "Active"-->
@@ -109,6 +127,14 @@
         e.preventDefault();
         $("#page").val($(this).text().trim());
         $("#browse-all-form").submit();
+    });
+
+    $(".remove-filter").click(function (e) {
+        e.preventDefault();
+        alert(window.location.href);
+        let url = new URL(window.location.href);
+        let search_params = url.searchParams;
+        alert(search_params)
     });
 </script>
 {% endblock %}

@@ -57,62 +57,44 @@ def browse_all():
 
     :return: Template for the browse all page and a list of certificates to display.
     """
-    year_range = db.session.query(func.max(Certificate.year).label("year_max"),
-                                   func.min(Certificate.year).label("year_min")).one()
-    form = BrowseAllForm()
-    page = request.args.get('page', 1, type=int)
-    certificates = Certificate.query.filter(Certificate.filename.isnot(None)).order_by(Certificate.id.asc()).paginate(
-        page=page, per_page=50)
-    return render_template("public/browse_all.html",
-                           form=form,
-                           year_range_min=year_range.year_min,
-                           year_range_max=year_range.year_max,
-                           year_min_value=year_range.year_min,
-                           year_max_value=year_range.year_max,
-                           certificates=certificates,
-                           num_results=format(certificates.total, ",d"))
-
-
-@blueprint.route("/browse-all", methods=["POST"])
-def browse_all_filter():
-    """
-    This view function handles POST requests for the Browse All page.
-    Based on the data returned from the BrowseAllForm(), the query for certificates will change.
-    The query can be modified based on certificate type, year, and county.
-
-    :return: Template for browse all page and an updated list of certificates based on the filters.
-    """
     year_range_query = db.session.query(func.max(Certificate.year).label("year_max"),
                                    func.min(Certificate.year).label("year_min")).one()
     form = BrowseAllForm()
-    page = request.form.get('page', 1, type=int)
+    page = request.args.get('page', 1, type=int)
 
     filter_by_kwargs = {}
     filter_args = []
+    remove_filters = {}
+
     for name, value, col in [
-        ("type", request.form.get("certificate_type", ""), Certificate.type),
-        ("number", request.form.get("number", ""), Certificate.number),
-        ("county", request.form.get("county", ""), Certificate.county),
-        ("year", request.form.get("year", ""), Certificate.year),
-        ("year_range", request.form.get("year_range", ""), Certificate.year),
-        ("number", request.form.get("number", ""), Certificate.number),
-        ("first_name", request.form.get("first_name", ""), Certificate.first_name),
-        ("last_name", request.form.get("last_name", ""), Certificate.last_name)
+        ("type", request.args.get("certificate_type", ""), Certificate.type),
+        ("number", request.args.get("number", ""), Certificate.number),
+        ("county", request.args.get("county", ""), Certificate.county),
+        ("year", request.args.get("year", ""), Certificate.year),
+        ("year_range", request.args.get("year_range", ""), Certificate.year),
+        ("number", request.args.get("number", ""), Certificate.number),
+        ("first_name", request.args.get("first_name", ""), Certificate.first_name),
+        ("last_name", request.args.get("last_name", ""), Certificate.last_name)
     ]:
         if value:
             if name in ("first_name", "last_name"):
                 filter_args.append(
                     col.ilike(value)
                 )
+                remove_filters[name] = value
             elif name == "year_range":
                 year_range = [int(year) for year in value.split() if year.isdigit()]
                 filter_args.append(
                     col.between(year_range[0], year_range[1])
                 )
+                if year_range[0] != year_range_query.year_min and year_range[1] != year_range_query.year_max:
+                    remove_filters[name] = value
             elif name == "type" and value == 'marriage':
                 filter_args.append(col.in_(['marriage', 'marriage_license']))
+                remove_filters[name] = value
             else:
                 filter_by_kwargs[name] = value
+                remove_filters[name] = value
 
     certificates = Certificate.query.filter_by(**filter_by_kwargs).filter(
         Certificate.filename.isnot(None),
@@ -122,9 +104,13 @@ def browse_all_filter():
         per_page=50
     )
 
-    form.certificate_type.data = request.form.get("certificate_type", "")
-    form.county.data = request.form.get("county", "")
-    form.year_range.data = request.form.get("year_range", "")
+    form.certificate_type.data = request.args.get("certificate_type", "")
+    form.county.data = request.args.get("county", "")
+    form.year_range.data = request.args.get("year_range", "")
+    form.year.data = request.args.get("year", "")
+    form.number.data = request.args.get("number", "")
+    form.last_name.data = request.args.get("last_name", "")
+    form.first_name.data = request.args.get("first_name", "")
 
     if certificates.total == 1:
         return redirect(url_for("public.view_certificate", certificate_id=certificates.items[0].id))
@@ -133,10 +119,11 @@ def browse_all_filter():
                            form=form,
                            year_range_min=year_range_query.year_min,
                            year_range_max=year_range_query.year_max,
-                           year_min_value=year_range[0] if request.form.get("year_range", "") else year_range_query.year_min,
-                           year_max_value=year_range[1] if request.form.get("year_range", "") else year_range_query.year_max,
+                           year_min_value=year_range[0] if request.args.get("year_range", "") else year_range_query.year_min,
+                           year_max_value=year_range[1] if request.args.get("year_range", "") else year_range_query.year_max,
                            certificates=certificates,
-                           num_results=format(certificates.total, ",d"))
+                           num_results=format(certificates.total, ",d"),
+                           remove_filters=remove_filters)
 
 
 @blueprint.route("/view/<certificate_id>", methods=["GET"])

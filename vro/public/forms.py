@@ -22,6 +22,10 @@ class BrowseAllForm(Form):
     certificate_type = SelectField("Certificate Type:", choices=certificate_types.DROPDOWN)
     year_range = StringField("Year Range:")
     county = SelectField("Borough:", choices=counties.DROPDOWN)
+    year = IntegerField(widget=HiddenInput())
+    number = IntegerField(widget=HiddenInput())
+    last_name = StringField(widget=HiddenInput())
+    first_name = StringField(widget=HiddenInput())
     page = IntegerField(widget=HiddenInput())
     submit_field = SubmitField("Update")
 

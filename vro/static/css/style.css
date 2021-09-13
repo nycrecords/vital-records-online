@@ -179,9 +179,12 @@ ul a {
     margin: 2rem 3rem;
 }
 
-#year-range{
+#year-range {
     background-color: #ffffff;
     text-align: center;
+    outline: 0;
+    border-width: 0 0 2px;
+    border-color: #a9a9a9;
 }
 
 .btn-dark {
