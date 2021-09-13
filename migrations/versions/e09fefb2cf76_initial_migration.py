@@ -1,8 +1,8 @@
 """Initial Migration
 
-Revision ID: dafa06748d4e
+Revision ID: e09fefb2cf76
 Revises: 
-Create Date: 2021-06-01 21:56:26.173588
+Create Date: 2021-09-13 20:29:50.966594
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'dafa06748d4e'
+revision = 'e09fefb2cf76'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,9 +21,17 @@ def upgrade():
     op.create_table('certificates',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('type', sa.Enum('death', 'birth', 'marriage_license', 'marriage', name='certificate_type'), nullable=False),
-    sa.Column('county', sa.Enum('richmond', 'queens', 'manhattan', 'kings', 'bronx', name='county'), nullable=False),
+    sa.Column('county', sa.Enum('queens', 'manhattan', 'kings', 'bronx', 'richmond', name='county'), nullable=False),
+    sa.Column('month', sa.String(), nullable=True),
+    sa.Column('day', sa.String(), nullable=True),
     sa.Column('year', sa.Integer(), nullable=True),
     sa.Column('number', sa.String(length=10), nullable=True),
+    sa.Column('first_name', sa.String(length=64), nullable=True),
+    sa.Column('last_name', sa.String(length=64), nullable=True),
+    sa.Column('age', sa.String(length=10), nullable=True),
+    sa.Column('soundex', sa.String(length=4), nullable=True),
+    sa.Column('path_prefix', sa.String(), nullable=True),
+    sa.Column('filename', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
