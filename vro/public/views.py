@@ -25,6 +25,7 @@ from vro.constants import (
 )
 from datetime import datetime, timedelta
 from azure.storage.blob import generate_blob_sas, BlobSasPermissions
+from urllib.parse import urlencode
 
 blueprint = Blueprint("public", __name__, static_folder="../static")
 
@@ -59,12 +60,12 @@ def browse_all():
     """
     year_range_query = db.session.query(func.max(Certificate.year).label("year_max"),
                                    func.min(Certificate.year).label("year_min")).one()
+    default_year_range_value = "{} - {}".format(year_range_query.year_min, year_range_query.year_max)
     form = BrowseAllForm()
     page = request.args.get('page', 1, type=int)
 
     filter_by_kwargs = {}
     filter_args = []
-    remove_filters = {}
 
     for name, value, col in [
         ("type", request.args.get("certificate_type", ""), Certificate.type),
@@ -81,20 +82,15 @@ def browse_all():
                 filter_args.append(
                     col.ilike(value)
                 )
-                remove_filters[name] = value
             elif name == "year_range":
                 year_range = [int(year) for year in value.split() if year.isdigit()]
                 filter_args.append(
                     col.between(year_range[0], year_range[1])
                 )
-                if year_range[0] != year_range_query.year_min and year_range[1] != year_range_query.year_max:
-                    remove_filters[name] = value
             elif name == "type" and value == 'marriage':
                 filter_args.append(col.in_(['marriage', 'marriage_license']))
-                remove_filters[name] = value
             else:
                 filter_by_kwargs[name] = value
-                remove_filters[name] = value
 
     certificates = Certificate.query.filter_by(**filter_by_kwargs).filter(
         Certificate.filename.isnot(None),
@@ -111,6 +107,31 @@ def browse_all():
     form.number.data = request.args.get("number", "")
     form.last_name.data = request.args.get("last_name", "")
     form.first_name.data = request.args.get("first_name", "")
+
+    # Handle filter labels and URLs
+    remove_filters = {}
+    current_args = request.args.to_dict()
+    for key, value in request.args.items():
+        if key != "page" and value:
+            if not (key == "year_range" and value == default_year_range_value):
+                # Handle filter label
+                if key == "certificate_type":
+                    value = certificate_types.CERTIFICATE_TYPE_VALUES.get(value)
+                elif key == "county":
+                    value = counties.COUNTY_VALUES.get(value)
+                elif key == "number":
+                    value = "Certificate Number: {}".format(value)
+                elif key == "first_name":
+                    value = "First Name: {}".format(value)
+                elif key == "last_name":
+                    value = "Last Name: {}".format(value)
+
+                # Handle new URL
+                current_args.pop(key)
+                new_url = "{}?{}".format(request.base_url, urlencode(current_args))
+
+                remove_filters[key] = (value, new_url)
+        current_args = request.args.to_dict()
 
     if certificates.total == 1:
         return redirect(url_for("public.view_certificate", certificate_id=certificates.items[0].id))
@@ -181,22 +202,12 @@ def search():
                            search_by_name_form=search_by_name_form)
 
 
-@blueprint.route("/search", methods=["POST"])
-def search_post():
-    return render_template("public/search.html")
-
-
-@blueprint.route("/digital-vital-records", methods=["GET", "POST"])
+@blueprint.route("/digital-vital-records", methods=["GET"])
 def digital_vital_records():
     return render_template("public/digital_vital_records.html")
 
 
-@blueprint.route("/conducting-research", methods=["GET", "POST"])
-def conducting_research():
-    return render_template("public/conducting_research.html")
-
-
-@blueprint.route("/about/")
+@blueprint.route("/about", methods=["GET"])
 def about():
     """About page."""
     return render_template("public/about.html")

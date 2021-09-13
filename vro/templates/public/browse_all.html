@@ -4,7 +4,11 @@
 <section class="py-3">
     <div class="container">
         <div class="row matrix-gutter px-2 pb-2 justify-content-between">
+            {% if num_results != "0" %}
             <div class="col-6"><h2>{{ num_results }} Vital Record Results</h2></div>
+            {% else %}
+            <div class="col-6"><h2>No Results</h2></div>
+            {% endif %}
         </div>
         <form class="col-lg" action="{{ url_for('public.browse_all') }}" method="get" role="form" id="browse-all-form">
             {{ form.year() }}
@@ -51,7 +55,7 @@
                 <div class="col-lg">
                     <small class="pr-2">Remove Filters:</small>
                     {% for key, value in remove_filters.items() %}
-                        <span class="border border-light px-2 pt-1 pb-1 small"><b>{{ value }}</b> <a class="remove-filter" href="">&nbsp;X&nbsp;</a></span>
+                        <span class="border border-light px-2 pt-1 pb-1 small"><b>{{ value[0] }}</b> <a class="remove-filter" href="{{ value[1] }}">&nbsp;X&nbsp;</a></span>
                     {% endfor %}
                 </div>
             </div>
@@ -61,11 +65,20 @@
                 <hr>
             </div>
         </div>
+        {% if num_results != "0" %}
         <div id="results">
             {% include "public/_browse_all_results.html" %}
         </div>
+        {% else %}
+        <div class="container">
+            <div class="row px-2 py-4">
+                <p class="large">There are no results for your search. Read our <strong><a
+                        href="{{ url_for('public.search') }}">search tips</a></strong>, or try removing filters.</p>
+            </div>
+        </div>
+        {% endif %}
     </div>
-    <!-- .row -->
+    {% if num_results != "0" %}
     <nav aria-label="Browse Results">
         <ul class="pagination justify-content-center">
             <a
@@ -101,7 +114,7 @@
             </a>
         </ul>
     </nav>
-    </div>
+    {% endif %}
     <!-- .container -->
 </section>
 {% endblock %}
@@ -127,14 +140,6 @@
         e.preventDefault();
         $("#page").val($(this).text().trim());
         $("#browse-all-form").submit();
-    });
-
-    $(".remove-filter").click(function (e) {
-        e.preventDefault();
-        alert(window.location.href);
-        let url = new URL(window.location.href);
-        let search_params = url.searchParams;
-        alert(search_params)
     });
 </script>
 {% endblock %}

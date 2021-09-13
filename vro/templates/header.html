@@ -125,36 +125,32 @@
         <div class="wide">
             <nav class="nav nav-pills" role="navigation">
                 <div class="nav-item">
-                    <a class="nav-link" href="{{ url_for('public.browse_all') }}"
+                    <a class="nav-link {% if request.endpoint == 'public.browse_all' %}active{% endif %}"
+                       href="{{ url_for('public.browse_all') }}"
                        aria-haspopup="true" aria-expanded="false" role="button">
                         Browse All
                     </a>
                 </div>
                 <div class="nav-item">
-                    <a class="nav-link" href="{{ url_for('public.search') }}"
+                    <a class="nav-link {% if request.endpoint == 'public.search' %}active{% endif %}"
+                       href="{{ url_for('public.search') }}"
                        aria-haspopup="true" aria-expanded="false" role="button">
                         Search &nbsp;<small><sup><b>beta</b></sup></small>
                     </a>
                 </div>
                 <!-- .nav-item -->
                 <div class="nav-item">
-                    <a class="nav-link" href="{{ url_for('public.digital_vital_records') }}"
+                    <a class="nav-link {% if request.endpoint == 'public.digital_vital_records' %}active{% endif %}"
+                       href="{{ url_for('public.digital_vital_records') }}"
                        aria-haspopup="true" aria-expanded="false" role="button">
                         Digital Vital Records
                     </a>
                 </div>
                 <!-- .nav-item -->
                 <div class="nav-item">
-                    <a class="nav-link" href="{{ url_for('public.conducting_research') }}"
-                       id="nav-item-04"
-                       aria-haspopup="true" aria-expanded="false" role="button">
-                        Conducting Research
-                    </a>
-                </div>
-                <!-- .nav-item -->
-                <div class="nav-item">
-                    <a class="nav-link" href="{{ url_for('public.about') }}" role="button">
-                        About
+                    <a class="nav-link {% if request.endpoint == 'public.about' %}active{% endif %}"
+                       href="{{ url_for('public.about') }}" role="button">
+                    About
                     </a>
                 </div>
                 <!-- .nav-item -->

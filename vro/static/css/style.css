@@ -172,7 +172,7 @@ ul a {
 }
 
 #slider-range .ui-slider-range {
-    background: #a9a9a9;
+    background: #e6ecf7;
 }
 
 #slider-range {
@@ -185,6 +185,11 @@ ul a {
     outline: 0;
     border-width: 0 0 2px;
     border-color: #a9a9a9;
+}
+
+#homepage-year-range {
+    background-color: #d3d3d3;
+    text-align: center;
 }
 
 .btn-dark {

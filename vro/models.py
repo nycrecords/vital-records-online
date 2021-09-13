@@ -99,9 +99,12 @@ class Certificate(PkModel):
 
     @property
     def name(self):
-        return "{} {}".format(self.first_name, self.last_name) \
-            if self.first_name is not None else self.last_name
-
+        if self.first_name is not None:
+            return "{} {}".format(self.first_name, self.last_name)
+        elif self.type == "marriage_license":
+            return "Not Indexed"
+        else:
+            return self.last_name
 
     @property
     def date(self):

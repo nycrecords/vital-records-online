@@ -30,7 +30,7 @@
                     </p>
                     <p><b>Borough</b>:
                         {% if certificate.county == counties.KINGS %}
-                        Brooklyn (Kings)
+                        Kings (Brooklyn)
                         {% elif certificate.county == counties.BRONX %}
                         Bronx
                         {% elif certificate.county == counties.MANHATTAN %}
@@ -38,7 +38,7 @@
                         {% elif certificate.county == counties.QUEENS %}
                         Queens
                         {% elif certificate.county == counties.RICHMOND %}
-                        Staten Island (Richmond)
+                        Richmond (Staten Island)
                         {% endif %}
                     </p>
                     <p><b>Date</b>: {{ certificate.date}}</p>

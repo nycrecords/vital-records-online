@@ -34,7 +34,7 @@
                         <div class="form-div">
                             <br>
                             {{ browse_all_form.year_range.label(class="control-label", for="year_range") }}
-                            {{ browse_all_form.year_range(class="form-control", id="year-range", readonly=true ) }}
+                            {{ browse_all_form.year_range(class="form-control", id="homepage-year-range", readonly=true ) }}
                         </div>
                         <div id="slider-range"></div>
                         <div class="text-center">
@@ -54,7 +54,6 @@
                 <div class="center">
                     <form action="{{ url_for('public.browse_all') }}" method="get" role="form"
                           id="search-by-number-form">
-                        {{ search_by_number_form.csrf_token }}
                         <div class="form-div">
                             <div class="form-group">
                                 {{ search_by_number_form.certificate_type.label(class="control-label",
@@ -77,7 +76,7 @@
                         <div class="form-div">
                             <div class="form-group">
                                 {{ search_by_number_form.year.label(class="control-label", for="year") }}
-                                {{ search_by_number_form.year(class="form-control", maxlength="4") }}
+                                {{ search_by_number_form.year(class="form-control", maxlength="4", type="number") }}
                             </div>
                         </div>
                         <div class="text-center pt-3 pb-1">
@@ -163,10 +162,10 @@
             max: parseInt("{{ year_range_max }}"),
             values: [parseInt("{{ year_range_min }}"), parseInt("{{ year_range_max }}")],
             slide: function (event, ui) {
-                $("#year-range").val(ui.values[0] + " - " + ui.values[1]);
+                $("#homepage-year-range").val(ui.values[0] + " - " + ui.values[1]);
             }
         });
-        $("#year-range").val($("#slider-range").slider("values", 0) +
+        $("#homepage-year-range").val($("#slider-range").slider("values", 0) +
             " - " + $("#slider-range").slider("values", 1));
     });
 </script>
