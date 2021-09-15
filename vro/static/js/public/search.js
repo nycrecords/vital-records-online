@@ -1,3 +1,5 @@
+"use strict";
+
 $(document).ready(function () {
     $("#search-by-name-form").hide();
     $("#form-type-select").change(function () {

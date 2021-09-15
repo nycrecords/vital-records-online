@@ -8,6 +8,7 @@
             <p class="small">{{ certificate.display_string }}<br>{{ certificate.name }}</p>
         </div>
     {% endfor %}
+    <!-- If last batch of certificates is less than 5, add empty columns to create a perfect grid -->
     {% if certificates_batched | length < 5 %}
         {% for col in range(5 - certificates_batched | length) %}
             <div class="col-lg"></div>

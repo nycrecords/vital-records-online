@@ -15,10 +15,16 @@ class Certificate(PkModel):
     Define the Certificate class for the `certificates` table with the following columns:
 
     id          integer, primary key
-    type        certificate_type, type of certificate (e.g. "birth")
     county      county, certificate county (e.g. "queens")
+    type        certificate_type, type of certificate (e.g. "birth")
+    month       varchar, month of certificate
+    day         varchar, day of certificate
     year        integer, year certificate was issued
     number      varchar(10), certificate number
+    first_name  varchar, first name of individual pertaining to the certificate
+    last_name   varchar, last name of individual pertaining to the certificate
+    age         varchar, age of individual pertaining to the certificate
+    soundex     varchar, certificate soundex
     path_prefix varchar, path prefix of file in Azure Storage Container
     filename    varchar, filename of certificate
     """
@@ -37,11 +43,27 @@ class Certificate(PkModel):
     path_prefix = db.Column(db.String)
     filename = db.Column(db.String)
 
-    def __init__(self, type_, county, year, number, path_prefix, filename):
+    def __init__(self,
+                 type_,
+                 county,
+                 month,
+                 day,
+                 year,
+                 number,
+                 first_name,
+                 last_name,
+                 age,
+                 soundex,
+                 path_prefix,
+                 filename):
         self.type = type_
         self.county = county
+        self.month = month
+        self.day = day
         self.year = year
         self.number = number
+        self.first_name = first_name
+        self.last_name = last_name
         self.path_prefix = path_prefix
         self.filename = filename
 
@@ -98,6 +120,12 @@ class Certificate(PkModel):
 
     @property
     def name(self):
+        """
+        A property that generates the full name of the person on the certificate. If the first name if not present,
+        only show the last name. Marriage licenses will show "Not Indexed" due to lack of index data.
+
+        :return: Name of the person associated with the certificate.
+        """
         if self.first_name is not None:
             return "{} {}".format(self.first_name, self.last_name)
         elif self.type == "marriage_license":
@@ -107,6 +135,14 @@ class Certificate(PkModel):
 
     @property
     def date(self):
+        """
+        A property that generates a date string using year, month, and day in the format of YYYY-MM-DD.
+        If day is missing use YYYY-MM.
+        If month is missing use YYYY-00-DD.
+        If month and day are missing use YYYY.
+
+        :return: The date string associated with the certificate.
+        """
         if self.year and self.month and self.day and self.day.isnumeric():
             return "{}-{}-{}".format(self.year, months.MONTHS.get(self.month, ""), self.day.zfill(2))
         elif self.year and self.month:

@@ -16,8 +16,14 @@ class BrowseAllForm(Form):
 
     certificate_type: a select dropdown with the options for all supported certificate types.
                       Marriage Certificates and Marriage Licenses will be treated as the same in this form.
-    year: a integer field with the range of supported years, 1866 - 1949.
+    year_range: a string field for the year range to query by. Format will be always be "<START_YEAR> - <END_YEAR>".
     county: a select dropdown with options for all supported counties.
+    year: an integer field for the exact year being queried by.
+    number: an integer field for the certificate number.
+    last_name: a string field for the last name associated with the certificate.
+    first_name: a string field for the first name associated with the certificate.
+    page: an integer field for the page number of certificate results.
+    submit_field: a submit button for form submission.
     """
     certificate_type = SelectField("Certificate Type:", choices=certificate_types.DROPDOWN)
     year_range = StringField("Year Range:")
@@ -35,6 +41,14 @@ class BrowseAllForm(Form):
 
 class SearchByNumberForm(Form):
     """
+    Form used for search by certificate number on Search page.
+
+    certificate_type: a select dropdown with the options for all supported certificate types.
+                      Marriage Certificates and Marriage Licenses will be treated as the same in this form.
+    year: an integer field for the exact year being queried by.
+    county: a select dropdown with options for all supported counties.
+    number: an integer field for the certificate number.
+    submit_field: a submit button for form submission.
 
     """
     certificate_type = SelectField("Certificate Type:*", choices=certificate_types.SEARCH_DROPDOWN, validators=[DataRequired()])
@@ -49,6 +63,15 @@ class SearchByNumberForm(Form):
 
 class SearchByNameForm(Form):
     """
+    Form used for search by last name on Search page.
+
+    certificate_type: a select dropdown with the options for all supported certificate types.
+                      Marriage Certificates and Marriage Licenses will be treated as the same in this form.
+    last_name: a string field for the last name associated with the certificate.
+    first_name: a string field for the first name associated with the certificate.
+    year: an integer field for the exact year being queried by.
+    county: a select dropdown with options for all supported counties.
+    submit_field: a submit button for form submission.
 
     """
     certificate_type = SelectField("Certificate Type:*", choices=certificate_types.SEARCH_DROPDOWN, validators=[DataRequired()])

@@ -120,7 +120,10 @@
 {% endblock %}
 
 {% block js %}
+<script src="{{ static_url_for('static', filename='js/public/pagination.js') }}"></script>
 <script>
+    "use strict";
+
     $(function () {
         $("#slider-range").slider({
             range: true,
@@ -133,13 +136,6 @@
         });
         $("#year-range").val($("#slider-range").slider("values", 0) +
             " - " + $("#slider-range").slider("values", 1));
-    });
-</script>
-<script>
-    $(".page-btn").click(function (e) {
-        e.preventDefault();
-        $("#page").val($(this).text().trim());
-        $("#browse-all-form").submit();
     });
 </script>
 {% endblock %}

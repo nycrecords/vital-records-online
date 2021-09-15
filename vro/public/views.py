@@ -37,9 +37,11 @@ def index():
 
     :return: Template for the homepage
     """
+    # Initialize forms
     browse_all_form = BrowseAllForm()
     search_by_number_form = SearchByNumberForm()
     search_by_name_form = SearchByNameForm()
+    # Get default year range
     year_range = db.session.query(func.max(Certificate.year).label("year_max"),
                                    func.min(Certificate.year).label("year_min")).one()
     return render_template("public/index.html",
@@ -57,16 +59,21 @@ def browse_all():
     A query is made for the initial page of certificates shown.
 
     :return: Template for the browse all page and a list of certificates to display.
+             Redirect to public.view_certificate if only one certificate is returned.
     """
+    # Get default year range/values
     year_range_query = db.session.query(func.max(Certificate.year).label("year_max"),
                                    func.min(Certificate.year).label("year_min")).one()
     default_year_range_value = "{} - {}".format(year_range_query.year_min, year_range_query.year_max)
+
+
     form = BrowseAllForm()
     page = request.args.get('page', 1, type=int)
 
     filter_by_kwargs = {}
     filter_args = []
 
+    # Set query filters based on form values submitted
     for name, value, col in [
         ("type", request.args.get("certificate_type", ""), Certificate.type),
         ("number", request.args.get("number", ""), Certificate.number),
@@ -78,20 +85,24 @@ def browse_all():
         ("last_name", request.args.get("last_name", ""), Certificate.last_name)
     ]:
         if value:
+            # Use ilike for case insensitive query
             if name in ("first_name", "last_name"):
                 filter_args.append(
                     col.ilike(value)
                 )
+            # Split year_range into two separate values
             elif name == "year_range":
                 year_range = [int(year) for year in value.split() if year.isdigit()]
                 filter_args.append(
                     col.between(year_range[0], year_range[1])
                 )
+            # Marriage certificates and marriage licenses are considered the same record type to the user
             elif name == "type" and value == 'marriage':
                 filter_args.append(col.in_(['marriage', 'marriage_license']))
             else:
                 filter_by_kwargs[name] = value
 
+    # Query based on filters and paginate the results
     certificates = Certificate.query.filter_by(**filter_by_kwargs).filter(
         Certificate.filename.isnot(None),
         *filter_args,
@@ -100,6 +111,7 @@ def browse_all():
         per_page=50
     )
 
+    # Set form data from previous form submissions
     form.certificate_type.data = request.args.get("certificate_type", "")
     form.county.data = request.args.get("county", "")
     form.year_range.data = request.args.get("year_range", "")
@@ -133,6 +145,7 @@ def browse_all():
                 remove_filters[key] = (value, new_url)
         current_args = request.args.to_dict()
 
+    # If only one certificate is returned, go directly to the view certificate page
     if certificates.total == 1:
         return redirect(url_for("public.view_certificate", certificate_id=certificates.items[0].id))
 
@@ -195,6 +208,14 @@ def view_certificate(certificate_id):
 
 @blueprint.route("/search", methods=["GET"])
 def search():
+    """
+    This view function handles GET requests for the search page.
+    The search page handles two search forms, search by number and search by names.
+    Form submissions are redirected to public.browse_all afterwards.
+
+    :return: Template for search page.
+    """
+    # Initialize search forms
     search_by_number_form = SearchByNumberForm()
     search_by_name_form = SearchByNameForm()
     return render_template("public/search.html",
