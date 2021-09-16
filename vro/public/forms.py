@@ -35,8 +35,8 @@ class BrowseAllForm(Form):
     page = IntegerField(widget=HiddenInput())
     submit_field = SubmitField("Update")
 
-    def __init__(self):
-        super(BrowseAllForm, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super(BrowseAllForm, self).__init__(*args, **kwargs)
 
 
 class SearchByNumberForm(Form):
@@ -57,8 +57,8 @@ class SearchByNumberForm(Form):
     number = IntegerField("Certificate Number:*", validators=[NumberRange(1, 9999999), DataRequired()], render_kw={"placeholder": "#######"})
     submit = SubmitField("Search")
 
-    def __init__(self):
-        super(SearchByNumberForm, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super(SearchByNumberForm, self).__init__(*args, **kwargs)
 
 
 class SearchByNameForm(Form):
@@ -81,5 +81,5 @@ class SearchByNameForm(Form):
     county = SelectField("Borough:", choices=counties.SEARCH_DROPDOWN)
     submit = SubmitField("Search")
 
-    def __init__(self):
-        super(SearchByNameForm, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super(SearchByNameForm, self).__init__(*args, **kwargs)

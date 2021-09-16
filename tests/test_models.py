@@ -14,13 +14,35 @@ class TestCertificate:
 
     def test_year_is_nullable(self):
         """Test null year."""
-        certificate = Certificate(type_=certificate_types.BIRTH, county=counties.QUEENS, year=None, number="00100")
+        certificate = Certificate(type_=certificate_types.BIRTH,
+                                  county=counties.QUEENS,
+                                  month="jan",
+                                  day="1",
+                                  year=None,
+                                  number="00100",
+                                  first_name="John",
+                                  last_name="Smith",
+                                  age="50",
+                                  soundex="ABCD",
+                                  path_prefix="REC0051_VitalRecords/Births/Bronx/1900/",
+                                  filename="B-B-1900-0000001.pdf")
         certificate.save()
         assert certificate.year is None
 
     def test_number_is_nullable(self):
         """Test null number."""
-        certificate = Certificate(type_=certificate_types.BIRTH, county=counties.QUEENS, year=1995, number=None)
+        certificate = Certificate(type_=certificate_types.BIRTH,
+                                  county=counties.QUEENS,
+                                  month="jan",
+                                  day="1",
+                                  year=1995,
+                                  number=None,
+                                  first_name="Jane",
+                                  last_name="Doe",
+                                  age="50",
+                                  soundex="ABCD",
+                                  path_prefix="REC0051_VitalRecords/Births/Bronx/1900/",
+                                  filename="B-B-1900-0000001.pdf")
         certificate.save()
         assert certificate.number is None
 

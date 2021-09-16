@@ -64,6 +64,8 @@ class Certificate(PkModel):
         self.number = number
         self.first_name = first_name
         self.last_name = last_name
+        self.age = age
+        self.soundex = soundex
         self.path_prefix = path_prefix
         self.filename = filename
 

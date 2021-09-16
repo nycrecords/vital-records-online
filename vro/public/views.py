@@ -111,6 +111,10 @@ def browse_all():
         per_page=50
     )
 
+    # If only one certificate is returned, go directly to the view certificate page
+    if certificates.total == 1:
+        return redirect(url_for("public.view_certificate", certificate_id=certificates.items[0].id))
+
     # Set form data from previous form submissions
     form.certificate_type.data = request.args.get("certificate_type", "")
     form.county.data = request.args.get("county", "")
@@ -144,10 +148,6 @@ def browse_all():
 
                 remove_filters[key] = (value, new_url)
         current_args = request.args.to_dict()
-
-    # If only one certificate is returned, go directly to the view certificate page
-    if certificates.total == 1:
-        return redirect(url_for("public.view_certificate", certificate_id=certificates.items[0].id))
 
     return render_template("public/browse_all.html",
                            form=form,
