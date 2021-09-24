@@ -92,13 +92,6 @@ ul a {
     display: block;
     text-align: center;
 }
-/*form*/
-/*{*/
-/*    display: inline-block;*/
-/*    margin-left: auto;*/
-/*    margin-right: auto;*/
-/*    text-align: left;*/
-/*}*/
 .accordion-group .card {
   background-color: #fff !important;
 }

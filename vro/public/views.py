@@ -106,7 +106,10 @@ def browse_all():
     certificates = Certificate.query.filter_by(**filter_by_kwargs).filter(
         Certificate.filename.isnot(None),
         *filter_args,
-    ).order_by(Certificate.id.asc()).paginate(
+    ).order_by(Certificate.type.asc(),
+               Certificate.year.asc(),
+               Certificate.last_name.asc(),
+               Certificate.county.asc()).paginate(
         page=page,
         per_page=50
     )
