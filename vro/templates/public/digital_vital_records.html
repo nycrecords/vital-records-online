@@ -1,4 +1,73 @@
 {% extends "base.html" %}
 
 {% block content %}
+<section class="py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Digital Vital Records</h2>
+                <p>Digitization of New York City's historical vital records is an on-going project. The charts below
+                    show full-form certificates in our collection and their digitization status.</p>
+                <p>To purchase a certified copy of a vital record that is not available on this website, please fill out
+                    the <a href="https://www1.nyc.gov/site/records/historical-records/order.page" target="_blank"
+                           rel="noopener noreferrer">Vital Records Order Form</a>. Registers for years prior to 1898 are
+                    viewable via
+                    microfilm in our reference room at 31 Chambers Street, New York, NY. <a
+                            href="https://www1.nyc.gov/site/records/about/hours-and-directions.page" target="_blank"
+                            rel="noopener noreferrer">Schedule your
+                        visit</a>.</p>
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="births" data-toggle="tab" href="#births-tab"
+                           role="tab" aria-controls="births-tab" aria-selected="true">Births</a>
+                        <a class="nav-item nav-link" id="deaths" data-toggle="tab" href="#deaths-tab"
+                           role="tab" aria-controls="deaths-tab" aria-selected="false">Deaths</a>
+                        <a class="nav-item nav-link" id="marriages" data-toggle="tab" href="#marriages-tab"
+                           role="tab" aria-controls="marriages-tab" aria-selected="false"
+                        >Marriages</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="tab-content">
+                    <div class="tab-pane fade show active pt-2" id="births-tab" role="tabpanel"
+                         aria-labelledby="births">
+                        <h3 class="h5 py-1">Digitized Birth Records</h3>
+                        <b>Bronx:</b> 1872-1873, 1898-1909 <b>Kings:</b> 1866-1897 <b>Manhattan:</b> 1866-1897 <b>Queens:</b>
+                        1898-1909 <b>Richmond:</b> 1898-1909 </p>
+                        <img src="{{ static_url_for('static', filename='img/birth-chart.png') }}" width="90%">
+                    </div>
+                    <div class="tab-pane fade pt-2" id="deaths-tab" role="tabpanel" aria-labelledby="deaths">
+                        <h3 class="h5 py-1">Digitized Death Records</h3>
+                        <b>Bronx:</b> 1898-1948 <b>Kings:</b> 1861-1948 <b>Manhattan:</b> 1866-1867, 1920-1923 <b>Queens:</b>
+                        1898-1948 <b>Richmond:</b> 1898-1948 </p>
+                        <img src="{{ static_url_for('static', filename='img/death-chart.png') }}">
+                    </div>
+                    <div class="tab-pane fade pt-2" id="marriages-tab" role="tabpanel" aria-labelledby="marriages">
+                        <h3>Marriage Records</h3>
+                        <p>The New York City Health Department issued marriage certificates through 1907. Beginning in
+                            1908, in compliance with N.Y. State Law, couples planning to marry obtained a license from
+                            the City Clerk. The City Clerk marriage licenses typically include an “affidavit” form
+                            filled out by the couple, the “license” issued by the Clerk, and a “certificate” filled-out
+                            by the person performing the ceremony.</p>
+                        <p>Since the Health Department continued to record marriages until 1937, there are potentially
+                            two separate records of a marriage for the time period from 1908 through 1937—the Health
+                            Department Certificate and the City Clerk License. The recorded information is duplicative,
+                            however, the City Clerk licenses include additional information about the couple’s parents
+                            and occupations.</p>
+                        <p>
+                        <h3 class="h5 py-1">Digitized Marriage Certificates</h3>
+                        <b>Bronx:</b> 1898-1937 <b>Kings:</b> 1866-1937 <b>Manhattan:</b> 1866-1937 <b>Queens:</b>
+                        1898-1937 <b>Richmond:</b> 1898-1937 </p>
+                        <img src="{{ static_url_for('static', filename='img/marriage-chart.png') }}">
+                        <hr>
+                        <h3 class="h5 py-1">Digitized Marriage Licenses</h3>
+                        <b>Kings:</b> 1938-1949 <b>Manhattan:</b> 1908-1910, 1938-1949 <b>Queens:</b> 1938-1947 <b>Richmond:</b>
+                        1908-1947 </p>
+                        <p><img src="{{ static_url_for('static', filename='img/marriage-license-chart.png') }}"
+                                width="75%"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
