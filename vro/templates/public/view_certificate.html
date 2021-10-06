@@ -11,12 +11,19 @@
             </div>
             <div class="col-lg-3 pt-3">
                 <small>
+                    {% if certificate.type not in (certificate_types.MARRIAGE, certificate_types.MARRIAGE_LICENSE) %}
                     <p><b>Name</b>: {{ certificate.name or "" }}</p>
-                    {% if spouse_name %}
-                        <p><b>Spouse</b>: {{ spouse_name }}</p>
-                    {% endif %}
                     <p><b>Soundex</b>: {{ certificate.soundex or "" }}</p>
+                    {% else %}
+                        {% for spouse in certificate.marriage_data.all() %}
+                        <p><b>Name</b>: {{ spouse.name }}
+                            <br>
+                            <b>Soundex</b>: {{ spouse.soundex }}
+                        {% endfor %}
+                    {% endif %}
+                    {% if certificate.type not in (certificate_types.MARRIAGE, certificate_types.MARRIAGE_LICENSE) %}
                     <p><b>Age</b>: {{ certificate.age or "" }}</p>
+                    {% endif %}
                     <p><b>Type</b>:
                         {% if certificate.type == certificate_types.BIRTH %}
                         Birth Certificate

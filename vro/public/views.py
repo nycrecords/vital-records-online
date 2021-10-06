@@ -18,7 +18,10 @@ from vro.public.forms import (
     SearchByNumberForm,
     SearchByNameForm
 )
-from vro.models import Certificate
+from vro.models import (
+    Certificate,
+    MarriageData
+)
 from vro.constants import (
     certificate_types,
     counties
@@ -73,49 +76,85 @@ def browse_all():
     filter_by_kwargs = {}
     filter_args = []
 
-    # Set query filters based on form values submitted
-    for name, value, col in [
-        ("type", request.args.get("certificate_type", ""), Certificate.type),
-        ("number", request.args.get("number", ""), Certificate.number),
-        ("county", request.args.get("county", ""), Certificate.county),
-        ("year", request.args.get("year", ""), Certificate.year),
-        ("year_range", request.args.get("year_range", ""), Certificate.year),
-        ("number", request.args.get("number", ""), Certificate.number),
-        ("first_name", request.args.get("first_name", ""), Certificate.first_name),
-        ("last_name", request.args.get("last_name", ""), Certificate.last_name)
-    ]:
-        if value:
-            # Use ilike for case insensitive query
-            if name in ("first_name", "last_name"):
-                filter_args.append(
-                    col.ilike(value)
-                )
-            # Split year_range into two separate values
-            elif name == "year_range":
-                year_range = [int(year) for year in value.split() if year.isdigit()]
-                filter_args.append(
-                    col.between(year_range[0], year_range[1])
-                )
-            # Marriage certificates and marriage licenses are considered the same record type to the user
-            elif name == "type" and value == 'marriage':
-                filter_args.append(col.in_(['marriage', 'marriage_license']))
-            else:
-                filter_by_kwargs[name] = value
+    search_by_last_name = request.args.get("last_name", None)
+    certificate_type = request.args.get("certificate_type", "")
 
-    # Query based on filters and paginate the results
-    certificates = Certificate.query.filter_by(**filter_by_kwargs).filter(
-        Certificate.filename.isnot(None),
-        *filter_args,
-    ).order_by(Certificate.type.asc(),
-               Certificate.year.asc(),
-               Certificate.last_name.asc(),
-               Certificate.county.asc()).paginate(
+    # Set query filters based on form values submitted
+    if search_by_last_name and certificate_type in ("marriage", "marriage_license"):
+        for name, value, col in [
+            ("type", request.args.get("certificate_type", ""), Certificate.type),
+            ("number", request.args.get("number", ""), Certificate.number),
+            ("county", request.args.get("county", ""), Certificate.county),
+            ("year", request.args.get("year", ""), Certificate.year),
+            ("year_range", request.args.get("year_range", ""), Certificate.year),
+            ("number", request.args.get("number", ""), Certificate.number),
+            ("first_name", request.args.get("first_name", ""), MarriageData.first_name),
+            ("last_name", request.args.get("last_name", ""), MarriageData.last_name)
+        ]:
+            if value:
+                # Use ilike for case insensitive query
+                if name in ("first_name", "last_name"):
+                    filter_args.append(
+                        col.ilike(value)
+                    )
+                # Split year_range into two separate values
+                elif name == "year_range":
+                    year_range = [int(year) for year in value.split() if year.isdigit()]
+                    filter_args.append(
+                        col.between(year_range[0], year_range[1])
+                    )
+                # Marriage certificates and marriage licenses are considered the same record type to the user
+                elif name == "type" and value == 'marriage':
+                    filter_args.append(col.in_(['marriage', 'marriage_license']))
+                else:
+                    filter_args.append(col == value)
+        base_query = Certificate.query.distinct().join(MarriageData).filter(
+            Certificate.filename.isnot(None),
+            *filter_args,
+        )
+    else:
+        for name, value, col in [
+            ("type", request.args.get("certificate_type", ""), Certificate.type),
+            ("number", request.args.get("number", ""), Certificate.number),
+            ("county", request.args.get("county", ""), Certificate.county),
+            ("year", request.args.get("year", ""), Certificate.year),
+            ("year_range", request.args.get("year_range", ""), Certificate.year),
+            ("number", request.args.get("number", ""), Certificate.number),
+            ("first_name", request.args.get("first_name", ""), Certificate.first_name),
+            ("last_name", request.args.get("last_name", ""), Certificate.last_name)
+        ]:
+            if value:
+                # Use ilike for case insensitive query
+                if name in ("first_name", "last_name"):
+                    filter_args.append(
+                        col.ilike(value)
+                    )
+                # Split year_range into two separate values
+                elif name == "year_range":
+                    year_range = [int(year) for year in value.split() if year.isdigit()]
+                    filter_args.append(
+                        col.between(year_range[0], year_range[1])
+                    )
+                # Marriage certificates and marriage licenses are considered the same record type to the user
+                elif name == "type" and value == 'marriage':
+                    filter_args.append(col.in_(['marriage', 'marriage_license']))
+                else:
+                    filter_by_kwargs[name] = value
+        base_query = Certificate.query.filter_by(**filter_by_kwargs).filter(
+            Certificate.filename.isnot(None),
+            *filter_args,
+        )
+    certificates = base_query.order_by(Certificate.type.asc(),
+                                       Certificate.year.asc(),
+                                       Certificate.last_name.asc(),
+                                       Certificate.county.asc()).limit(5000).from_self().paginate(
         page=page,
         per_page=50
     )
+    num_results = base_query.count()
 
     # If only one certificate is returned, go directly to the view certificate page
-    if certificates.total == 1:
+    if num_results == 1:
         return redirect(url_for("public.view_certificate", certificate_id=certificates.items[0].id))
 
     # Set form data from previous form submissions
@@ -159,7 +198,7 @@ def browse_all():
                            year_min_value=year_range[0] if request.args.get("year_range", "") else year_range_query.year_min,
                            year_max_value=year_range[1] if request.args.get("year_range", "") else year_range_query.year_max,
                            certificates=certificates,
-                           num_results=format(certificates.total, ",d"),
+                           num_results=format(num_results, ",d"),
                            remove_filters=remove_filters)
 
 
@@ -176,13 +215,6 @@ def view_certificate(certificate_id):
     try:
         # Query for certificate
         certificate = Certificate.query.filter(Certificate.id==certificate_id, Certificate.filename.isnot(None)).one()
-        if certificate.type == "marriage":
-            spouse_certificate = Certificate.query.filter(Certificate.filename == certificate.filename,
-                                                          Certificate.id != certificate.id,
-                                                          Certificate.soundex != certificate.soundex).first()
-            spouse_name = spouse_certificate.name
-        else:
-            spouse_name = ""
 
         # Generate SAS token
         sas_token = generate_blob_sas(account_name=current_app.config['AZURE_STORAGE_ACCOUNT_NAME'],
@@ -205,8 +237,7 @@ def view_certificate(certificate_id):
                            certificate=certificate,
                            certificate_types=certificate_types,
                            counties=counties,
-                           url=url,
-                           spouse_name=spouse_name)
+                           url=url)
 
 
 @blueprint.route("/search", methods=["GET"])

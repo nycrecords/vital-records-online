@@ -42,6 +42,7 @@ class Certificate(PkModel):
     soundex = db.Column(db.String(4))
     path_prefix = db.Column(db.String)
     filename = db.Column(db.String)
+    marriage_data = db.relationship("MarriageData", backref=db.backref("certificate", uselist=False), lazy="dynamic")
 
     def __init__(self,
                  type_,
@@ -152,3 +153,23 @@ class Certificate(PkModel):
         elif self.year and self.day and self.day.isnumeric():
             return "{}-00-{}".format(self.year, self.day.zfill(2))
         else: return self.year
+
+    @property
+    def get_marriage_data(self):
+        return self.marriage_data.all()
+
+
+class MarriageData(PkModel):
+    __tablename__ = "marriage_data"
+    certificate_id = db.Column(db.Integer, db.ForeignKey("certificates.id"), nullable=False)
+    filename = db.Column(db.String)
+    first_name = db.Column(db.String(64))
+    last_name = db.Column(db.String(64))
+    soundex = db.Column(db.String(4))
+
+    @property
+    def name(self):
+        if self.first_name is not None:
+            return "{} {}".format(self.first_name, self.last_name)
+        else:
+            return self.last_name
