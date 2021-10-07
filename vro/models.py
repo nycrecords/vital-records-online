@@ -154,14 +154,6 @@ class Certificate(PkModel):
             return "{}-00-{}".format(self.year, self.day.zfill(2))
         else: return self.year
 
-    @property
-    def get_marriage_data(self):
-        """
-        Get a certificate's related marriage data rows
-        :return: A list of related MarriageData objects
-        """
-        return self.marriage_data.all()
-
 
 class MarriageData(PkModel):
     """

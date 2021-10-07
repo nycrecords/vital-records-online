@@ -18,7 +18,7 @@
                         {% for spouse in certificate.marriage_data.all() %}
                         <p><b>Name</b>: {{ spouse.name }}
                             <br>
-                            <b>Soundex</b>: {{ spouse.soundex }}
+                            <b>Soundex</b>: {{ spouse.soundex }}</p>
                         {% endfor %}
                     {% endif %}
                     {% if certificate.type not in (certificate_types.MARRIAGE, certificate_types.MARRIAGE_LICENSE) %}
