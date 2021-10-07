@@ -1,12 +1,14 @@
+"use strict";
+
 $(document).ready(function () {
-    headers = [];    
+    let headers = [];
     $('table.table-stack-on-mobile').each(function (i) {
         headers[i] = [];        
-        currentslot = 0; 
+        let currentslot = 0;
         $(this).find('thead tr').each(function (k) {
             if (k < 1) {
                 $(this).find('> *').each(function (l) {
-                    thisth = $(this).text();
+                    let thisth = $(this).text();
                     var colspanattr = $(this).attr('colspan');
                     if (typeof colspanattr !== typeof undefined && colspanattr !== false) {
                         for (m = 0; m < colspanattr; m++) {
@@ -18,7 +20,7 @@ $(document).ready(function () {
                 });
             } else {
                 $(this).find('> *').each(function (l) {
-                    thisth = $(this).text();
+                    let thisth = $(this).text();
                     var colspanattr = $(this).attr('colspan');
                     if (typeof colspanattr !== typeof undefined && colspanattr !== false) {
                         for (m = 0; m < colspanattr; m++) {

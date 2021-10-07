@@ -9,45 +9,59 @@
                 <h1 class="h3">{{ certificate.display_string}}</h1>
                 <div id="pdf-viewer"></div>
             </div>
-            <div class="col-lg-3 pt-2">
-                <br>
-                <p><b>Type</b>:
-                    {% if certificate.type == certificate_types.BIRTH %}
+            <div class="col-lg-3 pt-3">
+                <small>
+                    {% if certificate.type not in (certificate_types.MARRIAGE, certificate_types.MARRIAGE_LICENSE) %}
+                    <p><b>Name</b>: {{ certificate.name or "" }}</p>
+                    <p><b>Soundex</b>: {{ certificate.soundex or "" }}</p>
+                    {% else %}
+                        {% for spouse in certificate.marriage_data.all() %}
+                        <p><b>Name</b>: {{ spouse.name }}
+                            <br>
+                            <b>Soundex</b>: {{ spouse.soundex }}</p>
+                        {% endfor %}
+                    {% endif %}
+                    {% if certificate.type not in (certificate_types.MARRIAGE, certificate_types.MARRIAGE_LICENSE) %}
+                    <p><b>Age</b>: {{ certificate.age or "" }}</p>
+                    {% endif %}
+                    <p><b>Type</b>:
+                        {% if certificate.type == certificate_types.BIRTH %}
                         Birth Certificate
-                    {% elif certificate.type == certificate_types.DEATH %}
+                        {% elif certificate.type == certificate_types.DEATH %}
                         Death Certificate
-                    {% elif certificate.type == certificate_types.MARRIAGE %}
+                        {% elif certificate.type == certificate_types.MARRIAGE %}
                         Marriage Certificate
-                    {% elif certificate.type == certificate_types.MARRIAGE_LICENSE %}
+                        {% elif certificate.type == certificate_types.MARRIAGE_LICENSE %}
                         Marriage License
-                    {% endif %}
-                </p>
-                <p><b>Borough</b>:
-                    {% if certificate.county == counties.KINGS %}
-                        Brooklyn (Kings)
-                    {% elif certificate.county == counties.BRONX %}
+                        {% endif %}
+                    </p>
+                    <p><b>Borough</b>:
+                        {% if certificate.county == counties.KINGS %}
+                        Kings (Brooklyn)
+                        {% elif certificate.county == counties.BRONX %}
                         Bronx
-                    {% elif certificate.county == counties.MANHATTAN %}
+                        {% elif certificate.county == counties.MANHATTAN %}
                         Manhattan
-                    {% elif certificate.county == counties.QUEENS %}
+                        {% elif certificate.county == counties.QUEENS %}
                         Queens
-                    {% elif certificate.county == counties.RICHMOND %}
-                        Staten Island (Richmond)
+                        {% elif certificate.county == counties.RICHMOND %}
+                        Richmond (Staten Island)
+                        {% endif %}
+                    </p>
+                    <p><b>Date</b>: {{ certificate.date}}</p>
+                    <p><b>Certificate</b>: {{ certificate.certificate_number_string }}</p>
+                    {% if certificate.type == certificate_types.BIRTH %}
+                    <a href="https://www1.nyc.gov/doittshoppingcart/birthCertificate.htm" class="btn btn-info mt-3"
+                       target="_blank" rel="noopener noreferrer">Purchase Certified Copy</a>
+                    {% elif certificate.type == certificate_types.DEATH %}
+                    <a href="https://www1.nyc.gov/doittshoppingcart/deathCertificate.htm" class="btn btn-info mt-3"
+                       target="_blank" rel="noopener noreferrer">Purchase Certified Copy</a>
+                    {% elif certificate.type == certificate_types.MARRIAGE or certificate.type ==
+                    certificate_types.MARRIAGE_LICENSE %}
+                    <a href="https://www1.nyc.gov/doittshoppingcart/marriageCertificate.htm" class="btn btn-info mt-3"
+                       target="_blank" rel="noopener noreferrer">Purchase Certified Copy</a>
                     {% endif %}
-                </p>
-                <p><b>Year</b>: {{ certificate.year }} </p>
-                <p><b>Certificate</b>: {{ certificate.certificate_number_string }} </p>
-                {% if certificate.type == certificate_types.BIRTH %}
-                <a href="https://www1.nyc.gov/doittshoppingcart/birthCertificate.htm" class="btn btn-primary mt-3"
-                   target="_blank" rel="noopener noreferrer">Purchase Certified Copy</a>
-                {% elif certificate.type == certificate_types.DEATH %}
-                <a href="https://www1.nyc.gov/doittshoppingcart/deathCertificate.htm" class="btn btn-primary mt-3"
-                   target="_blank" rel="noopener noreferrer">Purchase Certified Copy</a>
-                {% elif certificate.type == certificate_types.MARRIAGE or certificate.type ==
-                certificate_types.MARRIAGE_LICENSE %}
-                <a href="https://www1.nyc.gov/doittshoppingcart/marriageCertificate.htm" class="btn btn-primary mt-3"
-                   target="_blank" rel="noopener noreferrer">Purchase Certified Copy</a>
-                {% endif %}
+                </small>
             </div>
         </div>
     </div>

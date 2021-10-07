@@ -1,13 +1,28 @@
-{% for certificates_batched in certificates | batch(5) %}
+{% for certificates_batched in certificates.items | batch(5) %}
     <div class="row px-2 py-2">
     {% for certificate in certificates_batched %}
         <div class="col-lg">
             <a href="{{ url_for('public.view_certificate', certificate_id=certificate.id) }}">
                 <img src="{{ certificate.thumbnail }}">
             </a>
-            <p class="small">{{ certificate.display_string }}</p>
+            <p class="small">{{ certificate.display_string }}<br>
+                {% if certificate.type == "marriage" %}
+                    {% for spouse in certificate.marriage_data.all() %}
+                        {{ spouse.name }}
+                        <br>
+                    {% endfor %}
+                {% else %}
+                    {{ certificate.name or "" }}
+                {% endif %}
+            </p>
         </div>
     {% endfor %}
+    <!-- If last batch of certificates is less than 5, add empty columns to create a perfect grid -->
+    {% if certificates_batched | length < 5 %}
+        {% for col in range(5 - certificates_batched | length) %}
+            <div class="col-lg"></div>
+        {% endfor %}
+    {% endif %}
     </div>
     <br>
 {% endfor %}

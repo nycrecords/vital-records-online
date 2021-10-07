@@ -4,71 +4,139 @@
 <section class="py-3">
     <div class="container">
         <div class="row matrix-gutter px-2 pb-2 justify-content-between">
+            {% if num_results != "0" %}
             <div class="col-6"><h2>{{ num_results }} Vital Record Results</h2></div>
+            {% else %}
+            <div class="col-6"><h2>No Results</h2></div>
+            {% endif %}
         </div>
-        <form class="col-lg">
-            {{ form.csrf_token }}
+        <form class="col-lg" action="{{ url_for('public.browse_all') }}" method="get" role="form" id="browse-all-form">
+            {{ form.year() }}
+            {{ form.number() }}
+            {{ form.last_name() }}
+            {{ form.first_name() }}
+            {{ form.page() }}
             <div class="section mx-2 mb-2">
-                <div class="row py-1 pr-3 pt-2">
-                    <div class="col-md-3">
+                <div class="row py-1 pt-2">
+                    <div class="col-md center">
                         <div class="form-group">
                             {{ form.certificate_type.label(class="control-label", for="certificate_type") }}
-                            {{ form.certificate_type(class="form-control browse-all-select") }}
+                            {{ form.certificate_type(class="form-control browse-all-select mx-auto") }}
                         </div>
                     </div>
-                    <div class="col-md-6 mx-2">
-                        <div class="pt-1 text-center">
-                            <label>Year range:</label><br><small><b>1866</b></small>
-                            {{ form.year(class="span2 browse-all-year", type="number", min="1866", max="1949") }}
-                            <small><b>1949</b></small>
+                    <div class="col-md center">
+                        <div class="form-group">
+                            {{ form.year_range.label(class="control-label", for="year_range") }}
+                            {{ form.year_range(class="form-control browse-all-year-range mx-auto", id="year-range", readonly=true ) }}
                         </div>
+                        <div id="slider-range"></div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md center">
                         <div class="form-group">
                             {{ form.county.label(class="control-label", for="county") }}
-                            {{ form.county(class="form-control browse-all-select") }}
+                            {{ form.county(class="form-control browse-all-select mx-auto") }}
                         </div>
                     </div>
                 </div>
                 <div class="row text-center">
                     <div class="col-lg align-self-center">
-                        {{ form.submit(class="btn btn-primary") }}
+                        <button class="btn btn-info">Update</button>
                     </div>
                 </div>
             </div>
         </form>
+        {% if remove_filters %}
+            <div class="row">
+                <div class="col-lg">
+                    <hr>
+                </div>
+            </div>
+            <div class="row py-2">
+                <div class="col-lg">
+                    <small class="pr-2">Remove Filters:</small>
+                    {% for key, value in remove_filters.items() %}
+                        <span class="border border-light px-2 pt-1 pb-1 small"><b>{{ value[0] }}</b> <a class="remove-filter" href="{{ value[1] }}">&nbsp;X&nbsp;</a></span>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
         <div class="row">
             <div class="col-lg">
                 <hr>
             </div>
         </div>
+        {% if num_results != "0" %}
         <div id="results">
             {% include "public/_browse_all_results.html" %}
         </div>
+        {% else %}
+        <div class="container">
+            <div class="row px-2 py-4">
+                <p class="large">There are no results for your search. Read our <a
+                        href="{{ url_for('public.search') }}">search tips</a>, or try removing filters.</p>
+            </div>
+        </div>
+        {% endif %}
     </div>
-    <!-- .row -->
+    {% if num_results != "0" %}
     <nav aria-label="Browse Results">
         <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
-                </a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">4</a></li>
-            <li class="page-item"><a class="page-link" href="#">5</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </li>
+            <a
+               class="btn btn-outline-dark page-btn
+       {% if certificates.page == 1 %}disabled{% endif %}">
+                &laquo;
+            </a>
+
+            {% for page_num in certificates.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=4) %}
+
+            {% if page_num %}
+            <!-- Check for the active page and set the link to "Active"-->
+            {% if certificates.page == page_num %}
+            <a
+               class="btn btn-dark page-btn">
+                {{ page_num }}
+            </a>
+            {% else %}
+            <a
+               class="btn btn-outline-dark page-btn">
+                {{ page_num }}
+            </a>
+            {% endif %}
+            {% else %}
+            ...
+            {% endif %}
+            {% endfor %}
+
+            <a
+               class="btn btn-outline-dark page-btn
+       {% if certificates.page == certificates.pages %}disabled{% endif %}">
+                &raquo;
+            </a>
         </ul>
     </nav>
-    </div>
+    <p class="center pt-2">Only the first 100 pages of results will display. Use filters to find relevant records.</p>
+    {% endif %}
     <!-- .container -->
 </section>
+{% endblock %}
+
+{% block js %}
+<script src="{{ static_url_for('static', filename='js/public/pagination.js') }}"></script>
+<script>
+    "use strict";
+
+    $(function () {
+        $("#slider-range").slider({
+            range: true,
+            min: parseInt("{{ year_range_min }}"),
+            max: parseInt("{{ year_range_max }}"),
+            values: ["{{ year_min_value }}", "{{ year_max_value }}"],
+            slide: function (event, ui) {
+                $("#year-range").val(ui.values[0] + " - " + ui.values[1]);
+            }
+        });
+        $("#year-range").val($("#slider-range").slider("values", 0) +
+            " - " + $("#slider-range").slider("values", 1));
+    });
+</script>
 {% endblock %}

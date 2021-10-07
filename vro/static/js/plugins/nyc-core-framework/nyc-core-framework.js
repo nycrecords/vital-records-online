@@ -1,3 +1,5 @@
+"use strict";
+
 $(document).ready(function () {
 
     ////////////////////////////////////////
@@ -21,7 +23,7 @@ $(document).ready(function () {
     var config = {
         attributes: true,
         attributeFilter: ['class']
-    }
+    };
     
     observer.observe(target, config);
 

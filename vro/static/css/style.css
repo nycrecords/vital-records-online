@@ -20,6 +20,7 @@ h1 a:hover {
 }
  a {
   color: #181A7B;
+  font-weight: 600;
 }
 
 ol.breadcrumb {
@@ -91,13 +92,6 @@ ul a {
     display: block;
     text-align: center;
 }
-form
-{
-    display: inline-block;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: left;
-}
 .accordion-group .card {
   background-color: #fff !important;
 }
@@ -143,4 +137,59 @@ form
     height: 70rem;
     width: 100%;
     border: 1rem solid rgba(0, 0, 0, .1);
+}
+
+.browsesearch {
+  background: url("/static/img/certificate-background.jpg") no-repeat center center fixed;
+  background-blend-mode: multiply;
+}
+
+.browsesearch small a {
+  color: #e6ecf7;
+  font-weight: 600;
+}
+
+.browsesearch label {
+  color: white;
+  font-weight: 600;
+}
+
+.form-select {
+  max-width: 200px !important;
+}
+
+.form-div {
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+#slider-range .ui-slider-range {
+    background: #e6ecf7;
+}
+
+#slider-range {
+    margin: 2rem 3rem;
+}
+
+#year-range {
+    background-color: #ffffff;
+    text-align: center;
+    outline: 0;
+    border-width: 0 0 2px;
+    border-color: #a9a9a9;
+}
+
+#homepage-year-range {
+    background-color: #d3d3d3;
+    text-align: center;
+}
+
+.btn-dark {
+    color: white !important;
+}
+
+.btn-outline-dark:hover {
+    color: white !important;
 }

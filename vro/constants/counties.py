@@ -12,13 +12,29 @@ COUNTIES = {
     RICHMOND: "R"
 }
 
+COUNTY_VALUES = {
+    KINGS: "Kings (Brooklyn)",
+    QUEENS: "Queens",
+    BRONX: "Bronx",
+    MANHATTAN: "Manhattan",
+    RICHMOND: "Richmond"
+}
+
 DROPDOWN = [
     ("", "ALL"),
-    (KINGS, "Brooklyn (Kings)"),
+    (KINGS, "Kings (Brooklyn)"),
     (BRONX, "Bronx"),
     (MANHATTAN, "Manhattan"),
     (QUEENS, "Queens"),
-    (RICHMOND, "Staten Island (Richmond)")
+    (RICHMOND, "Richmond (Staten Island)")
 ]
 
-ALL = frozenset((KINGS, QUEENS, BRONX, MANHATTAN, RICHMOND))
+SEARCH_DROPDOWN = [
+    (KINGS, "Kings (Brooklyn)"),
+    (BRONX, "Bronx"),
+    (MANHATTAN, "Manhattan"),
+    (QUEENS, "Queens"),
+    (RICHMOND, "Richmond (Staten Island)")
+]
+
+ALL = frozenset((BRONX, KINGS, MANHATTAN, QUEENS, RICHMOND))

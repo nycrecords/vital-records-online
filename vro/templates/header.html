@@ -6,7 +6,7 @@
             <div class="row py-1 align-items-center justify-content-between">
                 <div class="col-auto">
                     <p class="d-none d-md-flex fs-md">
-                        <a class="text-reset" href="https://www1.nyc.gov/">
+                        <a class="text-reset" href="https://www1.nyc.gov/" target="_blank" rel="noopener noreferrer">
                             <strong>nyc.gov</strong>
                         </a>
                         <span class="mx-1" aria-hidden="true">|</span>
@@ -103,21 +103,6 @@
             <div id="google_translate_element"></div>
         </div>
     </div>
-    <div class="container-fluid border-top collapse" id="global-search">
-        <form class="narrow py-2" aria-label="Search" role="search">
-            <div class="input-group">
-                <label class="sr-only" for="global-search-bar">Search</label>
-                <input class="form-control form-control-lg" id="global-search-bar" placeholder="Search by keyword">
-                <div class="input-group-btn">
-                    <button class="btn btn-primary btn-lg" type="button" title="Search">
-                        <span class="sr-only">Search</span>
-                        <span class="fas fa-arrow-right" role="img"></span>
-                    </button>
-                    <span style="padding-left:5px;"><small><a href="/nyc-core-framework/aspace-advanced-search.html"> advanced search</a></small></span>
-                </div>
-            </div>
-        </form>
-    </div>
     <div class="container-fluid collapse d-lg-block px-0 border-lg-top border-lg-bottom" id="nav-primary">
         <h2 class="sr-only">
             Primary Navigation
@@ -125,37 +110,32 @@
         <div class="wide">
             <nav class="nav nav-pills" role="navigation">
                 <div class="nav-item">
-                    <a class="nav-link" href="{{ url_for('public.browse_all') }}" id="nav-item-01"
+                    <a class="nav-link {% if request.endpoint == 'public.browse_all' %}active{% endif %}"
+                       href="{{ url_for('public.browse_all') }}"
                        aria-haspopup="true" aria-expanded="false" role="button">
                         Browse All
                     </a>
                 </div>
-                <!-- .nav-item -->
                 <div class="nav-item">
-                    <a class="nav-link" href="{{ url_for('public.archives_holdings') }}" id="nav-item-02"
-                       aria-haspopup="true" aria-expanded="false" role="button">
-                        Archives Holdings
-                    </a>
-                </div>
-                <!-- .nav-item -->
-                <div class="nav-item">
-                    <a class="nav-link" href="{{ url_for('public.search') }}" id="nav-item-03"
+                    <a class="nav-link {% if request.endpoint == 'public.search' %}active{% endif %}"
+                       href="{{ url_for('public.search') }}"
                        aria-haspopup="true" aria-expanded="false" role="button">
                         Search &nbsp;<small><sup><b>beta</b></sup></small>
                     </a>
                 </div>
                 <!-- .nav-item -->
                 <div class="nav-item">
-                    <a class="nav-link" href="{{ url_for('public.genealogical_research') }}"
-                       id="nav-item-04"
+                    <a class="nav-link {% if request.endpoint == 'public.digital_vital_records' %}active{% endif %}"
+                       href="{{ url_for('public.digital_vital_records') }}"
                        aria-haspopup="true" aria-expanded="false" role="button">
-                        Genealogical Research
+                        Digital Vital Records
                     </a>
                 </div>
                 <!-- .nav-item -->
                 <div class="nav-item">
-                    <a class="nav-link" href="{{ url_for('public.about') }}" role="button">
-                        About
+                    <a class="nav-link {% if request.endpoint == 'public.about' %}active{% endif %}"
+                       href="{{ url_for('public.about') }}" role="button">
+                    About
                     </a>
                 </div>
                 <!-- .nav-item -->
