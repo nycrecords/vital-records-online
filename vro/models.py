@@ -42,6 +42,7 @@ class Certificate(PkModel):
     soundex = db.Column(db.String(4))
     path_prefix = db.Column(db.String)
     filename = db.Column(db.String)
+    marriage_data = db.relationship("MarriageData", backref=db.backref("certificate", uselist=False), lazy="dynamic")
 
     def __init__(self,
                  type_,
@@ -152,3 +153,34 @@ class Certificate(PkModel):
         elif self.year and self.day and self.day.isnumeric():
             return "{}-00-{}".format(self.year, self.day.zfill(2))
         else: return self.year
+
+
+class MarriageData(PkModel):
+    """
+    Define the MarriageData class for the `marriage_data` table with the following columns:
+
+    id              integer, primary key
+    certificate_id  integer, foreign key to the certificates table
+    first_name      varchar, first name of individual pertaining to the certificate
+    last_name       varchar, last name of individual pertaining to the certificate
+    soundex         varchar, certificate soundex
+    """
+    __tablename__ = "marriage_data"
+    certificate_id = db.Column(db.Integer, db.ForeignKey("certificates.id"), nullable=False)
+    filename = db.Column(db.String)
+    first_name = db.Column(db.String(64))
+    last_name = db.Column(db.String(64))
+    soundex = db.Column(db.String(4))
+
+    @property
+    def name(self):
+        """
+        A property that generates the full name of the person on the certificate. If the first name if not present,
+        only show the last name.
+
+        :return: Name of the person associated with the certificate.
+        """
+        if self.first_name is not None:
+            return "{} {}".format(self.first_name, self.last_name)
+        else:
+            return self.last_name

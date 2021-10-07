@@ -37,4 +37,4 @@ SEARCH_DROPDOWN = [
     (RICHMOND, "Richmond (Staten Island)")
 ]
 
-ALL = frozenset((KINGS, QUEENS, BRONX, MANHATTAN, RICHMOND))
+ALL = frozenset((BRONX, KINGS, MANHATTAN, QUEENS, RICHMOND))
