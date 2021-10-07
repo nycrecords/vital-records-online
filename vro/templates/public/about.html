@@ -42,8 +42,10 @@
             <div class="col-lg mb-3 mb-lg-0">
                 <h3 class="pb-1">Digitization Progress</h3>
                 <div class="progress bg-light">
-                    <div class="progress-bar bg-primary text-white" role="progressbar" style="width: 70%;"
-                         aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"><b>&nbsp; 70% (9,400,694 of 13.3
+                    <div class="progress-bar bg-primary text-white" role="progressbar"
+                         style="width: {{ digitization_percentage }}%;"
+                         aria-valuenow="{{ digitization_percentage }}" aria-valuemin="0" aria-valuemax="100"><b>&nbsp;
+                        {{ digitization_percentage }}% ({{ digitized }} of 13.3
                         million records)</b></div>
                 </div>
             </div>
