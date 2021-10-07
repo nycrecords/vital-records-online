@@ -265,6 +265,9 @@ def search():
 
 @blueprint.route("/digital-vital-records", methods=["GET"])
 def digital_vital_records():
+    """
+    Digital Vital Records page
+    """
     return render_template("public/digital_vital_records.html")
 
 
