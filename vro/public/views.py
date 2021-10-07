@@ -47,12 +47,17 @@ def index():
     # Get default year range
     year_range = db.session.query(func.max(Certificate.year).label("year_max"),
                                    func.min(Certificate.year).label("year_min")).one()
+    # Calculate digitization progress
+    digitized = Certificate.query.filter(Certificate.filename.isnot(None)).count()
+    digitization_percentage = round(digitized / 13300000 * 100)
     return render_template("public/index.html",
                            browse_all_form=browse_all_form,
                            search_by_number_form=search_by_number_form,
                            search_by_name_form=search_by_name_form,
                            year_range_min=year_range.year_min,
-                           year_range_max=year_range.year_max)
+                           year_range_max=year_range.year_max,
+                           digitized=format(digitized, ",d"),
+                           digitization_percentage=digitization_percentage)
 
 
 @blueprint.route("/browse-all", methods=["GET"])
@@ -72,12 +77,11 @@ def browse_all():
 
     form = BrowseAllForm()
     page = request.args.get('page', 1, type=int)
+    search_by_last_name = request.args.get("last_name", None)
+    certificate_type = request.args.get("certificate_type", "")
 
     filter_by_kwargs = {}
     filter_args = []
-
-    search_by_last_name = request.args.get("last_name", None)
-    certificate_type = request.args.get("certificate_type", "")
 
     # Set query filters based on form values submitted
     if search_by_last_name and certificate_type in ("marriage", "marriage_license"):
@@ -108,6 +112,7 @@ def browse_all():
                     filter_args.append(col.in_(['marriage', 'marriage_license']))
                 else:
                     filter_args.append(col == value)
+        # Query used for search by last name and marriage records
         base_query = Certificate.query.distinct().join(MarriageData).filter(
             Certificate.filename.isnot(None),
             *filter_args,
@@ -144,6 +149,7 @@ def browse_all():
             Certificate.filename.isnot(None),
             *filter_args,
         )
+    # Set order by criteria and limit to 5000 results (100 pages)
     certificates = base_query.order_by(Certificate.type.asc(),
                                        Certificate.year.asc(),
                                        Certificate.last_name.asc(),

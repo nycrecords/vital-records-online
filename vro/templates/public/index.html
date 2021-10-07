@@ -138,7 +138,10 @@
         <div class="row">
             <div class="col-lg mb-3 mb-lg-0">
                 <h2 class="pb-1">Research Assistance</h2>
-                <p><i>Learn about the collection</i><br>Read the <a href="/">Guide to the Vital Records Collection</a>,
+                <p><i>Learn about the collection</i><br>Read the
+                        <a href="https://a860-collectionguides.nyc.gov/repositories/2/resources/74"
+                           target="_blank"
+                           rel="noopener noreferrer">Guide to the Vital Records Collection</a>,
                     which details the record-keeping history of vital records in New York City, the scope of the
                     collections and additional resources for research. Still have questions? <a
                             href="https://www1.nyc.gov/site/records/about/contact-vital-records-center.page"
@@ -160,8 +163,10 @@
             <div class="col-lg mb-3 mb-lg-0">
                 <h2 class="pb-1">Digitization Progress</h2>
                 <div class="progress bg-light">
-                    <div class="progress-bar bg-primary text-white" role="progressbar" style="width: 70%;"
-                         aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"><b>&nbsp; 70% (9,400,694 of 13.3
+                    <div class="progress-bar bg-primary text-white" role="progressbar"
+                         style="width: {{ digitization_percentage }}%;"
+                         aria-valuenow="{{ digitization_percentage }}" aria-valuemin="0" aria-valuemax="100"><b>&nbsp;
+                        {{ digitization_percentage }}% ({{ digitized }} of 13.3
                         million records)</b></div>
                 </div>
             </div>

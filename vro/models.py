@@ -156,10 +156,23 @@ class Certificate(PkModel):
 
     @property
     def get_marriage_data(self):
+        """
+        Get a certificate's related marriage data rows
+        :return: A list of related MarriageData objects
+        """
         return self.marriage_data.all()
 
 
 class MarriageData(PkModel):
+    """
+    Define the MarriageData class for the `marriage_data` table with the following columns:
+
+    id              integer, primary key
+    certificate_id  integer, foreign key to the certificates table
+    first_name      varchar, first name of individual pertaining to the certificate
+    last_name       varchar, last name of individual pertaining to the certificate
+    soundex         varchar, certificate soundex
+    """
     __tablename__ = "marriage_data"
     certificate_id = db.Column(db.Integer, db.ForeignKey("certificates.id"), nullable=False)
     filename = db.Column(db.String)
@@ -169,6 +182,12 @@ class MarriageData(PkModel):
 
     @property
     def name(self):
+        """
+        A property that generates the full name of the person on the certificate. If the first name if not present,
+        only show the last name.
+
+        :return: Name of the person associated with the certificate.
+        """
         if self.first_name is not None:
             return "{} {}".format(self.first_name, self.last_name)
         else:
