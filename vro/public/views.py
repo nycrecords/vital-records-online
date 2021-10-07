@@ -274,4 +274,9 @@ def digital_vital_records():
 @blueprint.route("/about", methods=["GET"])
 def about():
     """About page."""
-    return render_template("public/about.html")
+    # Calculate digitization progress
+    digitized = Certificate.query.filter(Certificate.filename.isnot(None)).count()
+    digitization_percentage = round(digitized / 13300000 * 100)
+    return render_template("public/about.html",
+                           digitized=format(digitized, ",d"),
+                           digitization_percentage=digitization_percentage)
