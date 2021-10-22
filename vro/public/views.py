@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Public section, including homepage and signup."""
-from vro.extensions import db
+from vro.extensions import cache
 from flask import (
     abort,
     Blueprint,
@@ -10,7 +10,7 @@ from flask import (
     request,
     url_for
 )
-from sqlalchemy.sql import func
+from flask_paginate import Pagination
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import DataError
 from vro.public.forms import (
@@ -26,6 +26,7 @@ from vro.constants import (
     certificate_types,
     counties
 )
+from vro.services import get_count, get_certificate_count, get_year_range
 from datetime import datetime, timedelta
 from azure.storage.blob import generate_blob_sas, BlobSasPermissions
 from urllib.parse import urlencode
@@ -34,6 +35,7 @@ blueprint = Blueprint("public", __name__, static_folder="../static")
 
 
 @blueprint.route("/", methods=["GET"])
+@cache.cached()
 def index():
     """
     Homepage for Vital Records Online
@@ -44,19 +46,21 @@ def index():
     browse_all_form = BrowseAllForm()
     search_by_number_form = SearchByNumberForm()
     search_by_name_form = SearchByNameForm()
+
     # Get default year range
-    year_range = db.session.query(func.max(Certificate.year).label("year_max"),
-                                   func.min(Certificate.year).label("year_min")).one()
+    cached_year_range = get_year_range()
+
     # Calculate digitization progress
-    digitized = Certificate.query.filter(Certificate.filename.isnot(None)).count()
-    digitization_percentage = round(digitized / 13300000 * 100)
+    count = get_certificate_count()
+    digitization_percentage = round(count / 13300000 * 100)
+
     return render_template("public/index.html",
                            browse_all_form=browse_all_form,
                            search_by_number_form=search_by_number_form,
                            search_by_name_form=search_by_name_form,
-                           year_range_min=year_range.year_min,
-                           year_range_max=year_range.year_max,
-                           digitized=format(digitized, ",d"),
+                           year_range_min=cached_year_range.year_min,
+                           year_range_max=cached_year_range.year_max,
+                           digitized=format(count, ",d"),
                            digitization_percentage=digitization_percentage)
 
 
@@ -70,10 +74,8 @@ def browse_all():
              Redirect to public.view_certificate if only one certificate is returned.
     """
     # Get default year range/values
-    year_range_query = db.session.query(func.max(Certificate.year).label("year_max"),
-                                   func.min(Certificate.year).label("year_min")).one()
-    default_year_range_value = "{} - {}".format(year_range_query.year_min, year_range_query.year_max)
-
+    cached_year_range = get_year_range()
+    default_year_range_value = "{} - {}".format(cached_year_range.year_min, cached_year_range.year_max)
 
     form = BrowseAllForm()
     page = request.args.get('page', 1, type=int)
@@ -149,19 +151,23 @@ def browse_all():
             Certificate.filename.isnot(None),
             *filter_args,
         )
-    # Set order by criteria and limit to 5000 results (100 pages)
-    certificates = base_query.order_by(Certificate.type.asc(),
-                                       Certificate.year.asc(),
-                                       Certificate.last_name.asc(),
-                                       Certificate.county.asc()).limit(5000).from_self().paginate(
-        page=page,
-        per_page=50
-    )
-    num_results = base_query.count()
+
+    @cache.memoize()
+    def query_db(query):
+        return query.order_by(Certificate.type.asc(),
+                              Certificate.year.asc(),
+                              Certificate.last_name.asc(),
+                              Certificate.county.asc()).limit(5000).all()
+    certificates = query_db(base_query)
+
+    count = get_count(base_query)
 
     # If only one certificate is returned, go directly to the view certificate page
-    if num_results == 1:
-        return redirect(url_for("public.view_certificate", certificate_id=certificates.items[0].id))
+    if count == 1:
+        return redirect(url_for("public.view_certificate", certificate_id=certificates[0].id))
+
+    certificates = [certificates[(start_ndx - 2) * 50:(start_ndx - 1) * 50] for start_ndx in
+                    range(2, int(len(certificates) / 50) + 2)]
 
     # Set form data from previous form submissions
     form.certificate_type.data = request.args.get("certificate_type", "")
@@ -197,14 +203,17 @@ def browse_all():
                 remove_filters[key] = (value, new_url)
         current_args = request.args.to_dict()
 
+    pagination = Pagination(page=page, total=5000, search=False, per_page=50)
+
     return render_template("public/browse_all.html",
                            form=form,
-                           year_range_min=year_range_query.year_min,
-                           year_range_max=year_range_query.year_max,
-                           year_min_value=year_range[0] if request.args.get("year_range", "") else year_range_query.year_min,
-                           year_max_value=year_range[1] if request.args.get("year_range", "") else year_range_query.year_max,
-                           certificates=certificates,
-                           num_results=format(num_results, ",d"),
+                           year_range_min=cached_year_range.year_min,
+                           year_range_max=cached_year_range.year_max,
+                           year_min_value=year_range[0] if request.args.get("year_range", "") else cached_year_range.year_min,
+                           year_max_value=year_range[1] if request.args.get("year_range", "") else cached_year_range.year_max,
+                           certificates=certificates[page-1],
+                           pagination=pagination,
+                           num_results=format(count, ",d"),
                            remove_filters=remove_filters)
 
 
