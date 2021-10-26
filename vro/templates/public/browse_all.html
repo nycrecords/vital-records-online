@@ -78,41 +78,10 @@
         </div>
         {% endif %}
     </div>
+
     {% if num_results != "0" %}
     <nav aria-label="Browse Results">
-        <ul class="pagination justify-content-center">
-            <a
-               class="btn btn-outline-dark page-btn
-       {% if certificates.page == 1 %}disabled{% endif %}">
-                &laquo;
-            </a>
-
-            {% for page_num in certificates.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=4) %}
-
-            {% if page_num %}
-            <!-- Check for the active page and set the link to "Active"-->
-            {% if certificates.page == page_num %}
-            <a
-               class="btn btn-dark page-btn">
-                {{ page_num }}
-            </a>
-            {% else %}
-            <a
-               class="btn btn-outline-dark page-btn">
-                {{ page_num }}
-            </a>
-            {% endif %}
-            {% else %}
-            ...
-            {% endif %}
-            {% endfor %}
-
-            <a
-               class="btn btn-outline-dark page-btn
-       {% if certificates.page == certificates.pages %}disabled{% endif %}">
-                &raquo;
-            </a>
-        </ul>
+        {{ pagination.links }}
     </nav>
     <p class="center pt-2">Only the first 100 pages of results will display. Use filters to find relevant records.</p>
     {% endif %}
