@@ -166,6 +166,7 @@ def browse_all():
     if count == 1:
         return redirect(url_for("public.view_certificate", certificate_id=certificates[0].id))
 
+    # Create lists of certificates from query results for each page
     certificates = [certificates[(start_ndx - 2) * 50:(start_ndx - 1) * 50] for start_ndx in
                     range(2, int(len(certificates) / 50) + 2)]
 
@@ -203,7 +204,7 @@ def browse_all():
                 remove_filters[key] = (value, new_url)
         current_args = request.args.to_dict()
 
-    pagination = Pagination(page=page, total=5000, search=False, per_page=50)
+    pagination = Pagination(page=page, total=5000, search=False, per_page=50, css_framework="bootstrap4")
 
     return render_template("public/browse_all.html",
                            form=form,

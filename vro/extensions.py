@@ -6,13 +6,14 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_static_digest import FlaskStaticDigest
 from flask_wtf.csrf import CSRFProtect
+from vro.settings import CACHE_DEFAULT_TIMEOUT
 
 csrf_protect = CSRFProtect()
 db = SQLAlchemy()
 migrate = Migrate()
 cache = Cache(config={
     "CACHE_TYPE": "SimpleCache",
-    "CACHE_DEFAULT_TIMEOUT": 86400,
+    "CACHE_DEFAULT_TIMEOUT": CACHE_DEFAULT_TIMEOUT,
 })
 debug_toolbar = DebugToolbarExtension()
 flask_static_digest = FlaskStaticDigest()
