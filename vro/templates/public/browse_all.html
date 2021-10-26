@@ -83,7 +83,11 @@
     <nav aria-label="Browse Results">
         {{ pagination.links }}
     </nav>
+
+    {% if pagination.total > 50 %}
     <p class="center pt-2">Only the first 100 pages of results will display. Use filters to find relevant records.</p>
+    {% endif %}
+
     {% endif %}
     <!-- .container -->
 </section>
