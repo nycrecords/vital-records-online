@@ -115,10 +115,12 @@ def browse_all():
                 else:
                     filter_args.append(col == value)
         # Query used for search by last name and marriage records
-        base_query = Certificate.query.distinct().join(MarriageData).filter(
+        base_query = Certificate.query.join(MarriageData).filter(
             Certificate.filename.isnot(None),
             *filter_args,
         )
+        # Use .count() because get_count() does not work with join
+        count = base_query.count()
     else:
         for name, value, col in [
             ("type", request.args.get("certificate_type", ""), Certificate.type),
@@ -151,6 +153,7 @@ def browse_all():
             Certificate.filename.isnot(None),
             *filter_args,
         )
+        count = get_count(base_query)
 
     @cache.memoize()
     def query_db(query):
@@ -160,7 +163,7 @@ def browse_all():
                               Certificate.county.asc()).limit(5000).all()
     certificates = query_db(base_query)
 
-    count = get_count(base_query)
+    # count = get_count(base_query)
     pagination_total = count if count < 5000 else 5000
 
     # If only one certificate is returned, go directly to the view certificate page
