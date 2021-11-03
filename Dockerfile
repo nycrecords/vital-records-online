@@ -1,7 +1,7 @@
 # ================================== BUILDER ===================================
 ARG INSTALL_PYTHON_VERSION=${INSTALL_PYTHON_VERSION:-PYTHON_VERSION_NOT_SET}
 
-FROM python:${INSTALL_PYTHON_VERSION}-slim-buster AS builder
+FROM python:${INSTALL_PYTHON_VERSION}-slim-bullseye AS builder
 
 WORKDIR /app
 
@@ -42,4 +42,4 @@ CMD ["-c", "/etc/supervisor/supervisord.conf"]
 FROM builder AS development
 RUN pip install --no-cache -r requirements/dev.txt
 EXPOSE 5000
-CMD [ "gunicorn", "vro.app:create_app()", "-w", "2", "--threads", "2", "-b", "0.0.0.0:5000" ]
+CMD [ "flask", "run", "--host=0.0.0.0" ]

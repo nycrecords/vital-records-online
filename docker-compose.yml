@@ -1,7 +1,7 @@
 version: "3.6"
 
 x-build-args: &build_args
-  INSTALL_PYTHON_VERSION: 3.8
+  INSTALL_PYTHON_VERSION: 3.9.7
 
 x-default-volumes: &default_volumes
   volumes:
@@ -42,21 +42,21 @@ services:
       - "2992:2992"
     <<: *default_volumes
 
-#  flask-prod:
-#    build:
-#      context: .
-#      target: production
-#      args:
-#        <<: *build_args
-#    image: "vro-production"
-#    ports:
-#      - "5000:5000"
-#    environment:
-#      FLASK_ENV: production
-#      FLASK_DEBUG: 0
-#      LOG_LEVEL: info
-#      GUNICORN_WORKERS: 4
-#    <<: *default_volumes
+  flask-prod:
+    build:
+      context: .
+      target: production
+      args:
+        <<: *build_args
+    image: "vro-production"
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_ENV: production
+      FLASK_DEBUG: 0
+      LOG_LEVEL: info
+      GUNICORN_WORKERS: 8
+    <<: *default_volumes
 
   manage:
     build:
