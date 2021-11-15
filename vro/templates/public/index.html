@@ -75,7 +75,7 @@
                         <div class="form-div">
                             <div class="form-group">
                                 {{ search_by_number_form.year.label(class="control-label", for="year") }}
-                                {{ search_by_number_form.year(class="form-control", maxlength="4", type="number") }}
+                                {{ search_by_number_form.year(class="form-control", maxlength="4", type="number", min="1") }}
                             </div>
                         </div>
                         <div class="text-center pt-3 pb-1">
@@ -117,7 +117,7 @@
                         <div class="form-div">
                             <div class="form-group">
                                 {{ search_by_name_form.year.label(class="control-label", for="year") }}
-                                {{ search_by_name_form.year(class="form-control", maxlength="4") }}
+                                {{ search_by_name_form.year(class="form-control", maxlength="4", type="number", min="1") }}
                             </div>
                         </div>
                         <div class="text-center pt-3 pb-1">
@@ -141,15 +141,14 @@
                 <p><i>Learn about the collection</i><br>Read the
                         <a href="https://a860-collectionguides.nyc.gov/repositories/2/resources/74"
                            target="_blank"
-                           rel="noopener noreferrer">Guide to the Vital Records Collection</a>,
+                           rel="noopener noreferrer"><strong>Guide to the Vital Records Collection</strong></a>,
                     which details the record-keeping history of vital records in New York City, the scope of the
                     collections and additional resources for research. Still have questions? <a
                             href="https://www1.nyc.gov/site/records/about/contact-vital-records-center.page"
-                            target="_blank" rel="noopener noreferrer">Contact
-                        us.</a></p>
+                            target="_blank" rel="noopener noreferrer"><strong>Contact us.</strong></a></p>
                 <p><i>Still can't find a vital record?</i><br> Fill out the <a
                         href="https://www1.nyc.gov/site/records/historical-records/order.page" target="_blank"
-                        rel="noopener noreferrer">Vital Records Order Form</a>,
+                        rel="noopener noreferrer"><strong>Vital Records Order Form</strong></a>,
                     and we will conduct a search. If the record is located, we will digitize on demand. If not, we will
                     provide a certified <i>not found</i> letter.</p>
             </div>

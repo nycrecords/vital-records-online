@@ -20,7 +20,6 @@ h1 a:hover {
 }
  a {
   color: #181A7B;
-  font-weight: 600;
 }
 
 ol.breadcrumb {
@@ -201,4 +200,16 @@ ul a {
 
 .btn-outline-dark:hover {
     color: white !important;
+}
+
+/* Hide arrows from number inputs */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
