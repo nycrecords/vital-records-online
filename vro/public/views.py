@@ -163,7 +163,6 @@ def browse_all():
                               Certificate.county.asc()).limit(5000).all()
     certificates = query_db(base_query)
 
-    # count = get_count(base_query)
     pagination_total = count if count < 5000 else 5000
 
     # If only one certificate is returned, go directly to the view certificate page
@@ -289,6 +288,7 @@ def digital_vital_records():
 
 
 @blueprint.route("/about", methods=["GET"])
+@cache.cached()
 def about():
     """About page."""
     # Calculate digitization progress

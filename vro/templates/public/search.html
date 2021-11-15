@@ -34,7 +34,7 @@
                         <div class="form-div">
                             <div class="form-group">
                                 {{ search_by_number_form.year.label(class="control-label", for="year") }}
-                                {{ search_by_number_form.year(class="form-control", maxlength="4") }}
+                                {{ search_by_number_form.year(class="form-control", maxlength="4", type="number", min="1") }}
                             </div>
                         </div>
                         <div class="text-center pt-3 pb-1">
@@ -100,7 +100,7 @@
                         <div class="form-div">
                             <div class="form-group">
                                 {{ search_by_name_form.year.label(class="control-label", for="year") }}
-                                {{ search_by_name_form.year(class="form-control", maxlength="4") }}
+                                {{ search_by_name_form.year(class="form-control", maxlength="4", type="number", min="1") }}
                             </div>
                         </div>
                         <div class="text-center pt-3 pb-1">
