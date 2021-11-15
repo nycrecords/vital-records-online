@@ -292,8 +292,8 @@ def digital_vital_records():
 def about():
     """About page."""
     # Calculate digitization progress
-    digitized = Certificate.query.filter(Certificate.filename.isnot(None)).count()
-    digitization_percentage = round(digitized / 13300000 * 100)
+    count = get_certificate_count()
+    digitization_percentage = round(count / 13300000 * 100)
     return render_template("public/about.html",
-                           digitized=format(digitized, ",d"),
+                           digitized=format(count, ",d"),
                            digitization_percentage=digitization_percentage)
