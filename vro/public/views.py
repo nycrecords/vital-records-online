@@ -274,9 +274,14 @@ def search():
     # Initialize search forms
     search_by_number_form = SearchByNumberForm()
     search_by_name_form = SearchByNameForm()
+
+    # Get default year range
+    cached_year_range = get_year_range()
+
     return render_template("public/search.html",
                            search_by_number_form=search_by_number_form,
-                           search_by_name_form=search_by_name_form)
+                           search_by_name_form=search_by_name_form,
+                           year_range_min=cached_year_range.year_min)
 
 
 @blueprint.route("/digital-vital-records", methods=["GET"])
