@@ -99,7 +99,7 @@ def browse_all():
         ]:
             if value:
                 # Use ilike for case insensitive query
-                if name in ("first_name", "last_name"):
+                if name in ("first_name", "last_name", "number"):
                     filter_args.append(
                         col.ilike(value)
                     )
@@ -134,7 +134,7 @@ def browse_all():
         ]:
             if value:
                 # Use ilike for case insensitive query
-                if name in ("first_name", "last_name"):
+                if name in ("first_name", "last_name", "number"):
                     filter_args.append(
                         col.ilike(value)
                     )
