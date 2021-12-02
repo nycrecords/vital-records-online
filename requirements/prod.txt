@@ -40,3 +40,5 @@ environs==9.3.2
 
 # Azure
 azure-storage-blob>=12.8.0
+
+sqlakeyset==1.0.1629029818

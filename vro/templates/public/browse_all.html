@@ -16,6 +16,8 @@
             {{ form.last_name() }}
             {{ form.first_name() }}
             {{ form.page() }}
+            {{ form.next_page() }}
+            {{ form.prev_page() }}
             <div class="section mx-2 mb-2">
                 <div class="row py-1 pt-2">
                     <div class="col-md center">
@@ -79,16 +81,24 @@
         {% endif %}
     </div>
 
-    {% if num_results != "0" %}
-    <nav aria-label="Browse Results">
-        {{ pagination.links }}
-    </nav>
+    <div id="first" class="btn btn-info">
+        First
+    </div>
 
-    {% if pagination.total > 50 %}
-    <p class="center pt-2">Only the first 100 pages of results will display. Use filters to find relevant records.</p>
-    {% endif %}
+    {{ prev_page }}
+    <div id="previous" class="btn btn-info {% if prev_page is none %}disabled{% endif %}">
+        Previous
+    </div>
 
-    {% endif %}
+    <div id="next" class="btn btn-info">
+        Next
+    </div>
+    {{ next_page }}
+
+    <div id="last" class="btn btn-info">
+        Last
+    </div>
+
     <!-- .container -->
 </section>
 {% endblock %}

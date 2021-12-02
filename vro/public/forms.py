@@ -33,6 +33,8 @@ class BrowseAllForm(Form):
     last_name = StringField(widget=HiddenInput())
     first_name = StringField(widget=HiddenInput())
     page = IntegerField(widget=HiddenInput())
+    next_page = StringField(widget=HiddenInput())
+    prev_page = StringField(widget=HiddenInput())
     submit_field = SubmitField("Update")
 
     def __init__(self, *args, **kwargs):

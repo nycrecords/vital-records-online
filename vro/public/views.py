@@ -31,6 +31,9 @@ from datetime import datetime, timedelta
 from azure.storage.blob import generate_blob_sas, BlobSasPermissions
 from urllib.parse import urlencode
 
+from sqlakeyset import get_page
+from ast import literal_eval
+
 blueprint = Blueprint("public", __name__, static_folder="../static")
 
 
@@ -78,7 +81,6 @@ def browse_all():
     default_year_range_value = "{} - {}".format(cached_year_range.year_min, cached_year_range.year_max)
 
     form = BrowseAllForm()
-    page = request.args.get('page', 1, type=int)
     search_by_last_name = request.args.get("last_name", None)
     certificate_type = request.args.get("certificate_type", "")
 
@@ -120,7 +122,7 @@ def browse_all():
             *filter_args,
         )
         # Use .count() because get_count() does not work with join
-        count = base_query.count()
+        count = 10
     else:
         for name, value, col in [
             ("type", request.args.get("certificate_type", ""), Certificate.type),
@@ -153,28 +155,60 @@ def browse_all():
             Certificate.filename.isnot(None),
             *filter_args,
         )
-        count = get_count(base_query)
+        count = 10
 
     @cache.memoize()
     def query_db(query):
         return query.order_by(Certificate.type.asc(),
                               Certificate.year.asc(),
                               Certificate.last_name.asc(),
-                              Certificate.county.asc()).limit(5000).all()
-    certificates = query_db(base_query)
+                              Certificate.county.asc())
 
-    pagination_total = count if count < 5000 else 5000
+    certificates = base_query.order_by(Certificate.type.asc(),
+                                       Certificate.year.asc(),
+                                       Certificate.last_name.asc(),
+                                       Certificate.county.asc(),
+                                       Certificate.id.asc())
 
-    # If only one certificate is returned, go directly to the view certificate page
-    if count == 1:
-        return redirect(url_for("public.view_certificate", certificate_id=certificates[0].id))
 
-    # Create lists of certificates from query results for each page
-    if len(certificates) > 50:
-        certificates = [certificates[(start_ndx - 2) * 50:(start_ndx - 1) * 50] for start_ndx in
-                    range(2, int(len(certificates) / 50) + 2)]
+    page = request.args.get('page', None)
+    next_page = request.args.get('next_page', None)
+    prev_page = request.args.get('prev_page', None)
+
+    if page is None or page == "":
+        current_page = get_page(certificates, per_page=50)
+        next_page = current_page.paging.next
+        prev_page = (None, False)
     else:
-        certificates = [certificates]
+        if page == "next":
+            next_page = literal_eval(next_page)
+            current_page = get_page(certificates, per_page=50, page=next_page)
+        elif page == "previous":
+            prev_page = literal_eval(prev_page)
+            current_page = get_page(certificates, per_page=50, page=prev_page)
+        elif page == "first":
+            current_page = get_page(certificates, per_page=50, page=(None, False))
+        elif page == "last":
+            current_page = get_page(certificates, per_page=50, page=(None, True))
+
+        next_page = current_page.paging.next
+        prev_page = current_page.paging.previous
+
+    form.next_page.data = next_page
+    form.prev_page.data = prev_page
+
+    # pagination_total = count if count < 5000 else 5000
+    #
+    # # If only one certificate is returned, go directly to the view certificate page
+    # if count == 1:
+    #     return redirect(url_for("public.view_certificate", certificate_id=certificates[0].id))
+    #
+    # # Create lists of certificates from query results for each page
+    # if len(certificates) > 50:
+    #     certificates = [certificates[(start_ndx - 2) * 50:(start_ndx - 1) * 50] for start_ndx in
+    #                 range(2, int(len(certificates) / 50) + 2)]
+    # else:
+    #     certificates = [certificates]
 
     # Set form data from previous form submissions
     form.certificate_type.data = request.args.get("certificate_type", "")
@@ -210,7 +244,7 @@ def browse_all():
                 remove_filters[key] = (value, new_url)
         current_args = request.args.to_dict()
 
-    pagination = Pagination(page=page, total=pagination_total, search=False, per_page=50, css_framework="bootstrap4")
+    # pagination = Pagination(page=page, total=pagination_total, search=False, per_page=50, css_framework="bootstrap4")
 
     return render_template("public/browse_all.html",
                            form=form,
@@ -218,8 +252,9 @@ def browse_all():
                            year_range_max=cached_year_range.year_max,
                            year_min_value=year_range[0] if request.args.get("year_range", "") else cached_year_range.year_min,
                            year_max_value=year_range[1] if request.args.get("year_range", "") else cached_year_range.year_max,
-                           certificates=certificates[page-1],
-                           pagination=pagination,
+                           certificates=current_page,
+                           next_page=next_page,
+                           prev_page=prev_page,
                            num_results=format(count, ",d"),
                            remove_filters=remove_filters)
 
