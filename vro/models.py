@@ -42,7 +42,7 @@ class Certificate(PkModel):
     soundex = db.Column(db.String(4))
     path_prefix = db.Column(db.String)
     filename = db.Column(db.String)
-    marriage_data = db.relationship("MarriageData", backref=db.backref("certificate", uselist=False), lazy="dynamic")
+    marriage_data = db.relationship("MarriageData", backref=db.backref("certificate", uselist=False), lazy=True)
 
     def __init__(self,
                  type_,
@@ -97,7 +97,9 @@ class Certificate(PkModel):
             certificate_type = certificate_types.MARRIAGE
         else:
             certificate_type = self.type
-        thumbnail = url_for("static", filename="img/thumbnails/{}_{}.png".format(county, certificate_type))
+        import os
+        # thumbnail = url_for("static", filename="img/thumbnails/{}_{}.png".format(county, certificate_type))
+        thumbnail = "static/img/thumbnails/{}_{}.png".format(county, certificate_type)
         return thumbnail
 
 

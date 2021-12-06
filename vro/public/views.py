@@ -8,6 +8,7 @@ from flask import (
     render_template,
     redirect,
     request,
+    session,
     url_for
 )
 from flask_paginate import Pagination
@@ -163,16 +164,25 @@ def browse_all():
                               Certificate.county.asc()).limit(5000).all()
     certificates = query_db(base_query)
 
-    pagination_total = count if count < 5000 else 5000
+    from vro.extensions import es
+    # pit_id = None
+    # if "pit" not in session:
+    #     session["pit"] = es.open_point_in_time(index="certificates", keep_alive="1m")
+    # res = es.search(pit=session["pit"], query={"match_all": {}}, size=5000)
+
+    res = es.search(index="certificates", query={"match_all": {}}, from_=page*50, size=50)
+
+    pagination_total = res["hits"]["total"]["value"]
 
     # If only one certificate is returned, go directly to the view certificate page
     if count == 1:
         return redirect(url_for("public.view_certificate", certificate_id=certificates[0].id))
 
     # Create lists of certificates from query results for each page
-    if len(certificates) > 50:
-        certificates = [certificates[(start_ndx - 2) * 50:(start_ndx - 1) * 50] for start_ndx in
-                    range(2, int(len(certificates) / 50) + 2)]
+    if pagination_total > 50:
+        # certificates = [res["hits"]["hits"][(start_ndx - 2) * 50:(start_ndx - 1) * 50] for start_ndx in
+        #             range(2, int(pagination_total/50) + 2)]
+        certificates = [res['hits']['hits'][i]['_source'] for i in range(50)]
     else:
         certificates = [certificates]
 
@@ -210,7 +220,7 @@ def browse_all():
                 remove_filters[key] = (value, new_url)
         current_args = request.args.to_dict()
 
-    pagination = Pagination(page=page, total=pagination_total, search=False, per_page=50, css_framework="bootstrap4")
+    pagination = Pagination(page=page, total=5000, search=False, per_page=50, css_framework="bootstrap4")
 
     return render_template("public/browse_all.html",
                            form=form,
@@ -218,7 +228,7 @@ def browse_all():
                            year_range_max=cached_year_range.year_max,
                            year_min_value=year_range[0] if request.args.get("year_range", "") else cached_year_range.year_min,
                            year_max_value=year_range[1] if request.args.get("year_range", "") else cached_year_range.year_max,
-                           certificates=certificates[page-1],
+                           certificates=certificates,
                            pagination=pagination,
                            num_results=format(count, ",d"),
                            remove_filters=remove_filters)
