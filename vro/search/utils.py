@@ -93,6 +93,7 @@ def create_docs():
         operations.append({
             "_op_type": "create",
             "_id": c.id,
+            "id": c.id,
             "cert_type": c.type,
             "county": c.county,
             "year": c.year,
