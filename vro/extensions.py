@@ -11,7 +11,7 @@ from vro.settings import CACHE_DEFAULT_TIMEOUT, ELASTICSEARCH_URL
 
 csrf_protect = CSRFProtect()
 db = SQLAlchemy()
-es = Elasticsearch(ELASTICSEARCH_URL)
+es = Elasticsearch(ELASTICSEARCH_URL, timeout=120)
 migrate = Migrate()
 cache = Cache(config={
     "CACHE_TYPE": "SimpleCache",

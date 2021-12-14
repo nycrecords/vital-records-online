@@ -28,6 +28,9 @@ def create_index():
                     "cert_type": {
                         "type": 'keyword',
                     },
+                    "number": {
+                        "type": 'keyword',
+                    },
                     "county": {
                         "type": 'keyword',
                     },
@@ -57,7 +60,7 @@ def create_docs():
     """Creates elasticsearch request docs for every certificate"""
     if not es:
         return
-    certificates = Certificate.query.options(joinedload(Certificate.marriage_data)).filter(Certificate.filename.isnot(None)).limit(10000).all()
+    certificates = Certificate.query.options(joinedload(Certificate.marriage_data)).filter(Certificate.filename.isnot(None)).all()
 
     # certificates = Certificate.query.join(MarriageData).filter(Certificate.filename.isnot(None)).limit(10000).all()
 
@@ -95,6 +98,7 @@ def create_docs():
             "_id": c.id,
             "id": c.id,
             "cert_type": c.type,
+            "number": c.number,
             "county": c.county,
             "year": c.year,
             "first_name": c.first_name,

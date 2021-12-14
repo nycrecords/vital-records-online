@@ -12,7 +12,8 @@ psycopg2-binary==2.8.6
 psycogreen
 
 # Elasticsearch
-elasticsearch==7.15.2
+elasticsearch==7.16.1
+elasticsearch-dsl>=7.0.0,<8.0.0
 
 # Migrations
 Flask-Migrate==3.1.0
