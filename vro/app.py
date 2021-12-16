@@ -23,11 +23,12 @@ def create_app(config_object="vro.settings"):
 
     :param config_object: The configuration object to use.
     """
-    # from gevent import monkey
-    # from psycogreen.gevent import patch_psycopg
-    # monkey.patch_all()
-    # patch_psycopg()
     app = Flask(__name__.split(".")[0])
+    if app.config["ENV"] == "production":
+        from gevent import monkey
+        from psycogreen.gevent import patch_psycopg
+        monkey.patch_all()
+        patch_psycopg()
     app.config.from_object(config_object)
     app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
         if app.config['ELASTICSEARCH_URL'] else None
