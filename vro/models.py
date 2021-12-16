@@ -70,7 +70,6 @@ class Certificate(PkModel):
         self.path_prefix = path_prefix
         self.filename = filename
 
-
     @property
     def display_string(self):
         """
@@ -81,28 +80,6 @@ class Certificate(PkModel):
         """
         return self.filename[:-4]
 
-
-    @property
-    def thumbnail(self):
-        """
-        A property that determines which thumbnail image to use based on county and certificate type.
-        Thumbnail images have the following file name format:
-        <COUNTY_INITIAL>_<CERTIFICATE_TYPE>.png
-
-        :return: The path to the thumbnail image.
-        """
-        county = counties.COUNTIES.get(self.county, "")
-        # Marriage Licenses will use the same thumbnail as marriage certificates
-        if self.type == certificate_types.MARRIAGE_LICENSE:
-            certificate_type = certificate_types.MARRIAGE
-        else:
-            certificate_type = self.type
-        import os
-        # thumbnail = url_for("static", filename="img/thumbnails/{}_{}.png".format(county, certificate_type))
-        thumbnail = "static/img/thumbnails/{}_{}.png".format(county, certificate_type)
-        return thumbnail
-
-
     @property
     def certificate_number_string(self):
         """
@@ -112,7 +89,6 @@ class Certificate(PkModel):
         """
         return self.number.zfill(7)
 
-
     @property
     def blob_name(self):
         """
@@ -121,7 +97,6 @@ class Certificate(PkModel):
         :return: The blob name used to generate blob SAS token and blob URL.
         """
         return self.path_prefix + self.filename
-
 
     @property
     def name(self):

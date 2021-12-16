@@ -111,3 +111,8 @@ def create_docs():
         raise_on_error=True
     )
     print("Successfully created %s certificates docs." % num_success)
+
+def delete_doc(certificate_id):
+    """Delete a specific doc in the index"""
+    es.delete(index="certificates",
+              id=certificate_id)
