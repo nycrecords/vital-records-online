@@ -15,8 +15,8 @@
                     <p><b>Name</b>: {{ certificate.name or "" }}</p>
                     <p><b>Soundex</b>: {{ certificate.soundex or "" }}</p>
                     {% else %}
-                        {% for spouse in certificate.marriage_data.all() %}
-                        <p><b>Name</b>: {{ spouse.name }}
+                        {% for spouse in certificate.marriage_data %}
+                            <p><b>Name</b>: {{ spouse.name }}
                             <br>
                             <b>Soundex</b>: {{ spouse.soundex }}</p>
                         {% endfor %}

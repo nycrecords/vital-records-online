@@ -6,13 +6,10 @@
                 <img src="/static/img/thumbnails/{{ certificate.county }}_{{ certificate.cert_type }}.png">
             </a>
             <p class="small">{{ certificate.display_string }}<br>
-                {% if certificate.type == "marriage" %}
-                    {% for spouse in certificate.marriage_data.all() %}
-                        {{ spouse.name }}
-                        <br>
-                    {% endfor %}
-                {% else %}
-                    {{ certificate.full_name or "" }}
+                {{ certificate.full_name or "" }}
+                <br>
+                {% if certificate.cert_type == "marriage" %}
+                    {{ certificate.spouse_name }}
                 {% endif %}
             </p>
         </div>

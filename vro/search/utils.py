@@ -3,7 +3,7 @@ from sqlalchemy.orm import joinedload
 
 from vro.constants import certificate_types
 from vro.extensions import es
-from vro.models import Certificate, MarriageData
+from vro.models import Certificate
 
 
 def recreate():
@@ -49,6 +49,15 @@ def create_index():
                     },
                     "display_string": {
                         "type": "keyword"
+                    },
+                    "spouse_first_name": {
+                        "type": "keyword"
+                    },
+                    "spouse_last_name": {
+                        "type": "keyword"
+                    },
+                    "spouse_name": {
+                        "type": "keyword"
                     }
                 }
             }
@@ -62,36 +71,20 @@ def create_docs():
         return
     certificates = Certificate.query.options(joinedload(Certificate.marriage_data)).filter(Certificate.filename.isnot(None)).all()
 
-    # certificates = Certificate.query.join(MarriageData).filter(Certificate.filename.isnot(None)).limit(10000).all()
-
     operations = []
-
-    # operations.append({
-    #     "_op_type": "create",
-    #     "_id": c.id,
-    #     "cert_type": c.type,
-    #     "county": c.county,
-    #     "month": c.month,
-    #     "day": c.day,
-    #     "year": c.year,
-    #     "number": c.number,
-    #     "first_name": c.first_name,
-    #     "last_name": c.last_name,
-    #     "age": c.age,
-    #     "soundex": c.soundex,
-    #     "path_prefix": c.path_prefix,
-    #     "filename": c.filename
-    # })
 
     for c in certificates:
         spouse_name = None
+        spouse_first_name = None
+        spouse_last_name = None
 
+        # Get spouse metadata to store in index
         if c.type == certificate_types.MARRIAGE:
             for spouse in c.marriage_data:
                 if c.soundex != spouse.soundex:
+                    spouse_first_name = spouse.first_name
+                    spouse_last_name = spouse.last_name
                     spouse_name = spouse.name
-            # for spouse in c.marriage_data.all():
-            #     spouse_name = spouse.name
 
         operations.append({
             "_op_type": "create",
@@ -105,6 +98,8 @@ def create_docs():
             "last_name": c.last_name,
             "full_name": c.name,
             "display_string": c.display_string,
+            "spouse_first_name": spouse_first_name,
+            "spouse_last_name": spouse_last_name,
             "spouse_name": spouse_name
         })
 
