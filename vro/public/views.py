@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 """Public section, including homepage and signup."""
-from vro.extensions import cache
+from datetime import datetime, timedelta
+from urllib.parse import urlencode
+
+from azure.storage.blob import generate_blob_sas, BlobSasPermissions
+from elasticsearch_dsl import Search, Q
 from flask import (
     abort,
     Blueprint,
@@ -11,25 +15,21 @@ from flask import (
     url_for
 )
 from flask_paginate import Pagination
-from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import DataError
+from sqlalchemy.orm.exc import NoResultFound
+
+from vro.constants import (
+    certificate_types,
+    counties
+)
+from vro.extensions import cache, es
+from vro.models import Certificate
 from vro.public.forms import (
     BrowseAllForm,
     SearchByNumberForm,
     SearchByNameForm
 )
-from vro.models import (
-    Certificate,
-    MarriageData
-)
-from vro.constants import (
-    certificate_types,
-    counties
-)
-from vro.services import get_count, get_certificate_count, get_year_range
-from datetime import datetime, timedelta
-from azure.storage.blob import generate_blob_sas, BlobSasPermissions
-from urllib.parse import urlencode
+from vro.services import get_certificate_count, get_year_range
 
 blueprint = Blueprint("public", __name__, static_folder="../static")
 
@@ -79,102 +79,48 @@ def browse_all():
 
     form = BrowseAllForm()
     page = request.args.get('page', 1, type=int)
-    search_by_last_name = request.args.get("last_name", None)
-    certificate_type = request.args.get("certificate_type", "")
 
-    filter_by_kwargs = {}
-    filter_args = []
+    # Set up variables for search
+    _from = (page-1)*50
+    size = _from + 50
+    q_list = []
 
-    # Set query filters based on form values submitted
-    if search_by_last_name and certificate_type in ("marriage", "marriage_license"):
-        for name, value, col in [
-            ("type", request.args.get("certificate_type", ""), Certificate.type),
-            ("number", request.args.get("number", ""), Certificate.number),
-            ("county", request.args.get("county", ""), Certificate.county),
-            ("year", request.args.get("year", ""), Certificate.year),
-            ("year_range", request.args.get("year_range", ""), Certificate.year),
-            ("number", request.args.get("number", ""), Certificate.number),
-            ("first_name", request.args.get("first_name", ""), MarriageData.first_name),
-            ("last_name", request.args.get("last_name", ""), MarriageData.last_name)
-        ]:
-            if value:
-                # Use ilike for case insensitive query
-                if name in ("first_name", "last_name", "number"):
-                    filter_args.append(
-                        col.ilike(value)
-                    )
-                # Split year_range into two separate values
-                elif name == "year_range":
-                    year_range = [int(year) for year in value.split() if year.isdigit()]
-                    filter_args.append(
-                        col.between(year_range[0], year_range[1])
-                    )
-                # Marriage certificates and marriage licenses are considered the same record type to the user
-                elif name == "type" and value == 'marriage':
-                    filter_args.append(col.in_(['marriage', 'marriage_license']))
-                else:
-                    filter_args.append(col == value)
-        # Query used for search by last name and marriage records
-        base_query = Certificate.query.join(MarriageData).filter(
-            Certificate.filename.isnot(None),
-            *filter_args,
-        )
-        # Use .count() because get_count() does not work with join
-        count = base_query.count()
-    else:
-        for name, value, col in [
-            ("type", request.args.get("certificate_type", ""), Certificate.type),
-            ("number", request.args.get("number", ""), Certificate.number),
-            ("county", request.args.get("county", ""), Certificate.county),
-            ("year", request.args.get("year", ""), Certificate.year),
-            ("year_range", request.args.get("year_range", ""), Certificate.year),
-            ("number", request.args.get("number", ""), Certificate.number),
-            ("first_name", request.args.get("first_name", ""), Certificate.first_name),
-            ("last_name", request.args.get("last_name", ""), Certificate.last_name)
-        ]:
-            if value:
-                # Use ilike for case insensitive query
-                if name in ("first_name", "last_name", "number"):
-                    filter_args.append(
-                        col.ilike(value)
-                    )
-                # Split year_range into two separate values
-                elif name == "year_range":
-                    year_range = [int(year) for year in value.split() if year.isdigit()]
-                    filter_args.append(
-                        col.between(year_range[0], year_range[1])
-                    )
-                # Marriage certificates and marriage licenses are considered the same record type to the user
-                elif name == "type" and value == 'marriage':
-                    filter_args.append(col.in_(['marriage', 'marriage_license']))
-                else:
-                    filter_by_kwargs[name] = value
-        base_query = Certificate.query.filter_by(**filter_by_kwargs).filter(
-            Certificate.filename.isnot(None),
-            *filter_args,
-        )
-        count = get_count(base_query)
+    for key, value in [
+        ("cert_type", request.args.get("certificate_type", "")),
+        ("number", request.args.get("number", "").lstrip("0")),
+        ("county", request.args.get("county", "")),
+        ("year", request.args.get("year", "")),
+        ("year_range", request.args.get("year_range", "")),
+        ("first_name", request.args.get("first_name", "")),
+        ("last_name", request.args.get("last_name", ""))
+    ]:
+        if value:
+            if key == "year_range":
+                year_range = [int(year) for year in value.split() if year.isdigit()]
+                q_list.append(Q("range", year={"gte": year_range[0], "lte": year_range[1]}))
+            elif key in ["first_name", "last_name"]:
+                q_list.append(Q("multi_match", query=value, fields=[key, "spouse_"+key]))
+            else:
+                q_list.append(Q("match", **{key: value}))
+    q = Q("bool", must=q_list)
 
-    @cache.memoize()
-    def query_db(query):
-        return query.order_by(Certificate.type.asc(),
-                              Certificate.year.asc(),
-                              Certificate.last_name.asc(),
-                              Certificate.county.asc()).limit(5000).all()
-    certificates = query_db(base_query)
+    # Create Search object
+    s = Search(using=es, index="certificates").query(q)
+
+    # Call Elasticsearch count API to get number of documents matching query
+    count = es.count(index="certificates", body=s.to_dict())["count"]
+
+    # Specify from/size parameters
+    s = s[_from:size]
+
+    # Sent search request to Elasticsearch
+    res = s.execute()
 
     pagination_total = count if count < 5000 else 5000
 
     # If only one certificate is returned, go directly to the view certificate page
     if count == 1:
-        return redirect(url_for("public.view_certificate", certificate_id=certificates[0].id))
-
-    # Create lists of certificates from query results for each page
-    if len(certificates) > 50:
-        certificates = [certificates[(start_ndx - 2) * 50:(start_ndx - 1) * 50] for start_ndx in
-                    range(2, int(len(certificates) / 50) + 2)]
-    else:
-        certificates = [certificates]
+        return redirect(url_for("public.view_certificate", certificate_id=res[0].id))
 
     # Set form data from previous form submissions
     form.certificate_type.data = request.args.get("certificate_type", "")
@@ -218,7 +164,7 @@ def browse_all():
                            year_range_max=cached_year_range.year_max,
                            year_min_value=year_range[0] if request.args.get("year_range", "") else cached_year_range.year_min,
                            year_max_value=year_range[1] if request.args.get("year_range", "") else cached_year_range.year_max,
-                           certificates=certificates[page-1],
+                           certificates=res,
                            pagination=pagination,
                            num_results=format(count, ",d"),
                            remove_filters=remove_filters)

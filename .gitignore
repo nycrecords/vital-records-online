@@ -55,6 +55,9 @@ env/
 *.db
 postgres-data/
 
+# Development Elasticsearch
+elasticsearch-data
+
 .idea
 
 # Compiled directory

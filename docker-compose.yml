@@ -7,6 +7,7 @@ x-default-volumes: &default_volumes
   volumes:
     - ./:/app
     - ./postgres-data:/var/lib/postgresql/data
+    - ./elasticsearch-data:/usr/share/elasticsearch/data
 
 services:
   db:
@@ -26,6 +27,18 @@ services:
       retries: 3
     <<: *default_volumes
 
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
+    ports:
+      - "9208:9200"
+    environment:
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    <<: *default_volumes
+
   flask-dev:
     build:
       context: .
@@ -37,6 +50,7 @@ services:
     image: "vro-development"
     depends_on:
       - db
+      - es
     ports:
       - "5000:5000"
       - "2992:2992"

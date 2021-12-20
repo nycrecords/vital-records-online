@@ -5,11 +5,19 @@ from glob import glob
 from subprocess import call
 
 import click
+from flask.cli import with_appcontext
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 PROJECT_ROOT = os.path.join(HERE, os.pardir)
 TEST_PATH = os.path.join(PROJECT_ROOT, "tests")
 
+
+@click.command()
+@with_appcontext
+def es_recreate():
+    """Recreates the index and docs"""
+    from vro.search.utils import recreate
+    recreate()
 
 @click.command()
 def test():

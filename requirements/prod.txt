@@ -9,6 +9,11 @@ click>=7.0
 Flask-SQLAlchemy==2.5.1
 SQLAlchemy==1.4.26
 psycopg2-binary==2.8.6
+psycogreen
+
+# Elasticsearch
+elasticsearch==7.16.1
+elasticsearch-dsl>=7.0.0,<8.0.0
 
 # Migrations
 Flask-Migrate==3.1.0
@@ -19,7 +24,7 @@ Flask-WTF==0.15.1
 WTForms==2.3.3
 
 # Deployment
-gevent==21.1.2
+gevent==21.8.0
 gunicorn>=19.9.0
 supervisor==4.2.2
 
