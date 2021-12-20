@@ -20,7 +20,8 @@ def create_index():
             "settings": {
                 "index": {
                     "sort.field": ["cert_type", "year", "last_name", "county"],
-                    "sort.order": ["asc", "asc", "asc", "asc"]
+                    "sort.order": ["asc", "asc", "asc", "asc"],
+                    "sort.missing": ["_last", "_last", "_last", "_last"]
                 }
             },
             "mappings": {
