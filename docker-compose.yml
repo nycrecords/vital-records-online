@@ -52,7 +52,7 @@ services:
       - db
       - es
     ports:
-      - "5000:5000"
+      - "8080:5000"
       - "2992:2992"
     <<: *default_volumes
 
@@ -64,7 +64,7 @@ services:
         <<: *build_args
     image: "vro-production"
     ports:
-      - "5000:5000"
+      - "8080:5000"
     environment:
       FLASK_ENV: production
       FLASK_DEBUG: 0
