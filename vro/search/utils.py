@@ -1,16 +1,17 @@
+import psycopg2
 from elasticsearch.helpers import bulk
-from sqlalchemy.orm import joinedload
 
 from vro.constants import certificate_types
 from vro.extensions import es
-from vro.models import Certificate
+from vro.settings import DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD, DATABASE_HOST, DATABASE_PORT, DATABASE_SSLMODE
 
 
 def recreate():
     """Deletes then recreates the index"""
     es.indices.delete('*', ignore=[400, 404])
     create_index()
-    create_docs()
+    num_success, _ = bulk(es, create_docs(), chunk_size=5000)
+    print("Successfully created %s certificates docs." % num_success)
 
 def create_index():
     """Creates indices """
@@ -70,48 +71,93 @@ def create_docs():
     """Creates elasticsearch request docs for every certificate"""
     if not es:
         return
-    certificates = Certificate.query.options(joinedload(Certificate.marriage_data)).filter(Certificate.filename.isnot(None)).all()
 
-    operations = []
-
-    for c in certificates:
-        spouse_name = None
-        spouse_first_name = None
-        spouse_last_name = None
-
-        # Get spouse metadata to store in index
-        if c.type == certificate_types.MARRIAGE:
-            for spouse in c.marriage_data:
-                if c.soundex != spouse.soundex:
-                    spouse_first_name = spouse.first_name
-                    spouse_last_name = spouse.last_name
-                    spouse_name = spouse.name
-
-        operations.append({
-            "_op_type": "create",
-            "_id": c.id,
-            "id": c.id,
-            "cert_type": c.type,
-            "number": c.number,
-            "county": c.county,
-            "year": c.year,
-            "first_name": c.first_name,
-            "last_name": c.last_name,
-            "full_name": c.name,
-            "display_string": c.display_string,
-            "spouse_first_name": spouse_first_name,
-            "spouse_last_name": spouse_last_name,
-            "spouse_name": spouse_name
-        })
-
-    num_success, _ = bulk(
-        es,
-        operations,
-        index="certificates",
-        chunk_size=1000,
-        raise_on_error=True
+    conn = psycopg2.connect(
+        dbname=DATABASE_NAME,
+        user=DATABASE_USER,
+        password=DATABASE_PASSWORD,
+        host=DATABASE_HOST,
+        port=DATABASE_PORT,
+        sslmode=DATABASE_SSLMODE,
     )
-    print("Successfully created %s certificates docs." % num_success)
+    cursor = conn.cursor("fetch_large_result")
+
+    cursor.execute("""
+        SELECT certificates.id,
+            certificates.type,
+            certificates.number,
+            certificates.county,
+            certificates.year,
+            certificates.first_name,
+            certificates.last_name,
+            certificates.filename,
+            certificates.soundex,
+            json_agg(
+                json_build_object(
+                    'first_name', marriage_data_1.first_name,
+                    'last_name', marriage_data_1.last_name,
+                    'soundex', marriage_data_1.soundex
+                )
+            ) AS items
+        FROM certificates
+            LEFT OUTER JOIN marriage_data AS marriage_data_1 ON certificates.id = marriage_data_1.certificate_id
+        WHERE certificates.filename IS NOT NULL
+        GROUP BY certificates.id;
+    """)
+
+    count = 0
+
+    while True:
+        certificates = cursor.fetchmany(size=1000)
+
+        if not certificates:
+            break
+
+        for c in certificates:
+            if c[5] is not None:
+                name = "{} {}".format(c[5], c[6])
+            elif c[1] == "marriage_license":
+                name = "Not Indexed"
+            else:
+                name = c[6]
+
+            spouse_name = None
+            spouse_first_name = None
+            spouse_last_name = None
+
+            # Get spouse metadata to store in index
+            if c[1] == certificate_types.MARRIAGE:
+                spouse_list = c[9]
+                for spouse in spouse_list:
+                    if spouse["soundex"] != c[8]:
+                        spouse_first_name = spouse["first_name"]
+                        spouse_last_name = spouse["last_name"]
+                        if spouse_first_name is not None:
+                            spouse_name = "{} {}".format(spouse_first_name, spouse_last_name)
+                        else:
+                            spouse_name = spouse_last_name
+
+            yield {
+                "_index": "certificates",
+                "_id": c[0],
+                "_source": {
+                    "id": c[0],
+                    "cert_type": c[1],
+                    "number": c[2],
+                    "county": c[3],
+                    "year": c[4],
+                    "first_name": c[5],
+                    "last_name": c[6],
+                    "full_name": name,
+                    "display_string": c[7][:-4],
+                    "spouse_first_name": spouse_first_name,
+                    "spouse_last_name": spouse_last_name,
+                    "spouse_name": spouse_name
+                }
+            }
+
+            count = count + 1
+            print("COUNT: ", count)
 
 def delete_doc(certificate_id):
     """Delete a specific doc in the index"""
