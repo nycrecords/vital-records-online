@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block page_title %}Browse All{% endblock %}
+
 {% block content %}
 <section class="py-3">
     <div class="container">
@@ -32,14 +34,17 @@
                     <div class="tab-pane fade show active pt-2" id="births-tab" role="tabpanel"
                          aria-labelledby="births">
                         <h3 class="h5 py-1">Digitized Birth Records</h3>
-                        <b>Bronx:</b> 1872-1873, 1898-1909 <b>Kings:</b> 1866-1897 <b>Manhattan:</b> 1866-1897 <b>Queens:</b>
-                        1898-1909 <b>Richmond:</b> 1898-1909 </p>
+                        <b>Bronx:</b> 1872 to 1873 and 1898 to 1909 <b>Kings:</b> 1866 to 1897 <b>Manhattan:</b> 1866 to
+                        1897
+                        <b>Queens:</b>
+                        1898 to 1909 <b>Richmond:</b> 1898 to 1909
                         <img src="{{ static_url_for('static', filename='img/birth-chart.png') }}" width="90%">
                     </div>
                     <div class="tab-pane fade pt-2" id="deaths-tab" role="tabpanel" aria-labelledby="deaths">
                         <h3 class="h5 py-1">Digitized Death Records</h3>
-                        <b>Bronx:</b> 1898-1948 <b>Kings:</b> 1861-1948 <b>Manhattan:</b> 1866-1867, 1920-1923 <b>Queens:</b>
-                        1898-1948 <b>Richmond:</b> 1898-1948 </p>
+                        <b>Bronx:</b> 1898 to 1948 <b>Kings:</b> 1861 to 1948 <b>Manhattan:</b> 1866 to 1867 and 1920 to
+                        1923 <b>Queens:</b>
+                        1898 to 1948 <b>Richmond:</b> 1898 to 1948
                         <img src="{{ static_url_for('static', filename='img/death-chart.png') }}">
                     </div>
                     <div class="tab-pane fade pt-2" id="marriages-tab" role="tabpanel" aria-labelledby="marriages">
@@ -55,13 +60,16 @@
                             however, the City Clerk licenses include additional information about the couple’s parents
                             and occupations.</p>
                         <h3 class="h5 py-1">Digitized Marriage Certificates</h3>
-                        <b>Bronx:</b> 1898-1937 <b>Kings:</b> 1866-1937 <b>Manhattan:</b> 1866-1937 <b>Queens:</b>
-                        1898-1937 <b>Richmond:</b> 1898-1937 </p>
+                        <b>Bronx:</b> 1898 to 1937 <b>Kings:</b> 1866 to 1937 <b>Manhattan:</b> 1866 to 1937
+                        <b>Queens:</b>
+                        1898 to 1937 <b>Richmond:</b> 1898 to 1937
                         <img src="{{ static_url_for('static', filename='img/marriage-chart.png') }}">
                         <hr>
                         <h3 class="h5 py-1">Digitized Marriage Licenses</h3>
-                        <b>Kings:</b> 1938-1949 <b>Manhattan:</b> 1908-1910, 1938-1949 <b>Queens:</b> 1938-1947 <b>Richmond:</b>
-                        1908-1947 </p>
+                        <b>Bronx:</b> Not yet digitized <b>Kings:</b> 1938 to 1949 <b>Manhattan:</b> 1908 to 1910, 1938
+                        to 1949 <b>Queens:</b> 1938 to
+                        1947 <b>Richmond:</b>
+                        1908 to 1947
                         <p><img src="{{ static_url_for('static', filename='img/marriage-license-chart.png') }}"
                                 width="75%"></p>
                     </div>
