@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block page_title %}Browse All{% endblock %}
+{% block page_title %}Digital Vital Records{% endblock %}
 
 {% block content %}
 <section class="py-3">
@@ -19,14 +19,17 @@
                 <p>To purchase a certified copy of a vital record that is not available on this website, please fill out
                     the <a href="https://www1.nyc.gov/site/records/historical-records/order.page" target="_blank"
                            rel="noopener noreferrer"><strong>Vital Records Order Form</strong></a>.</p>
-                <nav>
+                <nav aria-label="Certificate type navigation">
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                         <a class="nav-item nav-link active" id="births" data-toggle="tab" href="#births-tab"
-                           role="tab" aria-controls="births-tab" aria-selected="true">Births</a>
+                           role="tab" aria-controls="births-tab" aria-selected="true"
+                           aria-label="View birth certificates chart">Births</a>
                         <a class="nav-item nav-link" id="deaths" data-toggle="tab" href="#deaths-tab"
-                           role="tab" aria-controls="deaths-tab" aria-selected="false">Deaths</a>
+                           role="tab" aria-controls="deaths-tab" aria-selected="false"
+                           aria-label="View death certificates chart">Deaths</a>
                         <a class="nav-item nav-link" id="marriages" data-toggle="tab" href="#marriages-tab"
                            role="tab" aria-controls="marriages-tab" aria-selected="false"
+                           aria-label="View marriage records charts"
                         >Marriages</a>
                     </div>
                 </nav>
@@ -34,28 +37,26 @@
                     <div class="tab-pane fade show active pt-2" id="births-tab" role="tabpanel"
                          aria-labelledby="births">
                         <h3 class="h5 py-1">Digitized Birth Records</h3>
-                        <span>
-                            <b>Bronx:</b> 1872 to 1873 and 1876 and 1888 to 1891 and 1895 to 1909
-                            <b>Kings:</b> 1866 to 1897
-                            <b>Manhattan:</b> 1855 and 1857 to 1861 and 1863 to 1865 and 1866 to 1909
-                            <b>Queens:</b> 1866 and 1857 to 1861 and 1863 to 1865 and 1866 to 1909
-                            <b>Richmond:</b> 1898 to 1909
-                        </span>
-                        <img src="{{ static_url_for('static', filename='img/birth-chart.png') }}">
+                        <span><b>Bronx:</b> 1872 to 1873 and 1876 and 1888 to 1891 and 1895 to 1909</span><br>
+                        <span><b>Kings:</b> 1866 to 1897</span><br>
+                        <span><b>Manhattan:</b> 1855 and 1857 to 1861 and 1863 to 1865 and 1866 to 1909</span><br>
+                        <span><b>Queens:</b> 1866 and 1857 to 1861 and 1863 to 1865 and 1866 to 1909</span><br>
+                        <span><b>Richmond:</b> 1898 to 1909</span>
+                        <img src="{{ static_url_for('static', filename='img/birth-chart.png') }}"
+                             alt="Chart for digitized birth certificates">
                     </div>
                     <div class="tab-pane fade pt-2" id="deaths-tab" role="tabpanel" aria-labelledby="deaths">
                         <h3 class="h5 py-1">Digitized Death Records</h3>
-                        <span>
-                            <b>Bronx:</b> 1898 to 1948
-                            <b>Kings:</b> 1862 to 1948
-                            <b>Manhattan:</b> 1866 to 1867 and 1871 to 1875 and 1920 to 1930
-                            <b>Queens:</b> 1898 to 1948
-                            <b>Richmond:</b> 1898 to 1948
-                        </span>
-                        <img src="{{ static_url_for('static', filename='img/death-chart.png') }}">
+                        <span><b>Bronx:</b> 1898 to 1948</span><br>
+                        <span><b>Kings:</b> 1862 to 1948</span><br>
+                        <span><b>Manhattan:</b> 1866 to 1867 and 1871 to 1875 and 1920 to 1930</span><br>
+                        <span><b>Queens:</b> 1898 to 1948</span><br>
+                        <span><b>Richmond:</b> 1898 to 1948</span>
+                        <img src="{{ static_url_for('static', filename='img/death-chart.png') }}"
+                             alt="Chart for digitized death certificates">
                     </div>
                     <div class="tab-pane fade pt-2" id="marriages-tab" role="tabpanel" aria-labelledby="marriages">
-                        <h3>Marriage Records</h3>
+                        <h3 class="h5 py-1">Marriage Records</h3>
                         <p>The New York City Health Department issued marriage certificates through 1907. Beginning in
                             1908, in compliance with N.Y. State Law, couples planning to marry obtained a license from
                             the City Clerk. The City Clerk marriage licenses typically include an “affidavit” filled out
@@ -67,24 +68,22 @@
                             however, the City Clerk licenses include additional information about the couple’s parents
                             and occupations.</p>
                         <h3 class="h5 py-1">Digitized Marriage Certificates</h3>
-                        <span>
-                            <b>Bronx:</b> 1898 to 1937
-                            <b>Kings:</b> 1866 to 1937
-                            <b>Manhattan:</b> 1866 to 1937
-                            <b>Queens:</b> 1898 to 1937
-                            <b>Richmond:</b> 1898 to 1937
-                        </span>
-                        <img src="{{ static_url_for('static', filename='img/marriage-chart.png') }}">
+                        <span><b>Bronx:</b> 1898 to 1937</span><br>
+                        <span><b>Kings:</b> 1866 to 1937</span><br>
+                        <span><b>Manhattan:</b> 1866 to 1937</span><br>
+                        <span><b>Queens:</b> 1898 to 1937</span><br>
+                        <span><b>Richmond:</b> 1898 to 1937</span>
+                        <img src="{{ static_url_for('static', filename='img/marriage-chart.png') }}"
+                             alt="Chart for digitized marriage certificates">
                         <hr>
                         <h3 class="h5 py-1">Digitized Marriage Licenses</h3>
-                        <span>
-                            <b>Bronx:</b> Not yet digitized
-                            <b>Kings:</b> 1938 to 1949
-                            <b>Manhattan:</b> 1908 to 1910 and 1938 to 1949
-                            <b>Queens:</b> 1938 to 1947
-                            <b>Richmond:</b> 1908 to 1947
-                        </span>
-                        <img src="{{ static_url_for('static', filename='img/marriage-license-chart.png') }}">
+                        <span><b>Bronx:</b> Not yet digitized</span><br>
+                        <span><b>Kings:</b> 1938 to 1949</span><br>
+                        <span><b>Manhattan:</b> 1908 to 1910 and 1938 to 1949</span><br>
+                        <span><b>Queens:</b> 1938 to 1947</span><br>
+                        <span><b>Richmond:</b> 1908 to 1947</span>
+                        <img src="{{ static_url_for('static', filename='img/marriage-license-chart.png') }}"
+                             alt="Chart for digitized marriage licenses">
                     </div>
                 </div>
             </div>

@@ -108,7 +108,7 @@
             Primary Navigation
         </h2>
         <div class="wide">
-            <nav class="nav nav-pills" role="navigation">
+            <nav class="nav nav-pills" role="navigation" aria-label="Primary navigation">
                 <div class="nav-item">
                     <a class="nav-link {% if request.endpoint == 'public.browse_all' %}active{% endif %}"
                        href="{{ url_for('public.browse_all') }}"

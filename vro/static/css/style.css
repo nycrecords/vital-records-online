@@ -177,7 +177,16 @@ ul a {
     background: #e6ecf7;
 }
 
-#slider-range {
+#browse-page-slider-range .ui-slider-range {
+    background: grey;
+}
+
+#slider-range .ui-state-default, #browse-page-slider-range .ui-state-default {
+    border: 1px solid white !important;
+    background: #A513B6 !important;
+}
+
+#slider-range, #browse-page-slider-range {
     margin: 2rem 3rem;
 }
 
@@ -212,4 +221,16 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+.orange-focus:focus {
+  border-color: #FF5F1F !important;
+  outline: 0 !important;
+  box-shadow: 0 0 0 2px #FF5F1F !important;
+}
+
+.orange-focus .ui-slider-handle:focus.ui-corner-all:focus.ui-state-default:focus {
+    border-color: #FF5F1F !important;
+    outline: 0 !important;
+    box-shadow: 0 0 0 2px #FF5F1F !important;
 }

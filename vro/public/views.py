@@ -167,7 +167,8 @@ def browse_all():
                            certificates=res,
                            pagination=pagination,
                            num_results=format(count, ",d"),
-                           remove_filters=remove_filters)
+                           remove_filters=remove_filters,
+                           certificate_types=certificate_types)
 
 
 @blueprint.route("/view/<certificate_id>", methods=["GET"])
