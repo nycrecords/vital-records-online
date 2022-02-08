@@ -69,7 +69,7 @@
                         <!-- Menu Toggle -->
                         <div class="col-auto d-flex d-lg-none">
                             <button class="no-btn-style" type="button" data-toggle="collapse"
-                                    data-target="#nav-primary" aria-controls="nav-primary" aria-expanded="false"
+                                    data-target="#nav-primary" aria-controls="nav-primary"
                                     aria-label="Toggle navigation">
                                 <span class="fas fa-bars fa-lg" role="img"></span>
                             </button>
@@ -80,7 +80,7 @@
                                 <li>
                                     <button class="no-btn-style" type="button" title="Language"
                                             data-toggle="collapse" data-target="#global-language"
-                                            aria-controls="global-language" aria-expanded="false">
+                                            aria-controls="global-language">
                                         <span class="sr-only">Language</span>
                                         <span class="fas fa-language fa-lg" role="img"></span>
                                     </button>
@@ -108,18 +108,18 @@
             Primary Navigation
         </h2>
         <div class="wide">
-            <nav class="nav nav-pills" role="navigation">
+            <nav class="nav nav-pills" role="navigation" aria-label="Primary navigation">
                 <div class="nav-item">
                     <a class="nav-link {% if request.endpoint == 'public.browse_all' %}active{% endif %}"
                        href="{{ url_for('public.browse_all') }}"
-                       aria-haspopup="true" aria-expanded="false" role="button">
+                       aria-haspopup="true" role="button">
                         Browse All
                     </a>
                 </div>
                 <div class="nav-item">
                     <a class="nav-link {% if request.endpoint == 'public.search' %}active{% endif %}"
                        href="{{ url_for('public.search') }}"
-                       aria-haspopup="true" aria-expanded="false" role="button">
+                       aria-haspopup="true" role="button">
                         Search &nbsp;<small><sup><b>beta</b></sup></small>
                     </a>
                 </div>
@@ -127,7 +127,7 @@
                 <div class="nav-item">
                     <a class="nav-link {% if request.endpoint == 'public.digital_vital_records' %}active{% endif %}"
                        href="{{ url_for('public.digital_vital_records') }}"
-                       aria-haspopup="true" aria-expanded="false" role="button">
+                       aria-haspopup="true" role="button">
                         Digital Vital Records
                     </a>
                 </div>

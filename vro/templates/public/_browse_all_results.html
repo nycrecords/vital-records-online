@@ -3,7 +3,16 @@
     {% for certificate in certificates_batched %}
         <div class="col-lg">
             <a href="{{ url_for('public.view_certificate', certificate_id=certificate.id) }}">
-                <img src="/static/img/thumbnails/{{ certificate.county }}_{{ certificate.cert_type }}.png">
+                <img src="/static/img/thumbnails/{{ certificate.county }}_{{ certificate.cert_type }}.png"
+                     alt="{% if certificate.cert_type == certificate_types.BIRTH %}
+                        Birth Certificate {{ certificate.display_string }} {% if certificate.full_name is not none %}for {{ certificate.full_name }}{% endif %}
+                        {% elif certificate.cert_type == certificate_types.DEATH %}
+                        Death Certificate {{ certificate.display_string }} {% if certificate.full_name is not none %}for {{ certificate.full_name }}{% endif %}
+                        {% elif certificate.cert_type == certificate_types.MARRIAGE %}
+                        Marriage Certificate {{ certificate.display_string }} {% if certificate.full_name is not none %}for {{ certificate.full_name }}{% if certificate.spouse_name is not none %} and {{ certificate.spouse_name }}{% endif %}{% endif %}
+                        {% elif certificate.cert_type == certificate_types.MARRIAGE_LICENSE %}
+                        Marriage License {{ certificate.display_string }}
+                        {% endif %}">
             </a>
             <p class="small">{{ certificate.display_string }}<br>
                 {{ certificate.full_name or "" }}

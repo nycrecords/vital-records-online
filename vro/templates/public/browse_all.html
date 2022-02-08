@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block page_title %}Browse All{% endblock %}
+
 {% block content %}
 <section class="py-3">
     <div class="container">
@@ -29,7 +31,7 @@
                             {{ form.year_range.label(class="control-label", for="year_range") }}
                             {{ form.year_range(class="form-control browse-all-year-range mx-auto", id="year-range", readonly=true ) }}
                         </div>
-                        <div id="slider-range"></div>
+                        <div id="browse-page-slider-range"></div>
                     </div>
                     <div class="col-md center">
                         <div class="form-group">
@@ -55,7 +57,10 @@
                 <div class="col-lg">
                     <small class="pr-2">Remove Filters:</small>
                     {% for key, value in remove_filters.items() %}
-                        <span class="border border-light px-2 pt-1 pb-1 small"><b>{{ value[0] }}</b> <a class="remove-filter" href="{{ value[1] }}">&nbsp;X&nbsp;</a></span>
+                        <span class="border border-light px-2 pt-1 pb-1 small">
+                            <b>{{ value[0] }}</b>
+                            <a class="remove-filter" href="{{ value[1] }}" aria-label="Remove filter {{ value[0] }}">&nbsp;X&nbsp;</a>
+                        </span>
                     {% endfor %}
                 </div>
             </div>
@@ -99,17 +104,17 @@
     "use strict";
 
     $(function () {
-        $("#slider-range").slider({
+        $("#browse-page-slider-range").slider({
             range: true,
             min: parseInt("{{ year_range_min }}"),
             max: parseInt("{{ year_range_max }}"),
             values: ["{{ year_min_value }}", "{{ year_max_value }}"],
             slide: function (event, ui) {
-                $("#year-range").val(ui.values[0] + " - " + ui.values[1]);
+                $("#year-range").val(ui.values[0] + " to " + ui.values[1]);
             }
         });
-        $("#year-range").val($("#slider-range").slider("values", 0) +
-            " - " + $("#slider-range").slider("values", 1));
+        $("#year-range").val($("#browse-page-slider-range").slider("values", 0) +
+            " to " + $("#browse-page-slider-range").slider("values", 1));
     });
 </script>
 {% endblock %}
