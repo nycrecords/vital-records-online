@@ -100,6 +100,9 @@ def browse_all():
                 q_list.append(Q("range", year={"gte": year_range[0], "lte": year_range[1]}))
             elif key in ["first_name", "last_name"]:
                 q_list.append(Q("multi_match", query=value, fields=[key, "spouse_"+key]))
+            # Marriage certificates and marriage licenses are considered the same record type to the user
+            elif key == "cert_type" and value == "marriage":
+                q_list.append(Q("terms", cert_type=[certificate_types.MARRIAGE, certificate_types.MARRIAGE_LICENSE]))
             else:
                 q_list.append(Q("match", **{key: value}))
     q = Q("bool", must=q_list)
