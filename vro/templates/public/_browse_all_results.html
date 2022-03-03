@@ -14,9 +14,9 @@
                         Marriage License {{ certificate.display_string }}
                         {% endif %}">
             </a>
-            <p class="small">{{ certificate.display_string }}<br>
+            <h3 class="small" style="margin-bottom: 0;">{{ certificate.display_string }}</h3>
+            <p class="small">
                 {{ certificate.full_name or "" }}
-                <br>
                 {% if certificate.cert_type == "marriage" %}
                     {{ certificate.spouse_name }}
                 {% endif %}
