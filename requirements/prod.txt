@@ -12,7 +12,7 @@ psycopg2-binary==2.8.6
 psycogreen
 
 # Elasticsearch
-elasticsearch==7.16.1
+elasticsearch==7.17.0
 elasticsearch-dsl>=7.0.0,<8.0.0
 
 # Migrations
