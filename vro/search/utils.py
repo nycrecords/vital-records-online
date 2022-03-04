@@ -102,7 +102,6 @@ def create_docs():
         FROM certificates
             LEFT OUTER JOIN marriage_data AS marriage_data_1 ON certificates.id = marriage_data_1.certificate_id
         WHERE certificates.filename IS NOT NULL
-        AND certificates.type = 'marriage_license'
         GROUP BY certificates.id;
     """)
 
