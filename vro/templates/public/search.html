@@ -35,7 +35,7 @@
                         </div>
                         <div class="form-div">
                             <div class="form-group">
-                                {{ search_by_number_form.year.label(class="control-label", for="year") }}
+                                {{ search_by_number_form.year.label(class="control-label", for="search-by-number-year") }}
                                 {{ search_by_number_form.year(class="form-control", maxlength="4", type="number", min=year_range_min) }}
                             </div>
                         </div>
@@ -47,26 +47,24 @@
                 <h4>Finding Certificate Numbers</h4>
                 <p>Indexes of the birth, death, and marriage records contain certificate numbers, and can be searched
                     on:</p>
-                <small>
+                <div>
                     <ul>
-                        <li><a href="https://www.ancestry.com/cs/newyork" target="_blank" rel="noopener noreferrer">Ancestry</a>
+                        <li><a href="https://www.ancestry.com/search/categories/34/" target="_blank" rel="noopener noreferrer">Ancestry</a>
                         </li>
                         <li><a href="https://www.germangenealogygroup.com/" target="_blank" rel="noopener noreferrer">German
                             Genealogy Group</a></li>
                         <li><a href="https://italiangen.org/" target="_blank" rel="noopener noreferrer">Italian
                             Genealogical Group</a></li>
-                        <li><a href="https://archive.org/details/nycmarriageindex" target="_blank"
-                               rel="noopener noreferrer">Internet Archive</a> (marriage
-                            licenses only)
-                        </li>
                     </ul>
-                </small><br>
+                </div><br>
                 <hr>
             </div>
             <div class="col-lg pt-2">
                 <h3>By Name&nbsp;<small><sup><b>beta</b></sup></small></h3>
                 <p>Searching by name is in beta mode, and may not produce accurate results. Because marriage licenses
-                    are not yet indexed by name, marriage licenses will not be returned in name search results.<br>
+                    are not yet indexed by name, marriage licenses will not be returned in name search results. Further
+                    guidance on researching <a href="{{ url_for('public.digital_vital_records') }}">City Clerk marriage
+                        license records</a>.</p>
                 <p>The searchable index used on this site was created by the Long Island Genealogy Federation by
                     transcribing original hard-copy indexes (which may have been inaccurately transcribed from original
                     certificates). Future phases of the <i>Historical Vital Records of NYC</i> project
@@ -101,7 +99,7 @@
                         </div>
                         <div class="form-div">
                             <div class="form-group">
-                                {{ search_by_name_form.year.label(class="control-label", for="year") }}
+                                {{ search_by_name_form.year.label(class="control-label", for="search-by-name-year") }}
                                 {{ search_by_name_form.year(class="form-control", maxlength="4", type="number", min=year_range_min) }}
                             </div>
                         </div>
@@ -112,7 +110,7 @@
                 </div>
             </div>
             <br>
-            <small>Search tips:
+            <div>Search tips:
                 <ul>
                     <li>Certificate numbering restarts at 0000001 for each borough*</li>
                     <li>Try alternate name spellings if necessary</li>
@@ -125,9 +123,9 @@
                     <li>Marriage certificates and licenses are indexed by the bride’s maiden name not married name</li>
                     <li>The date of birth or age at time of death is useful in identifying the correct individual</li>
                     <br>
-                    &nbsp;&nbsp; * One exception: Manhattan records were continuously numbered from 1881-1887
+                    &nbsp;&nbsp; * One exception: Manhattan records were continuously numbered from 1881 to 1887
                 </ul>
-            </small>
+            </div>
         </div>
     </div>
 </section>

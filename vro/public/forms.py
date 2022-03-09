@@ -52,7 +52,7 @@ class SearchByNumberForm(Form):
 
     """
     certificate_type = SelectField("Certificate Type:*", choices=certificate_types.SEARCH_DROPDOWN, validators=[DataRequired()])
-    year = IntegerField("Year:", validators=[NumberRange(1866, 1949)], render_kw={"placeholder": "####"})
+    year = IntegerField("Year:", id="search-by-number-year", validators=[NumberRange(1866, 1949)], render_kw={"placeholder": "####"})
     county = SelectField("Borough:", choices=counties.SEARCH_DROPDOWN)
     number = IntegerField("Certificate Number:*", validators=[NumberRange(1, 9999999), DataRequired()], render_kw={"placeholder": "#######"})
     submit = SubmitField("Search")
@@ -77,7 +77,7 @@ class SearchByNameForm(Form):
     certificate_type = SelectField("Certificate Type:*", choices=certificate_types.SEARCH_DROPDOWN, validators=[DataRequired()])
     last_name = StringField("Last Name:*", validators=[DataRequired()])
     first_name = StringField("First Name:")
-    year = IntegerField("Year:", validators=[NumberRange(1866, 1949)], render_kw={"placeholder": "####"})
+    year = IntegerField("Year:", id="search-by-name-year", validators=[NumberRange(1866, 1949)], render_kw={"placeholder": "####"})
     county = SelectField("Borough:", choices=counties.SEARCH_DROPDOWN)
     submit = SubmitField("Search")
 
