@@ -26,21 +26,21 @@
                             <div class="form-group">
                                 {{ browse_all_form.certificate_type.label(class="control-label",
                                 for="certificate_type") }}
-                                {{ browse_all_form.certificate_type(class="form-control orange-focus browse-all-select") }}
+                                {{ browse_all_form.certificate_type(class="form-control black-white-focus browse-all-select") }}
                             </div>
                         </div>
                         <div class="form-div">
                             {{ browse_all_form.county.label(class="control-label", for="county") }}
-                            {{ browse_all_form.county(class="form-control orange-focus browse-all-select") }}
+                            {{ browse_all_form.county(class="form-control black-white-focus browse-all-select") }}
                         </div>
                         <div class="form-div">
                             <br>
                             {{ browse_all_form.year_range.label(class="control-label", for="year_range") }}
-                            {{ browse_all_form.year_range(class="form-control orange-focus", id="homepage-year-range", readonly=true ) }}
+                            {{ browse_all_form.year_range(class="form-control black-white-focus", id="homepage-year-range", readonly=true ) }}
                         </div>
-                        <div id="slider-range" class="orange-focus"></div>
+                        <div id="slider-range" class="black-white-focus"></div>
                         <div class="text-center">
-                            <button id="homepage-browse" class="btn btn-info orange-focus">Browse</button>
+                            <button id="homepage-browse" class="btn btn-info black-white-focus">Browse</button>
                         </div>
                     </form>
                 </div>
@@ -48,7 +48,7 @@
             <!-- .col -->
             <div class="col-md text-center">
                 <h3 class="text-center text-white pb-1">Search</h3>
-                <select id="form-type-select" class="form-select orange-focus" aria-label="Search By Selection">
+                <select id="form-type-select" class="form-select black-white-focus" aria-label="Search By Selection">
                     <option selected value="number">Certificate Number</option>
                     <option value="name">Last Name</option>
                 </select>
@@ -60,33 +60,33 @@
                             <div class="form-group">
                                 {{ search_by_number_form.certificate_type.label(class="control-label",
                                 for="certificate_type") }}
-                                {{ search_by_number_form.certificate_type(class="form-control orange-focus browse-all-select") }}
+                                {{ search_by_number_form.certificate_type(class="form-control black-white-focus browse-all-select") }}
                             </div>
                         </div>
                         <div class="form-div">
                             <div class="form-group">
                                 {{ search_by_number_form.number.label(class="control-label", for="number") }}
-                                {{ search_by_number_form.number(class="form-control orange-focus", maxlength="7") }}
+                                {{ search_by_number_form.number(class="form-control black-white-focus", maxlength="7") }}
                             </div>
                         </div>
                         <div class="form-div">
                             <div class="form-group">
                                 {{ search_by_number_form.county.label(class="control-label", for="county") }}
-                                {{ search_by_number_form.county(class="form-control orange-focus browse-all-select") }}
+                                {{ search_by_number_form.county(class="form-control black-white-focus browse-all-select") }}
                             </div>
                         </div>
                         <div class="form-div">
                             <div class="form-group">
                                 {{ search_by_number_form.year.label(class="control-label", for="search-by-number-year") }}
-                                {{ search_by_number_form.year(class="form-control orange-focus", maxlength="4", type="number", min=year_range_min) }}
+                                {{ search_by_number_form.year(class="form-control black-white-focus", maxlength="4", type="number", min=year_range_min) }}
                             </div>
                         </div>
                         <div class="text-center pt-3 pb-1">
-                            <button id="homepage-search-number" class="btn btn-info orange-focus">Search</button>
+                            <button id="homepage-search-number" class="btn btn-info black-white-focus">Search</button>
                         </div>
                         <small class="pt-1 text-white">Not sure where to start? Read our <a
                                 href="{{ url_for('public.search') }}"
-                                class="orange-focus">*search tips*</a> for
+                                class="black-white-focus">*search tips*</a> for
                             finding vital records.</small>
                     </form>
                     <form action="{{ url_for('public.browse_all') }}" method="get" role="form"
@@ -96,40 +96,40 @@
                                 {{ search_by_name_form.certificate_type.label(class="control-label",
                                 for="certificate_type")
                                 }}
-                                {{ search_by_name_form.certificate_type(class="form-control orange-focus browse-all-select") }}
+                                {{ search_by_name_form.certificate_type(class="form-control black-white-focus browse-all-select") }}
                             </div>
                         </div>
                         <br>
                         <div class="form-div">
                             <div class="form-group">
                                 {{ search_by_name_form.last_name.label(class="control-label", for="last_name") }}
-                                {{ search_by_name_form.last_name(class="form-control orange-focus", maxlength="64") }}
+                                {{ search_by_name_form.last_name(class="form-control black-white-focus", maxlength="64") }}
                             </div>
                         </div>
                         <div class="form-div">
                             <div class="form-group">
                                 {{ search_by_name_form.first_name.label(class="control-label", for="first_name") }}
-                                {{ search_by_name_form.first_name(class="form-control orange-focus", maxlength="64") }}
+                                {{ search_by_name_form.first_name(class="form-control black-white-focus", maxlength="64") }}
                             </div>
                         </div>
                         <div class="form-div">
                             <div class="form-group">
                                 {{ search_by_name_form.county.label(class="control-label", for="county") }}
-                                {{ search_by_name_form.county(class="form-control orange-focus browse-all-select") }}
+                                {{ search_by_name_form.county(class="form-control black-white-focus browse-all-select") }}
                             </div>
                         </div>
                         <div class="form-div">
                             <div class="form-group">
                                 {{ search_by_name_form.year.label(class="control-label", for="search-by-name-year") }}
-                                {{ search_by_name_form.year(class="form-control orange-focus", maxlength="4", type="number", min=year_range_min) }}
+                                {{ search_by_name_form.year(class="form-control black-white-focus", maxlength="4", type="number", min=year_range_min) }}
                             </div>
                         </div>
                         <div class="text-center pt-3 pb-1">
-                            <button id="homepage-search-name" class="btn btn-info orange-focus">Search</button>
+                            <button id="homepage-search-name" class="btn btn-info black-white-focus">Search</button>
                         </div>
                         <small class="pt-1 text-white">Not sure where to start? Read our <a
                                 href="{{ url_for('public.search') }}"
-                                class="orange-focus">*search tips*</a> for finding vital records.</small>
+                                class="black-white-focus">*search tips*</a> for finding vital records.</small>
                     </form>
                 </div>
                 <!-- .col -->
