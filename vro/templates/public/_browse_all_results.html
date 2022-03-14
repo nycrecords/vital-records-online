@@ -15,12 +15,12 @@
                         {% endif %}Click to view details.">
             </a>
             <h3 class="small" style="margin-bottom: 0;">{{ certificate.display_string }}</h3>
-            <p class="small">
+            <p class="small" style="margin-bottom: 0;">
                 {{ certificate.full_name or "" }}
-                {% if certificate.cert_type == "marriage" %}
-                    {{ certificate.spouse_name }}
-                {% endif %}
             </p>
+            {% if certificate.cert_type == "marriage" %}
+                <p class="small">{{ certificate.spouse_name or "" }}</p>
+            {% endif %}
         </div>
     {% endfor %}
     <!-- If last batch of certificates is less than 5, add empty columns to create a perfect grid -->
