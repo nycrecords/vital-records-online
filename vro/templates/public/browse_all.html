@@ -57,10 +57,7 @@
                 <div class="col-lg">
                     <small class="pr-2">Remove Filters:</small>
                     {% for key, value in remove_filters.items() %}
-                        <span class="border border-light px-2 pt-1 pb-1 small">
-                            <b>{{ value[0] }}</b>
-                            <a class="remove-filter" href="{{ value[1] }}" aria-label="Remove filter {{ value[0] }}">&nbsp;X&nbsp;</a>
-                        </span>
+                        <span class="border border-light px-2 pt-1 pb-1 small"><b>{{ value[0] }}</b><a class="remove-filter" href="{{ value[1] }}" aria-label="Remove filter {{ value[0] }}">&nbsp;X&nbsp;</a></span>
                     {% endfor %}
                 </div>
             </div>
