@@ -129,7 +129,7 @@ def create_docs():
             if c[1] == certificate_types.MARRIAGE:
                 spouse_list = c[9]
                 for spouse in spouse_list:
-                    if spouse["soundex"] != c[8]:
+                    if spouse["soundex"] != c[8] or spouse["first_name"] != c[5]:
                         spouse_first_name = spouse["first_name"]
                         spouse_last_name = spouse["last_name"]
                         if spouse_first_name is not None:
