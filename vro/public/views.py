@@ -252,3 +252,9 @@ def about():
     return render_template("public/about.html",
                            digitized=format(count, ",d"),
                            digitization_percentage=digitization_percentage)
+
+
+@blueprint.route("/faq", methods=["GET"])
+def faq():
+    """FAQ page."""
+    return render_template("public/faq.html")

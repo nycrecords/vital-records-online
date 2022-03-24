@@ -47,9 +47,10 @@
             </div>
             <!-- .col -->
             <div class="col-md text-center">
-                <h3 class="text-center text-white pb-1">Search</h3>
-                <select id="form-type-select" class="form-select black-white-focus" aria-label="Search By Selection">
-                    <option selected value="number">Certificate Number</option>
+                <h3 class="text-center text-white pb-1">Search By</h3>
+                <select id="form-type-select" class="form-select black-white-focus" aria-label="Search By Selection" required form="search-by-number-form">
+                    <option hidden="" disabled="disabled" selected="selected" value="">Select an option</option>
+                    <option value="number">Certificate Number</option>
                     <option value="name">Last Name</option>
                 </select>
                 <br>
