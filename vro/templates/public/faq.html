@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block page_title %}FAQ{% endblock %}
+
+{% block content %}
+<section class="py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>FAQ</h2>
+                <ol type="1" class="pt-2">
+                    <p><strong>INCORRECT or NOT FOUND SEARCH RESULTS</strong></p>
+                    <li class="pb-2">Why do my search results return the wrong certificate?</li>
+                    <p>First, make sure that the correct Borough, year, and certificate number was entered into the
+                        site. If the result is still incorrect, check the date of the birth, death or marriage event. If
+                        it took place in December, it is possible that the certificate for the event was not filed until
+                        the following year. Try changing the year entry to the following year.</p>
+                    <p>Confirm the Borough, year and certificate number information with one of the other available
+                        indexes. The Municipal Archives application uses the indexes created by the Long Island
+                        Genealogy Federation. There are alternative indexes available at <a
+                                href="https://www.ancestry.com/" target="_blank"
+                                rel="noopener noreferrer">Ancestry.com</a> and <a
+                                href="https://www.familysearch.org/en/" target="_blank" rel="noopener noreferrer">FamilySearch.org</a>.
+                        Please note the Ancestry site links all the names listed on a vital record to
+                        one certificate number. Be sure the certificate number you enter corresponds with the individual
+                        you are researching.</p>
+                    <p>If these strategies do not produce the correct result, there may be an error in the index or the
+                        link to the image. We are developing ways to crowd-source corrections and will be announcing
+                        updates in the coming weeks.</p>
+                    <li class="pb-2">
+                        Why do I get a "no result" page? I’ve confirmed all my search parameters.
+                    </li>
+                    <p>a. The birth, death or marriage event was not reported to the appropriate civil office.</p>
+                    <p><strong>Births:</strong> Legislation dating as far back as 1847 required persons attending at a
+                        birth to report
+                        the event to the Department of Health. However, many births were not reported, especially in the
+                        19th and early 20th century when most births took place at home. There may have been a
+                        reluctance or inability to report the birth if the family or the attendant was not literate in
+                        English. Some families, especially in the Irish Catholic community, obtained a baptismal record
+                        from the church, but did not report the birth to the civil office.</p>
+                    <p><strong>Marriages:</strong> Sometimes persons officiating at the ceremony, particularly in a
+                        religious venue,
+                        failed to report the event to the Health Department. If the marriage took place after 1908, it
+                        is possible that there is a license record on file in the City Clerk marriage license series,
+                        but not in the Health Department marriage certificate series.</p>
+                    <p>
+                        <strong>Deaths:</strong> To the best of our knowledge, cemeteries required evidence of the
+                        Department of Health
+                        death certificate prior to burial. A "no result" return for a death record is likely due to
+                        incorrect search parameters, or an incorrect index entry, as described below.
+                    </p>
+                    <p>b. Not correctly indexed.</p>
+                    <p>Vital records are numbered sequentially beginning with no. 1 on January 1 of each calendar year.
+                        And each Borough of New York City maintained separate series of birth, death and marriage
+                        records. Therefore, in order to locate the requested birth, death or marriage record, it is
+                        necessary to search indices to identify the certificate number, Borough, and date (year).</p>
+                    <p>The indices to the vital records exist in varied formats, including hard copy and electronic, but
+                        all have one thing in common: they were created by people reading the original record and
+                        transcribing the index information: name(s), date, certificate number etc. Given this process,
+                        there were inevitable mistakes, especially since most of the original records are
+                        hand-written.</p>
+                    <p>The result is that some records are mis-indexed in such a way that even a diligent search of
+                        varied name spellings, etc. will not identify the correct entry.</p>
+                    <p>Assuming all available indexes have been searched, and there is good evidence that the
+                        certificate does exist (e.g. date of burial information from a cemetery), one alternative is to
+                        search the records directly, based on the date of the event. This is generally recommended only
+                        for death record searches or more recent marriage record searches.</p>
+                    <p><strong>DIGITIZATION TIMELINE</strong></p>
+                    <li class="pb-2">When will digitization of the Manhattan deaths be completed?</li>
+                    <p>Digitized microfilm of death records from 1931-1944 will be published to the site in June
+                        2022.</p>
+                    <p>Digitized microfilm of death records from 1945-1948 will be published September 2022.</p>
+                    <li class="pb-2">When will digitization of the City Clerk marriage license records be completed?</li>
+                    <p>Approximately 40,000 marriage licenses will be digitized and published quarterly, beginning in
+                        September, 2022.</p>
+                    <p>Digitization of the Manhattan deaths and City Clerk marriage license records is on-going. Newly
+                        digitized/indexed records will be added to the site on a quarterly basis. See <a
+                                href="{{ url_for('public.digital_vital_records') }}">Digital Vital Records</a> for
+                        charts detailing what has been
+                        digitized and more <a href="{{ url_for('public.about') }}">About</a> the three phased
+                        digitization project.
+                    </p>
+                    <p><strong>MARRIAGE RECORDS</strong></p>
+                    <li class="pb-2">What is the difference between a marriage certificate and a marriage license?</li>
+                    <p>Couples who married between 1908 and 1937 may have filed records with both the Department of
+                        Health and City Clerk. In these instances, two records will exist: the license and the
+                        certificate.</p>
+                    <p>Department of Health Marriage Certificates were issued until 1938.</p>
+                    <p>City Clerk Marriage Licenses were issued beginning in 1908 in compliance with NY State Law. The
+                        City Clerk marriage record series typically includes:</p>
+                    <ol type="a">
+                        <li>Affidavit filled-out by the couple.</li>
+                        <li>License issued by the Clerk, (includes parents’ country of birth and bride’s occupation)</li>
+                        <li>Certificate filled-out by the person performing the wedding ceremony.</li>
+                    </ol>
+                    <li class="pb-2 pt-2">How do I find a marriage license record?</li>
+                    <p>Search the index at <a href="https://www.ancestry.com/" target="_blank"
+                                              rel="noopener noreferrer">Ancestry.com</a>. Search results on the Ancestry
+                        site may include both the Health
+                        Department marriage record (for marriages reported from 1866 to 1937) and the City Clerk license
+                        record (for marriages reported from 1908 to 1949). <strong>The record number in each series is
+                            different.</strong> Make sure the correct number for the City Clerk license has been
+                        identified. On the
+                        Ancestry site, the source for the City Clerk license number will indicate: "New York, New York,
+                        U.S., Marriage License Indexes, 1907-2018."</p>
+                    <p>
+                        After obtaining the City Clerk license number from the index, return to <a
+                            href="{{ url_for('public.index') }}">Historical Vital Records</a> to view the record, or to
+                        order a copy. Note that digitization of the license records is
+                        on-going. The <a href="{{ url_for('public.digital_vital_records') }}">Marriage charts</a> detail
+                        whether the record has been digitized. If not, the record
+                        can be viewed on microfilm at the Municipal Archives, or <a
+                            href="https://dorisorders.nyc.gov/dorisorders/ui/order-vital-records" target="_blank"
+                            rel="noopener noreferrer">order a copy</a>.
+                    </p>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+{% include "public/municipal_archives_banner.html" %}
+{% endblock %}
