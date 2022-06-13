@@ -2,7 +2,6 @@
 Models for Vital Records Online
 """
 
-from flask import url_for
 from vro.database import db, PkModel
 from vro.constants import (
     certificate_types,
@@ -87,7 +86,7 @@ class Certificate(PkModel):
 
         :return: A 7 digit string with certificate number and leading zeros.
         """
-        return self.number.zfill(7)
+        return self.number.replace(" ", "").zfill(7)
 
     @property
     def blob_name(self):
@@ -144,7 +143,6 @@ class MarriageData(PkModel):
     """
     __tablename__ = "marriage_data"
     certificate_id = db.Column(db.Integer, db.ForeignKey("certificates.id"), nullable=False)
-    filename = db.Column(db.String)
     first_name = db.Column(db.String(64))
     last_name = db.Column(db.String(64))
     soundex = db.Column(db.String(4))

@@ -37,7 +37,6 @@ def upgrade():
     op.create_table('marriage_data',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('certificate_id', sa.Integer(), nullable=False),
-    sa.Column('filename', sa.String(), nullable=True),
     sa.Column('first_name', sa.String(length=64), nullable=True),
     sa.Column('last_name', sa.String(length=64), nullable=True),
     sa.Column('soundex', sa.String(length=4), nullable=True),
