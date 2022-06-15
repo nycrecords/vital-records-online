@@ -101,7 +101,7 @@ def create_docs():
             ) AS items
         FROM certificates
             LEFT OUTER JOIN marriage_data AS marriage_data_1 ON certificates.id = marriage_data_1.certificate_id
-        WHERE certificates.filename IS NOT NULL
+        WHERE certificates.filename IS NOT NULL and certificates.id=10276931
         GROUP BY certificates.id;
     """)
 
@@ -137,13 +137,20 @@ def create_docs():
                         else:
                             spouse_name = spouse_last_name
 
+            # Check for special character in number
+            number = c[2]
+            if c[2][-1].isalpha():
+                unspaced_number = c[2].replace(" ", "")
+                spaced_number = unspaced_number.replace(c[2][-1], " " + c[2][-1])
+                number = [unspaced_number, spaced_number]
+
             yield {
                 "_index": "certificates",
                 "_id": c[0],
                 "_source": {
                     "id": c[0],
                     "cert_type": c[1],
-                    "number": c[2],
+                    "number": number,
                     "county": c[3],
                     "year": c[4],
                     "first_name": c[5],
