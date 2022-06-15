@@ -79,14 +79,6 @@ class Certificate(PkModel):
         """
         return self.filename[:-4]
 
-    @property
-    def certificate_number_string(self):
-        """
-        A property that generates a 7 digit string with certificate number and leading zeros.
-
-        :return: A 7 digit string with certificate number and leading zeros.
-        """
-        return self.number.replace(" ", "").zfill(7)
 
     @property
     def blob_name(self):
