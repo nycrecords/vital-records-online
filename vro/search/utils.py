@@ -137,13 +137,20 @@ def create_docs():
                         else:
                             spouse_name = spouse_last_name
 
+            # Check for special character in number
+            number = c[2]
+            if c[2][-1].isalpha():
+                unspaced_number = c[2].replace(" ", "")
+                spaced_number = unspaced_number.replace(c[2][-1], " " + c[2][-1])
+                number = [unspaced_number, spaced_number]
+
             yield {
                 "_index": "certificates",
                 "_id": c[0],
                 "_source": {
                     "id": c[0],
                     "cert_type": c[1],
-                    "number": c[2],
+                    "number": number,
                     "county": c[3],
                     "year": c[4],
                     "first_name": c[5],

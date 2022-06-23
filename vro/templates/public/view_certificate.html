@@ -51,18 +51,9 @@
                         {% endif %}
                     </p>
                     <p><b>Date</b>: {{ certificate.date }}</p>
-                    <p><b>Certificate</b>: {{ certificate.certificate_number_string }}</p>
-                    {% if certificate.type == certificate_types.BIRTH %}
-                    <a href="https://www1.nyc.gov/doittshoppingcart/birthCertificate.htm" class="btn btn-info mt-3"
+                    <p><b>Certificate</b>: {{ certificate.number | replace(" ", "") }}</p>
+                    <a href="https://dorisorders.nyc.gov/dorisorders/ui/order-vital-records-via-site/#link={{ request.url }}&id={{ certificate.display_string }}&type={{ certificate.type }}" class="btn btn-info mt-3"
                        target="_blank" rel="noopener noreferrer">Purchase Certified Copy</a>
-                    {% elif certificate.type == certificate_types.DEATH %}
-                    <a href="https://www1.nyc.gov/doittshoppingcart/deathCertificate.htm" class="btn btn-info mt-3"
-                       target="_blank" rel="noopener noreferrer">Purchase Certified Copy</a>
-                    {% elif certificate.type == certificate_types.MARRIAGE or certificate.type ==
-                    certificate_types.MARRIAGE_LICENSE %}
-                    <a href="https://www1.nyc.gov/doittshoppingcart/marriageCertificate.htm" class="btn btn-info mt-3"
-                       target="_blank" rel="noopener noreferrer">Purchase Certified Copy</a>
-                    {% endif %}
                 </small>
             </div>
         </div>
