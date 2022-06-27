@@ -1,3 +1,61 @@
-<div class="container">
-    <h1 class="mt-5">About</h1>
-</div>
+{% extends "base.html" %}
+
+{% block page_title %}About{% endblock %}
+
+{% block content %}
+<section class="py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>About</h2>
+                <p><i>Historical Vital Records of NYC</i> is an initiative from Department of Records and Information
+                    Services.</p>
+                <p>The New York City Municipal Archives’ vital records collection is one of the largest in the country.
+                    The Archives initiated a mass digitization project in 2013 to provide access to 13.3 million birth,
+                    death, and marriage records. As of 2022, 70% of these holdings have been digitized.</p>
+                <h3 class="h4">Phase One</h3>
+                <p>In 2013, the Municipal Archives contracted with eDocNY to digitize 8.5 million records. Archives
+                    staff collaborated closely with the vendor to ensure high-quality, preservation-standard
+                    digitization. In addition, the Conservation and Preservation Unit worked alongside the digitization
+                    team to repair and preserve the original documents.</p>
+                <p>Beginning in 2003, the <a href="https://gfli.net/" target="_blank" rel="noopener noreferrer"><strong>
+                    Genealogy Federation of Long Island</strong></a> generously
+                    provided volunteers to transcribe original hard-copy indexes to a database format.</p>
+                <h3 class="h4">Phase Two (Current Phase)</h3>
+                <p>The Municipal Archives is digitizing the marriage license series (1908 to 1949) in-house.</p>
+                <h3 class="h4">Phase Three</h3>
+                <p>The Municipal Archives will create high-quality images of Manhattan death records dating 1867 to 1948,
+                    from the original hard-copy. These records are currently serviced using the microfilm edition.</p>
+                <p>This initiative represents just one effort to fulfill the Municipal Archives’ mission to provide
+                    broad, long-term access to the collections through improved descriptions, digitization, preservation
+                    and conservation. To learn more, explore the <a href="https://a860-collectionguides.nyc.gov"
+                                                                    target="_blank" rel="noopener noreferrer"><strong>
+                        Collection Guides</strong></a>, browse the <a href="https://nycma.lunaimaging.com/luna/servlet"
+                                                                      target="_blank"
+                                                                      rel="noopener noreferrer"><strong>Digital
+                        Gallery</strong></a>,
+                    and read the <a href="https://www.archives.nyc/blog" target="_blank"
+                                    rel="noopener noreferrer"><strong>blog</strong></a>.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="pt-1 pb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg mb-3 mb-lg-0">
+                <h3 class="pb-1">Digitization Progress</h3>
+                <div class="progress bg-light">
+                    <div class="progress-bar bg-primary text-white" role="progressbar"
+                         style="width: {{ digitization_percentage }}%;"
+                         aria-valuenow="{{ digitization_percentage }}" aria-valuemin="0" aria-valuemax="100"><b>&nbsp;
+                        {{ digitization_percentage }}% ({{ digitized }} of 13.3
+                        million records)</b></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- .container -->
+</section>
+{% include "public/municipal_archives_banner.html" %}
+{% endblock %}

@@ -1,0 +1,156 @@
+<!-- For keyboard users -->
+<a class="sr-only sr-only-focusable skip-menu" href="#skip-header-target">Skip Header</a>
+<header id="global-header" role="banner">
+    <div class="bg-black text-white" id="nyc-top-header">
+        <div class="container-fluid wide">
+            <div class="row py-1 align-items-center justify-content-between">
+                <div class="col-auto">
+                    <p class="d-none d-md-flex fs-md">
+                        <a class="text-reset" href="https://www1.nyc.gov/" target="_blank" rel="noopener noreferrer">
+                            <strong>nyc.gov</strong>
+                        </a>
+                        <span class="mx-1" aria-hidden="true">|</span>
+                        DORIS
+                    </p>
+                </div>
+                <!-- .col -->
+                <div class="col-auto">
+                    <ul class="extensible-list horizontal fs-md">
+                        <li>
+                            <a class="text-reset" href="http://www1.nyc.gov/">
+                                <strong>
+                                    311
+                                </strong>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="text-reset" href="http://www1.nyc.gov/home/search/index.page">
+                                <strong>
+                                    Search all NYC.gov
+                                </strong>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www1.nyc.gov/" title="Go to nyc.gov">
+                                <img class="d-block" src="{{ static_url_for('static', filename='img/nyc-bubble-logo.svg') }}" width="45"
+                                     alt="NYC Logo">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- .col -->
+            </div>
+            <!-- .row -->
+        </div>
+        <!-- .container-fluid -->
+    </div>
+    <!-- #nyc-top-header -->
+    <div class="wrap-header">
+        <div class="container-fluid wide">
+            <div class="row pt-2 pb-2 align-items-center">
+                <div class="col-lg-3">
+                    <div class="d-flex justify-content-center justify-content-lg-start">
+                        <a class="align-self-center" href="https://nyc.gov/doris" title="Home">
+                            <img src="{{ static_url_for('static', filename='img/DORIS-logo.png') }}" alt="DORIS" width="35%">
+                        </a>
+                    </div>
+                    <!-- .d-flex -->
+                </div>
+                <!-- .col -->
+                <div class="col-lg-6">
+                    <div class="d-flex justify-content-center text-center">
+                        <h1><a href="{{ url_for('public.index') }}">Historical Vital Records<br><small>The
+                            New York City Municipal Archives</small></a></h1>
+                    </div>
+                    <!-- .d-flex -->
+                </div>
+                <div class="col-lg-3 justify-content-end border-top border-lg-0">
+                    <div class="row no-gutters justify-content-end py-2">
+                        <!-- Menu Toggle -->
+                        <div class="col-auto d-flex d-lg-none">
+                            <button class="no-btn-style" type="button" data-toggle="collapse"
+                                    data-target="#nav-primary" aria-controls="nav-primary"
+                                    aria-label="Toggle navigation">
+                                <span class="fas fa-bars fa-lg" role="img"></span>
+                            </button>
+                        </div>
+                        <!-- .col -->
+                        <div class="col-auto">
+                            <ul class="extensible-list horizontal">
+                                <li>
+                                    <button class="no-btn-style" type="button" title="Language"
+                                            data-toggle="collapse" data-target="#global-language"
+                                            aria-controls="global-language">
+                                        <span class="sr-only">Language</span>
+                                        <span class="fas fa-language fa-lg" role="img"></span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- .col -->
+                    </div>
+                    <!-- .row -->
+                </div>
+                <!-- .col -->
+            </div>
+            <!-- .row -->
+        </div>
+        <!-- .container-fluid -->
+    </div>
+    <!-- .wrap-header -->
+    <div class="container-fluid border-top collapse" id="global-language">
+        <div class="narrow py-2">
+            <div id="google_translate_element"></div>
+        </div>
+    </div>
+    <div class="container-fluid collapse d-lg-block px-0 border-lg-top border-lg-bottom" id="nav-primary">
+        <h2 class="sr-only">
+            Primary Navigation
+        </h2>
+        <div class="wide">
+            <nav class="nav nav-pills" role="navigation" aria-label="Primary navigation">
+                <div class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'public.browse_all' %}active{% endif %}"
+                       href="{{ url_for('public.browse_all') }}"
+                       aria-haspopup="true" role="button">
+                        Browse All
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'public.search' %}active{% endif %}"
+                       href="{{ url_for('public.search') }}"
+                       aria-haspopup="true" role="button">
+                        Search &nbsp;<small><sup><b>beta</b></sup></small>
+                    </a>
+                </div>
+                <!-- .nav-item -->
+                <div class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'public.digital_vital_records' %}active{% endif %}"
+                       href="{{ url_for('public.digital_vital_records') }}"
+                       aria-haspopup="true" role="button">
+                        Digital Vital Records
+                    </a>
+                </div>
+                <!-- .nav-item -->
+                <div class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'public.about' %}active{% endif %}"
+                       href="{{ url_for('public.about') }}"
+                       aria-haspopup="true" role="button">
+                    About
+                    </a>
+                </div>
+                <!-- .nav-item -->
+                <div class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'public.faq' %}active{% endif %}"
+                       href="{{ url_for('public.faq') }}"
+                       aria-haspopup="true" role="button">
+                    FAQ
+                    </a>
+                </div>
+                <!-- .nav-item -->
+            </nav>
+        </div>
+        <!-- .wide -->
+    </div>
+</header>
+<!-- #global-header -->

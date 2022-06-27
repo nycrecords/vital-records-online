@@ -3,6 +3,7 @@
 import logging
 import sys
 
+from elasticsearch import Elasticsearch
 from flask import Flask, render_template
 
 from vro import commands, public
@@ -14,6 +15,7 @@ from vro.extensions import (
     flask_static_digest,
     migrate,
 )
+from vro.models import Certificate
 
 
 def create_app(config_object="vro.settings"):
@@ -22,7 +24,14 @@ def create_app(config_object="vro.settings"):
     :param config_object: The configuration object to use.
     """
     app = Flask(__name__.split(".")[0])
+    if app.config["ENV"] == "production":
+        from gevent import monkey
+        from psycogreen.gevent import patch_psycopg
+        monkey.patch_all()
+        patch_psycopg()
     app.config.from_object(config_object)
+    app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
+        if app.config['ELASTICSEARCH_URL'] else None
     register_extensions(app)
     register_blueprints(app)
     register_errorhandlers(app)
@@ -68,13 +77,15 @@ def register_shellcontext(app):
 
     def shell_context():
         """Shell context objects."""
-        return {"db": db}
+        return {"db": db,
+                "Certificate": Certificate}
 
     app.shell_context_processor(shell_context)
 
 
 def register_commands(app):
     """Register Click commands."""
+    app.cli.add_command(commands.es_recreate)
     app.cli.add_command(commands.test)
     app.cli.add_command(commands.lint)
 

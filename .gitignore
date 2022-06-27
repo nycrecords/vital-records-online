@@ -48,14 +48,15 @@ env/
 # npm
 /node_modules/
 
-# webpack-built files
-/vro/static/build/
-
 # Configuration
 .env
 
 # Development database
 *.db
+postgres-data/
+
+# Development Elasticsearch
+elasticsearch-data
 
 .idea
 

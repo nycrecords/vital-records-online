@@ -1,16 +1,44 @@
 version: "3.6"
 
 x-build-args: &build_args
-  INSTALL_PYTHON_VERSION: 3.8
-  INSTALL_NODE_VERSION: 14
+  INSTALL_PYTHON_VERSION: 3.9.7
 
 x-default-volumes: &default_volumes
   volumes:
     - ./:/app
-    - node-modules:/app/node_modules
-    - ./dev.db:/tmp/dev.db
+    - ./postgres-data:/var/lib/postgresql/data
+    - ./elasticsearch-data:/usr/share/elasticsearch/data
 
 services:
+  db:
+    image: postgres:11-alpine
+    ports:
+      - "5438:5432"
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    healthcheck:
+      test: [ "CMD-SHELL", "POSTGRES_PASSWORD=${POSTGRES_PASSWORD} pg_isready -U ${POSTGRES_USER} -h localhost -d ${POSTGRES_DB}" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    <<: *default_volumes
+
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
+    ports:
+      - "9208:9200"
+    environment:
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    <<: *default_volumes
+
   flask-dev:
     build:
       context: .
@@ -20,8 +48,11 @@ services:
     environment:
       FLASK_APP: autoapp.py
     image: "vro-development"
+    depends_on:
+      - db
+      - es
     ports:
-      - "5000:5000"
+      - "8080:5000"
       - "2992:2992"
     <<: *default_volumes
 
@@ -33,12 +64,12 @@ services:
         <<: *build_args
     image: "vro-production"
     ports:
-      - "5000:5000"
+      - "8080:5000"
     environment:
       FLASK_ENV: production
       FLASK_DEBUG: 0
       LOG_LEVEL: info
-      GUNICORN_WORKERS: 4
+      GUNICORN_WORKERS: 8
     <<: *default_volumes
 
   manage:
@@ -55,6 +86,3 @@ services:
     stdin_open: true
     tty: true
     <<: *default_volumes
-
-volumes:
-  node-modules:

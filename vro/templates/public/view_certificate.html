@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block page_title %}{{ certificate.display_string }}{% endblock %}
+
+{% block content %}
+<section class="py-3">
+    <div class="container">
+        <div class="row">
+            <a href="{{ url }}" id="blob-url" hidden>{{ url }}</a>
+            <div class="col-lg-9">
+                <h1 class="h3">{{ certificate.display_string }}</h1>
+                <div id="pdf-viewer"></div>
+            </div>
+            <div class="col-lg-3 pt-3">
+                <small>
+                    {% if certificate.type not in (certificate_types.MARRIAGE, certificate_types.MARRIAGE_LICENSE) %}
+                    <p><b>Name</b>: {{ certificate.name or "" }}</p>
+                    <p><b>Soundex</b>: {{ certificate.soundex or "" }}</p>
+                    {% else %}
+                        {% for spouse in certificate.marriage_data %}
+                            <p><b>Name</b>: {{ spouse.name }}
+                            <br>
+                            <b>Soundex</b>: {{ spouse.soundex }}</p>
+                        {% endfor %}
+                    {% endif %}
+                    {% if certificate.type not in (certificate_types.MARRIAGE, certificate_types.MARRIAGE_LICENSE) %}
+                    <p><b>Age</b>: {{ certificate.age or "" }}</p>
+                    {% endif %}
+                    <p><b>Type</b>:
+                        {% if certificate.type == certificate_types.BIRTH %}
+                        Birth Certificate
+                        {% elif certificate.type == certificate_types.DEATH %}
+                        Death Certificate
+                        {% elif certificate.type == certificate_types.MARRIAGE %}
+                        Marriage Certificate
+                        {% elif certificate.type == certificate_types.MARRIAGE_LICENSE %}
+                        Marriage License
+                        {% endif %}
+                    </p>
+                    <p><b>Borough</b>:
+                        {% if certificate.county == counties.KINGS %}
+                        Kings (Brooklyn)
+                        {% elif certificate.county == counties.BRONX %}
+                        Bronx
+                        {% elif certificate.county == counties.MANHATTAN %}
+                        Manhattan
+                        {% elif certificate.county == counties.QUEENS %}
+                        Queens
+                        {% elif certificate.county == counties.RICHMOND %}
+                        Richmond (Staten Island)
+                        {% endif %}
+                    </p>
+                    <p><b>Date</b>: {{ certificate.date }}</p>
+                    <p><b>Certificate</b>: {{ certificate.number | replace(" ", "") }}</p>
+                    <a href="https://dorisorders.nyc.gov/dorisorders/ui/order-vital-records-via-site/#link={{ request.url }}&id={{ certificate.display_string }}&type={{ certificate.type }}" class="btn btn-info mt-3"
+                       target="_blank" rel="noopener noreferrer">Purchase Certified Copy</a>
+                </small>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ static_url_for('static', filename='js/plugins/pdfobject/pdfobject.min.js') }}"></script>
+    <script src="{{ static_url_for('static', filename='js/public/view-certificate.js') }}"></script>
+{% endblock %}
