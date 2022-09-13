@@ -52,7 +52,8 @@
                     </p>
                     <p><b>Date</b>: {{ certificate.date }}</p>
                     <p><b>Certificate</b>: {{ certificate.number | replace(" ", "") }}</p>
-                    <a href="https://dorisorders.nyc.gov/dorisorders/ui/order-vital-records-via-site/#link={{ request.url }}&id={{ certificate.display_string }}&type={{ certificate.type }}" class="btn btn-info mt-3"
+                    {% set certificate_type = 'marriage' if certificate.type == certificate_types.MARRIAGE_LICENSE else certificate.type %}
+                    <a href="https://dorisorders.nyc.gov/dorisorders/ui/order-vital-records-via-site/#link={{ request.url }}&id={{ certificate.display_string }}&type={{ certificate_type }}" class="btn btn-info mt-3"
                        target="_blank" rel="noopener noreferrer">Purchase Certified Copy</a>
                 </small>
             </div>
