@@ -24,7 +24,7 @@ Flask-WTF==1.0.1
 WTForms==2.3.3
 
 # Deployment
-gevent==21.8.0
+gevent==22.10.2
 gunicorn>=19.9.0
 supervisor==4.2.2
 
