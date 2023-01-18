@@ -8,6 +8,11 @@
         <div class="row">
             <div class="col-lg-12">
                 <h2 class="pb-2">Search</h2>
+                <p>Indexes to digitized records are now available on <a
+                        href="https://data.cityofnewyork.us/City-Government/New-York-City-Historical-Vital-Records-Digitized-C/xdc2-zgy3"
+                        target="_blank" rel="noopener noreferrer">NYC Open Data</a>! View/search data, explore
+                    visualizations, and download data sets.</p>
+                <p><a href="#search-tips">Search Tips</a></p>
                 <h3>By Certificate Number</h3>
                 <p>The fastest way to locate a vital record is by using the certificate number. Note that certificate
                     numbering restarts at 0000001 annually for each borough and you must limit by borough and year to
@@ -64,7 +69,7 @@
             </div>
             <div class="col-lg pt-2">
                 <h3>By Name&nbsp;<small><sup><b>beta</b></sup></small></h3>
-                <p>Searching by name is in beta mode, and may not produce accurate results. Because marriage licenses
+                <p>Searching by name is in beta mode and may not produce accurate results. Because marriage licenses
                     are not yet indexed by name, marriage licenses will not be returned in name search results. Further
                     guidance on researching <a href="{{ url_for('public.digital_vital_records') }}">City Clerk marriage
                         license records</a>.</p>
@@ -113,7 +118,7 @@
                 </div>
             </div>
             <br>
-            <div>Search tips:
+            <div id="search-tips">Search tips:
                 <ul>
                     <li>Certificate numbering restarts at 0000001 for each borough*</li>
                     <li>Try alternate name spellings if necessary</li>
