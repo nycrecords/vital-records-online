@@ -12,6 +12,18 @@
                     project to provide online access to 13.3 million historical birth, death, and marriage records.</p>
             </div>
         </div>
+        <div class="row">
+            <div class="col-lg pt-3">
+                <h2 class="pb-1">Digitization Progress</h2>
+                <div class="progress bg-light">
+                    <div class="progress-bar bg-primary text-white" role="progressbar"
+                         style="width: {{ digitization_percentage }}%;"
+                         aria-valuenow="{{ digitization_percentage }}" aria-valuemin="0" aria-valuemax="100"><b>&nbsp;
+                        {{ digitization_percentage }}% ({{ digitized }} of 13.3
+                        million records)</b></div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 <section class="py-3 pb-1 bg-primary browsesearch">
@@ -157,23 +169,6 @@
                         rel="noopener noreferrer"><strong>Vital Records Order Form</strong></a>,
                     and we will conduct a search. If the record is located, we will digitize on demand. If not, we will
                     provide a certified <i>not found</i> letter.</p>
-            </div>
-        </div>
-    </div>
-    <!-- .container -->
-</section>
-<section class="pt-1 pb-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg mb-3 mb-lg-0">
-                <h2 class="pb-1">Digitization Progress</h2>
-                <div class="progress bg-light">
-                    <div class="progress-bar bg-primary text-white" role="progressbar"
-                         style="width: {{ digitization_percentage }}%;"
-                         aria-valuenow="{{ digitization_percentage }}" aria-valuemin="0" aria-valuemax="100"><b>&nbsp;
-                        {{ digitization_percentage }}% ({{ digitized }} of 13.3
-                        million records)</b></div>
-                </div>
             </div>
         </div>
     </div>
