@@ -1,5 +1,8 @@
-{% extends "base.html" %} {% block page_title %}Browse All{% endblock %} {%
-block content %}
+{% extends "base.html" %} 
+
+{% block page_title %}Browse All{% endblock %} 
+
+{%block content %}
 <section class="py-3">
   <div class="container">
     <div class="row matrix-gutter px-2 pb-2 justify-content-between">
@@ -18,30 +21,30 @@ block content %}
       role="form"
       id="browse-all-form"
     >
-      {{ form.year() }} {{ form.number() }} {{ form.last_name() }} {{
-      form.first_name() }} {{ form.page() }}
+      {{ form.year() }}
+      {{ form.number() }}
+      {{ form.last_name() }}
+      {{ form.first_name() }}
+      {{ form.page() }}
       <div class="section mx-2 mb-2">
         <div class="row py-1 pt-2">
           <div class="col-md center">
             <div class="form-group">
-              {{ form.certificate_type.label(class="control-label",
-              for="certificate_type") }} {{
-              form.certificate_type(class="form-control browse-all-select
-              mx-auto") }}
+              {{ form.certificate_type.label(class="control-label",for="certificate_type") }} 
+              {{ form.certificate_type(class="form-control browse-all-select mx-auto") }}
             </div>
           </div>
           <div class="col-md center">
             <div class="form-group">
-              {{ form.year_range.label(class="control-label", for="year_range")
-              }} {{ form.year_range(class="form-control browse-all-year-range
-              mx-auto", id="year-range", readonly=true ) }}
+              {{ form.year_range.label(class="control-label", for="year_range")}} 
+              {{ form.year_range(class="form-control browse-all-year-range mx-auto", id="year-range", readonly=true ) }}
             </div>
             <div id="browse-page-slider-range"></div>
           </div>
           <div class="col-md center">
             <div class="form-group">
-              {{ form.county.label(class="control-label", for="county") }} {{
-              form.county(class="form-control browse-all-select mx-auto") }}
+              {{ form.county.label(class="control-label", for="county") }} 
+              {{ form.county(class="form-control browse-all-select mx-auto") }}
             </div>
           </div>
         </div>
@@ -120,7 +123,6 @@ block content %}
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
-      
       {% else %}
       <li class="page-item disabled">
         <span class="page-link">&laquo;</span>
@@ -128,7 +130,6 @@ block content %}
       {% endif %} {% set start = [page - 2, 1] | max %} {% set end = [start + 4,
       total_pages] | min %} {% set start = [end - 4, 1] | max %} {% if start > 1
       %}
-
       <li class="page-item">
         {% set query_params = request.args.copy() %} {% set _ =
         query_params.pop('page', None) %}
@@ -138,7 +139,6 @@ block content %}
           >1</a
         >
       </li>
-
       {% if start > 2 %}
       <li class="page-item disabled"><span class="page-link">...</span></li>
       {% endif %} {% endif %} {% for p in range(start, end + 1) %}
@@ -151,7 +151,6 @@ block content %}
           >{{ p }}</a
         >
       </li>
-
       {% endfor %} {% if end < total_pages %} {% if end < total_pages - 1 %}
       <li class="page-item disabled"><span class="page-link">...</span></li>
       {% endif %}
@@ -186,7 +185,6 @@ block content %}
   
   <h5 class="center pt-2">Showing page {{ page }}</h5>
   {% endif %}
-
 
   <!-- .container -->
 </section>
