@@ -12,9 +12,10 @@ from flask import (
     render_template,
     redirect,
     request,
-    url_for
+    url_for, 
+    session
 )
-from flask_paginate import Pagination
+from flask_paginate import Pagination, get_page_parameter
 from sqlalchemy.exc import DataError
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -81,8 +82,7 @@ def browse_all():
     page = request.args.get('page', 1, type=int)
 
     # Set up variables for search
-    _from = (page-1)*50
-    size = _from + 50
+    size = 50
     q_list = []
 
     for key, value in [
@@ -108,22 +108,59 @@ def browse_all():
     q = Q("bool", must=q_list)
 
     # Create Search object
-    s = Search(using=es, index="certificates").query(q)
+    s = Search(using=es, index="certificates").query(q).extra(track_total_hits=True)
 
-    # Call Elasticsearch count API to get number of documents matching query
-    count = es.count(index="certificates", body=s.to_dict())["count"]
+    s_test = Search(using=es, index="certificates").query(q)
+    count_test = es.count(index="certificates", body=s_test.to_dict())["count"]
 
-    # Specify from/size parameters
-    s = s[_from:size]
+    # Add sort
+    s = s.sort("cert_type", "year", "last_name", "county", "_id")
 
-    # Sent search request to Elasticsearch
+    # Apply search_after if it exists and we're not on the first page
+    if page > 1 and 'search_after' in session:
+        s = s.extra(search_after=session['search_after'])
+    
+    # Set size
+    s = s[:size]
+
+    # Execute search
     res = s.execute()
 
-    pagination_total = count if count < 5000 else 5000
+    # Store search_after for next page
+    if len(res) == size:
+        session['search_after'] = list(res[-1].meta.sort)
+    else:
+        session.pop('search_after', None)
 
-    # If only one certificate is returned, go directly to the view certificate page
-    if count == 1:
-        return redirect(url_for("public.view_certificate", certificate_id=res[0].id))
+    # Get total count
+    count = res.hits.total.value
+
+    # Calculate total pages
+    # total_pages = min((count + size - 1) // size, 200) - This was a previous version of what I had, newer is below# 
+    total_pages = (count + size - 1) // size
+    
+    # This is the condition to get rid of the page loop
+    if page > total_pages and total_pages > 0:
+        query_params = request.args.to_dict() 
+        query_params['page'] = total_pages  
+        return redirect(url_for('public.browse_all', **query_params))
+    elif page < 1:
+        query_params = request.args.to_dict()
+        query_params['page'] = 1 
+        return redirect(url_for('public.browse_all', **query_params))
+
+    # Flask Pagination Stuff
+    pagination = Pagination(
+        page=page, 
+        per_page=size, 
+        total=count_test, 
+        css_framework='bootstrap4', 
+        format_total=True, 
+        format_number=True, 
+        search=False, 
+        inner_window=2, 
+        outer_window=0
+    )
 
     # Set form data from previous form submissions
     form.certificate_type.data = request.args.get("certificate_type", "")
@@ -159,7 +196,9 @@ def browse_all():
                 remove_filters[key] = (value, new_url)
         current_args = request.args.to_dict()
 
-    pagination = Pagination(page=page, total=pagination_total, search=False, per_page=50, css_framework="bootstrap4")
+    # Pagination Controls
+    has_prev = page > 1
+    has_next = len(res) == size
 
     return render_template("public/browse_all.html",
                            form=form,
@@ -168,9 +207,14 @@ def browse_all():
                            year_min_value=year_range[0] if request.args.get("year_range", "") else cached_year_range.year_min,
                            year_max_value=year_range[1] if request.args.get("year_range", "") else cached_year_range.year_max,
                            certificates=res,
-                           pagination=pagination,
+                           page=page,
+                           has_prev=has_prev,
+                           has_next=has_next,
+                           total_pages=total_pages,
                            num_results=format(count, ",d"),
+                           total_documents=format(count, ",d"), 
                            remove_filters=remove_filters,
+                           pagination=pagination,
                            certificate_types=certificate_types)
 
 
