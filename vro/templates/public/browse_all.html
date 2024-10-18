@@ -110,80 +110,49 @@
 
   {% if num_results != "0" %}
   <nav aria-label="Browse Results">
-    <ul class="pagination justify-content-center">
-      {% if has_prev %}
-      <li class="page-item">
-        {% set query_params = request.args.copy() %} {% set _ =
-        query_params.pop('page', None) %}
-        <a
-          class="page-link"
-          href="{{ url_for('public.browse_all', page=page-1, **query_params) }}"
-          aria-label="Previous"
-        >
-          <span aria-hidden="true">&laquo;</span>
-        </a>
-      </li>
-      {% else %}
-      <li class="page-item disabled">
-        <span class="page-link">&laquo;</span>
-      </li
-      {% endif %} {% set start = [page - 2, 1] | max %} {% set end = [start + 4,
-      total_pages] | min %} {% set start = [end - 4, 1] | max %} {% if start > 1
-      %}
-      <li class="page-item">
-        {% set query_params = request.args.copy() %} {% set _ =
-        query_params.pop('page', None) %}
-        <a
-          class="page-link"
-          href="{{ url_for('public.browse_all', page=1, **query_params) }}"
-          >1</a
-        >
-      </li>
-      {% if start > 2 %}
-      <li class="page-item disabled"><span class="page-link">...</span></li>
-      {% endif %} {% endif %} {% for p in range(start, end + 1) %}
-      <li class="page-item {% if p == page %}active{% endif %}">
-        {% set query_params = request.args.copy() %} {% set _ =
-        query_params.pop('page', None) %}
-        <a
-          class="page-link"
-          href="{{ url_for('public.browse_all', page=p, **query_params) }}"
-          >{{ p }}</a
-        >
-      </li>
-      {% endfor %} {% if end < total_pages %} {% if end < total_pages - 1 %}
-      <li class="page-item disabled"><span class="page-link">...</span></li>
-      {% endif %}
-      <li class="page-item">
-        {% set query_params = request.args.copy() %} {% set _ =
-        query_params.pop('page', None) %}
-        <a
-          class="page-link"
-          href="{{ url_for('public.browse_all', page=total_pages, **query_params) }}"
-          >{{ total_pages }}</a
-        >
-      </li>
-      {% endif %} {% if has_next %}
-      <li class="page-item">
-        {% set query_params = request.args.copy() %} {% set _ =
-        query_params.pop('page', None) %}
-        <a
-          class="page-link"
-          href="{{ url_for('public.browse_all', page=page+1, **query_params) }}"
-          aria-label="Next"
-        >
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
-      {% else %}
-      <li class="page-item disabled">
-        <span class="page-link">&raquo;</span>
-      </li>
-      {% endif %}
-    </ul>
+    {{pagination.links}}
   </nav>
   
-  <h5 class="center pt-2">Showing page {{ page }}</h5>
+  <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    <h6 class="center pt-2">{{ pagination.info.replace('displaying', 'Displaying') }}</h6>
+    <br>
+    <span style="display: flex; align-items: center;">
+        <p style="margin: 0; margin-right: 10px;">Skip to Page:</p> 
+        <input id="pageInput" type="number" style="height: 40px; width: 80px; margin-right: 10px; padding: 5px;">
+        <button id="selectPageButton" class="btn btn-info" style="height: 40px;">
+            Go
+        </button>
+    </span>
+  </div>
+
+  {#This is the script for the "Skip to Page" and "Go Button"#}
+  <script>
+    document.getElementById('selectPageButton').addEventListener('click', function() {
+        var pageNumber = document.getElementById('pageInput').value;
+        //event listener for the click. this is just for the "Go Button"
+        //also, created a variable called pageNumber, which takes the user input, which has an ID of 'pageInput'
+        
+        if (pageNumber && pageNumber > 0) {
+            var url = "{{ url_for('public.browse_all', page='') }}" + pageNumber;
+        //this ensures that a user doesn't enter a negative page number, because that is impossible. 
+        //creates a url for each page essentially, and it leaves the page = '' part empty because it is subject to change every time. 
+
+            var formElements = document.querySelectorAll('#browse-all-form input, #browse-all-form select');
+            formElements.forEach(function(element) {
+                if (element.name && element.value) {
+                    url += "&" + encodeURIComponent(element.name) + "=" + encodeURIComponent(element.value);
+                }
+            });
+            window.location.href = url;
+            //this now creates a variable called formElements. and what this does is essentially, select the filters for the form,
+            //instead of just copying and making a whole new form, this works. 
+            
+            //then if these filters exist, the url is updated to include the filters and the pages, finally returning the filtered
+            //url for each page. 
+        }
+    });
+  </script>
+
   {% endif %}
 
   <!-- .container -->

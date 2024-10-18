@@ -15,7 +15,7 @@ from flask import (
     url_for, 
     session
 )
-from flask_paginate import Pagination
+from flask_paginate import Pagination, get_page_parameter
 from sqlalchemy.exc import DataError
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -110,6 +110,9 @@ def browse_all():
     # Create Search object
     s = Search(using=es, index="certificates").query(q).extra(track_total_hits=True)
 
+    s_test = Search(using=es, index="certificates").query(q)
+    count_test = es.count(index="certificates", body=s_test.to_dict())["count"]
+
     # Add sort
     s = s.sort("cert_type", "year", "last_name", "county", "_id")
 
@@ -133,11 +136,31 @@ def browse_all():
     count = res.hits.total.value
 
     # Calculate total pages
-    total_pages = min((count + size - 1) // size, 200)
+    # total_pages = min((count + size - 1) // size, 200) - This was a previous version of what I had, newer is below# 
+    total_pages = (count + size - 1) // size
+    
+    # This is the condition to get rid of the page loop
+    if page > total_pages and total_pages > 0:
+        query_params = request.args.to_dict() 
+        query_params['page'] = total_pages  
+        return redirect(url_for('public.browse_all', **query_params))
+    elif page < 1:
+        query_params = request.args.to_dict()
+        query_params['page'] = 1 
+        return redirect(url_for('public.browse_all', **query_params))
 
-    # If only one certificate is returned, go directly to the view certificate page
-    if count == 1:
-        return redirect(url_for("public.view_certificate", certificate_id=res[0].id))
+    # Flask Pagination Stuff
+    pagination = Pagination(
+        page=page, 
+        per_page=size, 
+        total=count_test, 
+        css_framework='bootstrap4', 
+        format_total=True, 
+        format_number=True, 
+        search=False, 
+        inner_window=2, 
+        outer_window=0
+    )
 
     # Set form data from previous form submissions
     form.certificate_type.data = request.args.get("certificate_type", "")
@@ -173,7 +196,7 @@ def browse_all():
                 remove_filters[key] = (value, new_url)
         current_args = request.args.to_dict()
 
-    # Pagination
+    # Pagination Controls
     has_prev = page > 1
     has_next = len(res) == size
 
@@ -188,9 +211,10 @@ def browse_all():
                            has_prev=has_prev,
                            has_next=has_next,
                            total_pages=total_pages,
-                           num_results=format(count, ",d"), 
+                           num_results=format(count, ",d"),
                            total_documents=format(count, ",d"), 
                            remove_filters=remove_filters,
+                           pagination=pagination,
                            certificate_types=certificate_types)
 
 
