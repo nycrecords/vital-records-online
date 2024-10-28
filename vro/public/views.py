@@ -15,7 +15,7 @@ from flask import (
     url_for, 
     session
 )
-from flask_paginate import Pagination, get_page_parameter
+from flask_paginate import Pagination
 from sqlalchemy.exc import DataError
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -85,22 +85,28 @@ def browse_all():
     size = 50
     q_list = []
 
+    # "Search by Year" for Search by Year Function/Parameter
+    year_value = request.args.get("year", "")
+    year_range_value = request.args.get("year_range", "")
+
+    if year_value:
+        q_list.append(Q("range", year={"gte": int(year_value), "lte": int(year_value)}))
+        year_range_value = f"{year_value} - {year_value}"
+    elif year_range_value and " to " in year_range_value:  # Only process range if it contains "to"
+        year_range = [int(year.strip()) for year in year_range_value.split("to") if year.strip().isdigit()]
+        if len(year_range) == 2:
+            q_list.append(Q("range", year={"gte": year_range[0], "lte": year_range[1]}))
+    
     for key, value in [
         ("cert_type", request.args.get("certificate_type", "")),
         ("number", request.args.get("number", "").lstrip("0")),
         ("county", request.args.get("county", "")),
-        ("year", request.args.get("year", "")),
-        ("year_range", request.args.get("year_range", "")),
         ("first_name", request.args.get("first_name", "")),
         ("last_name", request.args.get("last_name", ""))
     ]:
         if value:
-            if key == "year_range":
-                year_range = [int(year) for year in value.split() if year.isdigit()]
-                q_list.append(Q("range", year={"gte": year_range[0], "lte": year_range[1]}))
-            elif key in ["first_name", "last_name"]:
+            if key in ["first_name", "last_name"]:
                 q_list.append(Q("multi_match", query=value.capitalize(), fields=[key, "spouse_"+key]))
-            # Marriage certificates and marriage licenses are considered the same record type to the user
             elif key == "cert_type" and value == "marriage":
                 q_list.append(Q("terms", cert_type=[certificate_types.MARRIAGE, certificate_types.MARRIAGE_LICENSE]))
             else:
@@ -138,15 +144,18 @@ def browse_all():
     # Calculate total pages
     # total_pages = min((count + size - 1) // size, 200) - This was a previous version of what I had, newer is below# 
     total_pages = (count + size - 1) // size
+
+    # Flag for no results when going past a certain page
+    no_results = False
     
     # This is the condition to get rid of the page loop
     if page > total_pages and total_pages > 0:
-        query_params = request.args.to_dict() 
-        query_params['page'] = total_pages  
-        return redirect(url_for('public.browse_all', **query_params))
+        no_results = True 
+
+    # Handle the case when the page is less than 1
     elif page < 1:
         query_params = request.args.to_dict()
-        query_params['page'] = 1 
+        query_params['page'] = 1
         return redirect(url_for('public.browse_all', **query_params))
 
     # Flask Pagination Stuff
@@ -188,6 +197,10 @@ def browse_all():
                     value = "First Name: {}".format(value)
                 elif key == "last_name":
                     value = "Last Name: {}".format(value)
+                """
+                elif key == "year":
+                    value = f"Year: {value}"
+                """
 
                 # Handle new URL
                 current_args.pop(key)
@@ -204,8 +217,8 @@ def browse_all():
                            form=form,
                            year_range_min=cached_year_range.year_min,
                            year_range_max=cached_year_range.year_max,
-                           year_min_value=year_range[0] if request.args.get("year_range", "") else cached_year_range.year_min,
-                           year_max_value=year_range[1] if request.args.get("year_range", "") else cached_year_range.year_max,
+                           year_min_value=int(year_value) if year_value else (year_range[0] if year_range_value and " to " in year_range_value else cached_year_range.year_min),
+                           year_max_value=int(year_value) if year_value else (year_range[1] if year_range_value and " to " in year_range_value else cached_year_range.year_max),
                            certificates=res,
                            page=page,
                            has_prev=has_prev,
@@ -215,6 +228,7 @@ def browse_all():
                            total_documents=format(count, ",d"), 
                            remove_filters=remove_filters,
                            pagination=pagination,
+                           no_results=no_results,
                            certificate_types=certificate_types)
 
 
@@ -304,3 +318,11 @@ def faq():
     FAQ page
     """
     return render_template("public/faq.html")
+
+
+"""
+@blueprint.route('/browse-ledgers')
+def browse_ledgers():
+    Displaying Ledgers Page
+    return render_template('public/browse_ledgers.html')
+"""

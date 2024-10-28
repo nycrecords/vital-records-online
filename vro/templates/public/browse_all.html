@@ -53,6 +53,21 @@
             <button class="btn btn-info">Update</button>
           </div>
         </div>
+
+        {# Commented Out - Search by Year Parameter
+        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+          <br>
+          <br>
+          <span style="display: flex; align-items: center;">
+              <p style="margin: 0; margin-right: 10px;" id="skip-to-page">Search by Year:</p> 
+              <input id="yearInput" type="number" style="height: 40px; width: 80px; margin-right: 10px; padding: 5px;" min="1855" max="1949">
+              <button id="selectYearButton" class="btn btn-info" style="height: 40px;">
+                  Go
+              </button>
+          </span>
+        </div>
+        #}
+
       </div>
     </form>
     {% if remove_filters %}
@@ -83,29 +98,47 @@
         <hr />
       </div>
     </div>
-    {% if num_results != "0" %}
-    <div id="results">{% include "public/_browse_all_results.html" %}</div>
-    {% else %}
+    {% if no_results %}
     <div class="container">
-      <div class="row px-2 py-4">
-        <p class="large">
-          There are no results for your search. Read our
-          <a href="{{ url_for('public.search') }}">Search Tips</a> or see
-          <a href="{{ url_for('public.digital_vital_records') }}"
-            >Digital Vital Records</a
-          >
-          for what you can find on this site.
-        </p>
-        <p class="large">
-          Please note that the "No Results" message is generated when there is
-          not a digitized image associated with the search. Future versions of
-          this application will return the certificate number (if found) along
-          with instructions on how to view/order a copy of the certificate
-          pending digitization.
-        </p>
-      </div>
+        <div class="row px-2 py-4">
+            <p class="large">
+                There are no results for your search. Read our
+                <a href="{{ url_for('public.search') }}">Search Tips</a> or see
+                <a href="{{ url_for('public.digital_vital_records') }}">
+                Digital Vital Records</a>
+                for what you can find on this site.
+            </p>
+            <p class="large">
+                Please note that the "No Results" message is generated when there is
+                not a digitized image associated with the search. Future versions of
+                this application will return the certificate number (if found) along
+                with instructions on how to view/order a copy of the certificate
+                pending digitization.
+            </p>
+        </div>
     </div>
-    {% endif %}
+{% elif num_results != "0" %}
+    <div id="results">{% include "public/_browse_all_results.html" %}</div>
+{% else %}
+    <div class="container">
+        <div class="row px-2 py-4">
+            <p class="large">
+                There are no results for your search. Read our
+                <a href="{{ url_for('public.search') }}">Search Tips</a> or see
+                <a href="{{ url_for('public.digital_vital_records') }}">
+                Digital Vital Records</a>
+                for what you can find on this site.
+            </p>
+            <p class="large">
+                Please note that the "No Results" message is generated when there is
+                not a digitized image associated with the search. Future versions of
+                this application will return the certificate number (if found) along
+                with instructions on how to view/order a copy of the certificate
+                pending digitization.
+            </p>
+        </div>
+    </div>
+{% endif %}
   </div>
 
   {% if num_results != "0" %}
@@ -117,7 +150,7 @@
     <h6 class="center pt-2">{{ pagination.info.replace('displaying', 'Displaying') }}</h6>
     <br>
     <span style="display: flex; align-items: center;">
-        <p style="margin: 0; margin-right: 10px;">Skip to Page:</p> 
+        <p style="margin: 0; margin-right: 10px;" id="skip-to-page">Skip to Page:</p> 
         <input id="pageInput" type="number" style="height: 40px; width: 80px; margin-right: 10px; padding: 5px;">
         <button id="selectPageButton" class="btn btn-info" style="height: 40px;">
             Go
@@ -125,7 +158,7 @@
     </span>
   </div>
 
-  {#This is the script for the "Skip to Page" and "Go Button"#}
+  {#This is the script for the "Skip to Page" and "Go" Button#}
   <script>
     document.getElementById('selectPageButton').addEventListener('click', function() {
         var pageNumber = document.getElementById('pageInput').value;
@@ -153,30 +186,90 @@
     });
   </script>
 
-  {% endif %}
+  {#This is the script for the "Search by Year" and "Go" Button
+  <script>
+    document.getElementById('selectYearButton').addEventListener('click', function (event) {
+      event.preventDefault();
+      var yearNumber = document.getElementById('yearInput').value.trim();
 
-  <!-- .container -->
-</section>
-{% endblock %} {% block js %}
-<script src="{{ static_url_for('static', filename='js/public/pagination.js') }}"></script>
-<script>
-  "use strict";
+      if (yearNumber >= 1855 && yearNumber <= 1949) {
+        var url = "{{ url_for('public.browse_all') }}?year=" + encodeURIComponent(yearNumber);
+        url += "&page=1";
+        var formElements = document.querySelectorAll('#browse-all-form input:not([name="year_range"]), #browse-all-form select:not([name="year_range"])');
 
-  $(function () {
-    $("#browse-page-slider-range").slider({
-      range: true,
-      min: parseInt("{{ year_range_min }}"),
-      max: parseInt("{{ year_range_max }}"),
-      values: ["{{ year_min_value }}", "{{ year_max_value }}"],
-      slide: function (event, ui) {
-        $("#year-range").val(ui.values[0] + " to " + ui.values[1]);
-      },
+        formElements.forEach(function (element) {
+          if (element.name &&
+            element.value &&
+            element.name !== 'year' &&
+            element.name !== 'page' &&
+            element.name !== 'year_range') {
+            url += "&" + encodeURIComponent(element.name) + "=" + encodeURIComponent(element.value);
+          }
+        });
+
+        window.location.href = url;
+      } else {
+        alert("Enter a year between 1855 and 1949.");
+      }
     });
-    $("#year-range").val(
-      $("#browse-page-slider-range").slider("values", 0) +
+    document.getElementById('selectPageButton').addEventListener('click', function () {
+      var pageNumber = document.getElementById('pageInput').value;
+
+      if (pageNumber && pageNumber > 0) {
+        var url = "{{ url_for('public.browse_all', page='') }}" + pageNumber;
+
+        var formElements = document.querySelectorAll('#browse-all-form input, #browse-all-form select');
+        formElements.forEach(function (element) {
+          if (element.name && element.value) {
+            url += "&" + encodeURIComponent(element.name) + "=" + encodeURIComponent(element.value);
+          }
+        });
+        window.location.href = url;
+      }
+    });
+  </script>
+  #}
+  {% endif %}
+  
+  <!-- .container -->
+  </section>
+  {% endblock %} {% block js %}
+  <script src="{{ static_url_for('static', filename='js/public/pagination.js') }}"></script>
+  <script>
+    "use strict";
+    $(function () {
+      $("#browse-page-slider-range").slider({
+        range: true,
+        min: parseInt("{{ year_range_min }}"),
+        max: parseInt("{{ year_range_max }}"),
+        values: ["{{ year_min_value }}", "{{ year_max_value }}"],
+        slide: function (event, ui) {
+          $("#year-range").val(ui.values[0] + " to " + ui.values[1]);
+          $("#yearInput").val("");
+        }
+      });
+
+      $("#year-range").val(
+        $("#browse-page-slider-range").slider("values", 0) +
         " to " +
         $("#browse-page-slider-range").slider("values", 1)
-    );
-  });
-</script>
+      );
+
+      $("#browse-all-form").on("submit", function (event) {
+        event.preventDefault();
+        var url = "{{ url_for('public.browse_all') }}?page=1";
+
+        var sliderValues = $("#browse-page-slider-range").slider("values");
+        url += "&year_range=" + encodeURIComponent(sliderValues[0] + " to " + sliderValues[1]);
+
+        var formElements = document.querySelectorAll('#browse-all-form input:not([name="year"]):not([name="year_range"]), #browse-all-form select');
+        formElements.forEach(function (element) {
+          if (element.name && element.value && element.name !== 'page') {
+            url += "&" + encodeURIComponent(element.name) + "=" + encodeURIComponent(element.value);
+          }
+        });
+        window.location.href = url;
+      });
+    });
+  </script>
 {% endblock %}

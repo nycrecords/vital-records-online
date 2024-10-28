@@ -102,7 +102,7 @@ def create_docs():
         FROM certificates
             LEFT OUTER JOIN marriage_data AS marriage_data_1 ON certificates.id = marriage_data_1.certificate_id
         WHERE certificates.filename IS NOT NULL
-        GROUP BY certificates.id limit 500000;
+        GROUP BY certificates.id;
     """)
 
     count = 0
