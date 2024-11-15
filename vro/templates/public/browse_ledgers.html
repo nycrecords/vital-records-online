@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block page_title %}Browse Ledgers{% endblock %}
+
+{% block content %}
+<section class="py-3">
+    <div class="container">
+        <div class="row matrix-gutter px-2 pb-2 justify-content-between">
+            {% if num_results != "0" %}
+            <div class="col-6"><h2>{{ num_results }} Ledger Results</h2></div>
+            {% else %}
+            <div class="col-6"><h2>No Results</h2></div>
+            {% endif %}
+        </div>
+        <form class="col-lg" action="{{ url_for('public.browse_ledgers') }}" method="get" role="form" id="browse-ledgers-form">
+            {{ form.year() }}
+            {{ form.page() }}
+            <div class="section mx-2 mb-2">
+                <div class="row py-1 pt-2">
+                    <div class="col-md center">
+                        <div class="form-group">
+                            {{ form.ledger_types.label(class="control-label", for="ledger_types") }}
+                            {{ form.ledger_types(class="form-control browse-ledgers-select mx-auto") }}
+                        </div>
+                    </div>
+                    <div class="col-md center">
+                        <div class="form-group">
+                            {{ form.year_range.label(class="control-label", for="year_range") }}
+                            {{ form.year_range(class="form-control browse-ledgers-year-range mx-auto", id="year-range", readonly=true) }}
+                        </div>
+                        <div id="browse-page-slider-range"></div>
+                    </div>
+                    <div class="col-md center">
+                        <div class="form-group">
+                            {{ form.county.label(class="control-label", for="county") }}
+                            {{ form.county(class="form-control browse-ledgers-select mx-auto") }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-lg align-self-center">
+                        <button class="btn btn-info">Update</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        {% if remove_filters %}
+            <div class="row">
+                <div class="col-lg">
+                    <hr>
+                </div>
+            </div>
+            <div class="row py-2">
+                <div class="col-lg">
+                    <small class="pr-2">Remove Filters:</small>
+                    {% for key, value in remove_filters.items() %}
+                        <span class="border border-light px-2 pt-1 pb-1 small"><b>{{ value[0] }}</b><a class="remove-filter" href="{{ value[1] }}" aria-label="Remove filter {{ value[0] }}">&nbsp;X&nbsp;</a></span>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-lg">
+                <hr>
+            </div>
+        </div>
+        {% if num_results != "0" %}
+        <div id="results">
+            {% include "public/_browse_ledgers_results.html" %}
+        </div>
+        {% else %}
+        <div class="container">
+            <div class="row px-2 py-4">
+                <p class="large">There are no results for your search. Read our <a
+                        href="{{ url_for('public.search') }}">Search Tips</a> or see <a
+                        href="{{ url_for('public.digital_vital_records') }}">Digital Vital Records</a> for what you can find on this
+                    site.</p>
+                <p class="large">Please note that the "No Results" message is generated when there is not a digitized
+                    image associated with the search.</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if num_results != "0" %}
+    <nav aria-label="Browse Results">
+        {{ pagination.links }}
+    </nav>
+
+    {% if pagination.total > 50 %}
+    <p class="center pt-2">Only the first 100 pages of results will display. Use filters to find relevant records.</p>
+    {% endif %}
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block js %}
+<script src="{{ static_url_for('static', filename='js/public/pagination.js') }}"></script>
+<script>
+    "use strict";
+
+    $(function () {
+        $("#browse-page-slider-range").slider({
+            range: true,
+            min: parseInt("{{ year_range_min }}"),
+            max: parseInt("{{ year_range_max }}"),
+            values: ["{{ year_min_value }}", "{{ year_max_value }}"],
+            slide: function (event, ui) {
+                $("#year-range").val(ui.values[0] + " to " + ui.values[1]);
+            }
+        });
+        $("#year-range").val($("#browse-page-slider-range").slider("values", 0) +
+            " to " + $("#browse-page-slider-range").slider("values", 1));
+    });
+</script>
+{% endblock %}
