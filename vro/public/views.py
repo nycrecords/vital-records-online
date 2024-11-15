@@ -17,15 +17,18 @@ from flask import (
 from flask_paginate import Pagination
 from sqlalchemy.exc import DataError
 from sqlalchemy.orm.exc import NoResultFound
+from elasticsearch.exceptions import NotFoundError
 
 from vro.constants import (
     certificate_types,
-    counties
+    counties,
+    ledger_types
 )
 from vro.extensions import cache, es
 from vro.models import Certificate
 from vro.public.forms import (
     BrowseAllForm,
+    BrowseLedgersForm,
     SearchByNumberForm,
     SearchByNameForm
 )
@@ -260,3 +263,124 @@ def faq():
     FAQ page
     """
     return render_template("public/faq.html")
+
+
+@blueprint.route("/browse-ledgers", methods=["GET"])
+def browse_ledgers():
+    """
+    Browse Ledgers page for now, very much so in the beginning stages. 
+    This page is supposed to be implementing the compressed and linearized
+    PDFs. Currently, nothing will be displayed because the ledgers are not
+    loaded up in the backend, in the ElasticSearch, or in the database. 
+
+    THIS IS CURRENTLY USING THE OLD METHOD. DID NOT PUSH WITH THE NEW 
+    SEARCH_AFTER PARAMETER IMPLEMENTED. 
+    """
+    try:
+        # Get default year range/values
+        cached_year_range = get_year_range()
+        year_range_min = cached_year_range.year_min
+        year_range_max = cached_year_range.year_max
+        default_year_range_value = f"{year_range_min} - {year_range_max}"
+
+        form = BrowseLedgersForm()
+        page = request.args.get('page', 1, type=int)
+
+        # Set up variables for search
+        _from = (page-1)*50
+        size = _from + 50
+        q_list = []
+
+        for key, value in [
+            ("ledger_type", request.args.get("ledger_type", "")),
+            ("number", request.args.get("number", "").lstrip("0")),
+            ("county", request.args.get("county", "")),
+            ("year", request.args.get("year", "")),
+            ("year_range", request.args.get("year_range", "")),
+            ("entity_name", request.args.get("entity_name", "")),
+        ]:
+            if value:
+                if key == "year_range":
+                    year_range = [int(year) for year in value.split() if year.isdigit()]
+                    q_list.append(Q("range", year={"gte": year_range[0], "lte": year_range[1]}))
+                elif key == "entity_name":
+                    q_list.append(Q("multi_match", query=value.capitalize(), fields=[key]))
+                else:
+                    q_list.append(Q("match", **{key: value}))
+        q = Q("bool", must=q_list)
+
+        # Create Search object
+        s = Search(using=es, index="ledgers").query(q)
+
+        # Call Elasticsearch count API to get number of documents matching query
+        count = es.count(index="ledgers", body=s.to_dict())["count"]
+
+        # Specify from/size parameters
+        s = s[_from:size]
+
+        # Send search request to Elasticsearch
+        res = s.execute()
+
+        pagination_total = count if count < 5000 else 5000
+
+        # If only one ledger is returned, go directly to the view ledger page
+        if count == 1:
+            return redirect(url_for("public.view_ledger", ledger_id=res[0].id))
+
+        # Set form data from previous form submissions
+        form.ledger_type.data = request.args.get("ledger_type", "")
+        form.county.data = request.args.get("county", "")
+        form.year_range.data = request.args.get("year_range", "")
+        form.year.data = request.args.get("year", "")
+        form.number.data = request.args.get("number", "")
+        form.entity_name.data = request.args.get("entity_name", "")
+
+        # Handle filter labels and URLs
+        remove_filters = {}
+        current_args = request.args.to_dict()
+        for key, value in request.args.items():
+            if key != "page" and value:
+                if not (key == "year_range" and value == default_year_range_value):
+                    # Handle filter label
+                    if key == "ledger_type":
+                        value = ledger_types.LEDGER_TYPE_VALUES.get(value)
+                    elif key == "county":
+                        value = counties.COUNTY_VALUES.get(value)
+                    elif key == "number":
+                        value = "Ledger Number: {}".format(value)
+                    elif key == "entity_name":
+                        value = "Entity Name: {}".format(value)
+
+                    # Handle new URL
+                    current_args.pop(key)
+                    new_url = "{}?{}".format(request.base_url, urlencode(current_args))
+
+                    remove_filters[key] = (value, new_url)
+        current_args = request.args.to_dict()
+
+        pagination = Pagination(page=page, total=pagination_total, search=False, per_page=50, css_framework="bootstrap4")
+
+        return render_template("public/browse_ledgers.html",
+                               form=form,
+                               year_range_min=year_range_min,
+                               year_range_max=year_range_max,
+                               year_min_value=year_range_min,
+                               year_max_value=year_range_max,
+                               ledgers=res,
+                               pagination=pagination,
+                               num_results=format(count, ",d"),
+                               remove_filters=remove_filters,
+                               ledger_types=ledger_types)
+    except NotFoundError:
+        # If the "ledgers" index is not found, display a basic view
+        return render_template("public/browse_ledgers.html",
+                               form=BrowseLedgersForm(),
+                               year_range_min=year_range_min,
+                               year_range_max=year_range_max,
+                               year_min_value=year_range_min,
+                               year_max_value=year_range_max,
+                               ledgers=None,
+                               pagination=None,
+                               num_results="0",
+                               remove_filters={},
+                               ledger_types=ledger_types)
