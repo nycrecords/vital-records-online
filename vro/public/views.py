@@ -318,11 +318,3 @@ def faq():
     FAQ page
     """
     return render_template("public/faq.html")
-
-
-"""
-@blueprint.route('/browse-ledgers')
-def browse_ledgers():
-    Displaying Ledgers Page
-    return render_template('public/browse_ledgers.html')
-"""
