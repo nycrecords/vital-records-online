@@ -74,29 +74,43 @@ def browse_all():
     :return: Template for the browse all page and a list of certificates to display.
              Redirect to public.view_certificate if only one certificate is returned.
     """
+    def clean_query_params(args_dict, default_year_range):
+        """Remove default values from query"""
+        cleaned = args_dict.copy()
+        if cleaned.get('year_range') == default_year_range:
+            cleaned.pop('year_range')
+        return cleaned
+
     # Get default year range/values
     cached_year_range = get_year_range()
-    default_year_range_value = "{} - {}".format(cached_year_range.year_min, cached_year_range.year_max)
+    default_year_range_value = f"{cached_year_range.year_min} to {cached_year_range.year_max}"
 
     form = BrowseAllForm()
     page = request.args.get('page', 1, type=int)
 
-    # Set up variables for search
+    # Set up variables for search, results, and total documents
     size = 50
     q_list = []
-
-    # "Search by Year" for Search by Year Function/Parameter
+    num_results = 0
+    total_documents = 0
+    
+    # Initialize year-related variables
     year_value = request.args.get("year", "")
     year_range_value = request.args.get("year_range", "")
+    year_min = cached_year_range.year_min
+    year_max = cached_year_range.year_max
 
     if year_value:
         q_list.append(Q("range", year={"gte": int(year_value), "lte": int(year_value)}))
         year_range_value = f"{year_value} - {year_value}"
-    elif year_range_value and " to " in year_range_value:  # Only process range if it contains "to"
-        year_range = [int(year.strip()) for year in year_range_value.split("to") if year.strip().isdigit()]
-        if len(year_range) == 2:
-            q_list.append(Q("range", year={"gte": year_range[0], "lte": year_range[1]}))
-    
+        year_min = year_max = int(year_value)
+    elif year_range_value and year_range_value != default_year_range_value:
+        if " to " in year_range_value:
+            range_parts = [year.strip() for year in year_range_value.split("to") if year.strip().isdigit()]
+            if len(range_parts) == 2:
+                year_min, year_max = map(int, range_parts)
+                q_list.append(Q("range", year={"gte": year_min, "lte": year_max}))
+
     for key, value in [
         ("cert_type", request.args.get("certificate_type", "")),
         ("number", request.args.get("number", "").lstrip("0")),
@@ -116,16 +130,24 @@ def browse_all():
     # Create Search object
     s = Search(using=es, index="certificates").query(q).extra(track_total_hits=True)
 
-    s_test = Search(using=es, index="certificates").query(q)
-    count_test = es.count(index="certificates", body=s_test.to_dict())["count"]
-
     # Add sort
     s = s.sort("cert_type", "year", "last_name", "county", "_id")
+
+    # Get count
+    count = s.count()
+
+    # Calculate total pages
+    total_pages = (count + size - 1) // size
+
+    # Testing the last page logic, instead of always showing 50 it will show the remainder 
+    # if there is one. And then use that instead. Before it used to be a loop. 
+    if page == total_pages:
+        size = count - (total_pages - 1) * 50
 
     # Apply search_after if it exists and we're not on the first page
     if page > 1 and 'search_after' in session:
         s = s.extra(search_after=session['search_after'])
-    
+
     # Set size
     s = s[:size]
 
@@ -133,48 +155,43 @@ def browse_all():
     res = s.execute()
 
     # Store search_after for next page
-    if len(res) == size:
+    if len(res) == size and page < total_pages:
         session['search_after'] = list(res[-1].meta.sort)
     else:
         session.pop('search_after', None)
 
-    # Get total count
-    count = res.hits.total.value
-
-    # Calculate total pages
-    # total_pages = min((count + size - 1) // size, 200) - This was a previous version of what I had, newer is below# 
-    total_pages = (count + size - 1) // size
-
-    # Flag for no results when going past a certain page
-    no_results = False
-    
-    # This is the condition to get rid of the page loop
-    if page > total_pages and total_pages > 0:
-        no_results = True 
-
-    # Handle the case when the page is less than 1
-    elif page < 1:
-        query_params = request.args.to_dict()
-        query_params['page'] = 1
-        return redirect(url_for('public.browse_all', **query_params))
-
-    # Flask Pagination Stuff
+    # Flask Pagination Setup
     pagination = Pagination(
         page=page, 
-        per_page=size, 
-        total=count_test, 
+        per_page=50, 
+        total=count, 
         css_framework='bootstrap4', 
         format_total=True, 
         format_number=True, 
         search=False, 
         inner_window=2, 
-        outer_window=0
+        outer_window=0,
+        view_args=clean_query_params(request.args.to_dict(), default_year_range_value)
     )
+
+    # This is for the no results mainly. But also for pagination and the boundaries. 
+    no_results = False
+    if page > total_pages and total_pages > 0:
+        no_results = True
+        num_results = "0"
+        total_documents = "0"
+    elif page < 1:
+        query_params = clean_query_params(request.args.to_dict(), default_year_range_value)
+        query_params['page'] = 1
+        return redirect(url_for('public.browse_all', **query_params))
+    else:
+        num_results = format(count, ",d")
+        total_documents = format(count, ",d")
 
     # Set form data from previous form submissions
     form.certificate_type.data = request.args.get("certificate_type", "")
     form.county.data = request.args.get("county", "")
-    form.year_range.data = request.args.get("year_range", "")
+    form.year_range.data = request.args.get("year_range", "") if request.args.get("year_range") != default_year_range_value else ""
     form.year.data = request.args.get("year", "")
     form.number.data = request.args.get("number", "")
     form.last_name.data = request.args.get("last_name", "")
@@ -185,51 +202,47 @@ def browse_all():
     current_args = request.args.to_dict()
     for key, value in request.args.items():
         if key != "page" and value:
-            if not (key == "year_range" and value == default_year_range_value):
-                # Handle filter label
-                if key == "certificate_type":
-                    value = certificate_types.CERTIFICATE_TYPE_VALUES.get(value)
-                elif key == "county":
-                    value = counties.COUNTY_VALUES.get(value)
-                elif key == "number":
-                    value = "Certificate Number: {}".format(value)
-                elif key == "first_name":
-                    value = "First Name: {}".format(value)
-                elif key == "last_name":
-                    value = "Last Name: {}".format(value)
-                """
-                elif key == "year":
-                    value = f"Year: {value}"
-                """
+            if key == "year_range" and value == default_year_range_value:
+                continue
+            if key == "certificate_type":
+                value = certificate_types.CERTIFICATE_TYPE_VALUES.get(value)
+            elif key == "county":
+                value = counties.COUNTY_VALUES.get(value)
+            elif key == "number":
+                value = "Certificate Number: {}".format(value)
+            elif key == "first_name":
+                value = "First Name: {}".format(value)
+            elif key == "last_name":
+                value = "Last Name: {}".format(value)
+            
+            current_args_copy = clean_query_params(current_args.copy(), default_year_range_value)
+            current_args_copy.pop(key, None)
+            new_url = "{}?{}".format(request.base_url, urlencode(current_args_copy))
 
-                # Handle new URL
-                current_args.pop(key)
-                new_url = "{}?{}".format(request.base_url, urlencode(current_args))
-
-                remove_filters[key] = (value, new_url)
+            remove_filters[key] = (value, new_url)
         current_args = request.args.to_dict()
 
     # Pagination Controls
     has_prev = page > 1
-    has_next = len(res) == size
+    has_next = page < total_pages
 
-    return render_template("public/browse_all.html",
-                           form=form,
-                           year_range_min=cached_year_range.year_min,
-                           year_range_max=cached_year_range.year_max,
-                           year_min_value=int(year_value) if year_value else (year_range[0] if year_range_value and " to " in year_range_value else cached_year_range.year_min),
-                           year_max_value=int(year_value) if year_value else (year_range[1] if year_range_value and " to " in year_range_value else cached_year_range.year_max),
-                           certificates=res,
-                           page=page,
-                           has_prev=has_prev,
-                           has_next=has_next,
-                           total_pages=total_pages,
-                           num_results=format(count, ",d"),
-                           total_documents=format(count, ",d"), 
-                           remove_filters=remove_filters,
-                           pagination=pagination,
-                           no_results=no_results,
-                           certificate_types=certificate_types)
+    return render_template( "public/browse_all.html",
+                            form=form,
+                            year_range_min=cached_year_range.year_min,
+                            year_range_max=cached_year_range.year_max,
+                            year_min_value=year_min,
+                            year_max_value=year_max,
+                            certificates=res,
+                            page=page,
+                            has_prev=has_prev,
+                            has_next=has_next,
+                            total_pages=total_pages,
+                            num_results=num_results,
+                            total_documents=total_documents,
+                            remove_filters=remove_filters,
+                            pagination=pagination,
+                            no_results=no_results,
+                            certificate_types=certificate_types)
 
 
 @blueprint.route("/view/<certificate_id>", methods=["GET"])

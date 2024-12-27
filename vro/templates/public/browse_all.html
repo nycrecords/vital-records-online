@@ -186,20 +186,23 @@
             }
         });
         document.getElementById('selectPageButton').addEventListener('click', function () {
-            var pageNumber = document.getElementById('pageInput').value;
+                var pageNumber = document.getElementById('pageInput').value;
 
-            if (pageNumber && pageNumber > 0) {
-                var url = "{{ url_for('public.browse_all', page='') }}" + pageNumber;
+                if (pageNumber && pageNumber > 0) {
+                    var url = "{{ url_for('public.browse_all', page='') }}" + pageNumber;
 
-                var formElements = document.querySelectorAll('#browse-all-form input, #browse-all-form select');
-                formElements.forEach(function (element) {
-                    if (element.name && element.value) {
-                        url += "&" + encodeURIComponent(element.name) + "=" + encodeURIComponent(element.value);
-                    }
-                });
-                window.location.href = url;
-            }
-        });
+                    var formElements = document.querySelectorAll('#browse-all-form input, #browse-all-form select');
+                    formElements.forEach(function (element) {
+                        if (element.name && element.value) {
+                            if (element.name === 'year_range' && element.value === '{{ year_range_min }} to {{ year_range_max }}') {
+                                return;
+                            }
+                            url += "&" + encodeURIComponent(element.name) + "=" + encodeURIComponent(element.value);
+                        }
+                    });
+                    window.location.href = url;
+                }
+            });
     </script>
     #}
     {% endif %}
@@ -233,7 +236,11 @@
             var url = "{{ url_for('public.browse_all') }}?page=1";
 
             var sliderValues = $("#browse-page-slider-range").slider("values");
-            url += "&year_range=" + encodeURIComponent(sliderValues[0] + " to " + sliderValues[1]);
+            var yearRange = sliderValues[0] + " to " + sliderValues[1];
+
+            if (yearRange !== '{{ year_range_min }} to {{ year_range_max }}') {
+                url += "&year_range=" + encodeURIComponent(yearRange);
+            }
 
             var formElements = document.querySelectorAll('#browse-all-form input:not([name="year"]):not([name="year_range"]), #browse-all-form select');
             formElements.forEach(function (element) {
