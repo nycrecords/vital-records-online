@@ -62,3 +62,6 @@ elasticsearch-data
 
 # Compiled directory
 __pycache__/
+
+# Application Specific Files
+vro/static/pdfs/1949_death_index.pdf
