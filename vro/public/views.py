@@ -260,3 +260,11 @@ def faq():
     FAQ page
     """
     return render_template("public/faq.html")
+
+
+@blueprint.route("/1949-death-index", methods=["GET"])
+def death_index_1949():
+    """
+    1949 Death Index page
+    """
+    return render_template("public/1949_death_index.html")
