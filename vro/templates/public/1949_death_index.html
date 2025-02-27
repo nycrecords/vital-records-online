@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block page_title %}NYC 1949 Death Index{% endblock %}
+
+{% block content %}
+<section class="py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg">
+                <h2>NYC 1949 Death Index</h2>
+                <p>The Municipal Archives recently accessioned the 1949 Death Certificate records and digitized the index volume for deaths in all five New York City boroughs.</p>
+                <p>The index is organized by surname and can be downloaded and/or searched for the certificate number to place orders.</p>
+                <p>Certificate copies (email or certified hard copy) can be ordered <a href="https://dorisorders.nyc.gov/dorisorders/ui/order-vital-records" target="_blank" rel="noopener noreferrer"><strong>here</strong></a>.</p>
+                <p>The microfilm of the 1949 death certificates transferred to DORIS exhibits signs of significant deterioration which prohibits its use by the public.</p>
+                <div id="pdf-viewer"></div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ static_url_for('static', filename='js/plugins/pdfobject/pdfobject.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            PDFObject.embed("/static/pdfs/1949_death_index.pdf", "#pdf-viewer");
+        });
+    </script>
+{% endblock %}
