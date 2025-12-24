@@ -1,4 +1,5 @@
 import psycopg2
+from flask import current_app
 from elasticsearch.helpers import bulk
 
 from vro.constants import certificate_types
@@ -8,7 +9,7 @@ from vro.settings import DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD, DATABA
 
 def recreate():
     """Deletes then recreates the index"""
-    es.indices.delete('*', ignore=[400, 404])
+    es.indices.delete(index=current_app.config["ELASTICSEARCH_INDEX"], ignore=[400, 404])
     create_index()
     num_success, _ = bulk(es, create_docs(), chunk_size=5000)
     print("Successfully created %s certificates docs." % num_success)
@@ -16,7 +17,7 @@ def recreate():
 def create_index():
     """Creates indices """
     es.indices.create(
-        index='certificates',
+        index=current_app.config["ELASTICSEARCH_INDEX"],
         body={
             "settings": {
                 "index": {
@@ -145,7 +146,7 @@ def create_docs():
                 number = [unspaced_number, spaced_number]
 
             yield {
-                "_index": "certificates",
+                "_index": current_app.config["ELASTICSEARCH_INDEX"],
                 "_id": c[0],
                 "_source": {
                     "id": c[0],
@@ -168,5 +169,5 @@ def create_docs():
 
 def delete_doc(certificate_id):
     """Delete a specific doc in the index"""
-    es.delete(index="certificates",
+    es.delete(index=current_app.config["ELASTICSEARCH_INDEX"],
               id=certificate_id)

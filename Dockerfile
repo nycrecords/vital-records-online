@@ -15,7 +15,9 @@ COPY vro vro
 COPY .env.example .env
 
 # ================================= PRODUCTION =================================
-FROM python:${INSTALL_PYTHON_VERSION}-slim-buster as production
+FROM builder as production
+
+RUN apt-get update && apt-get -y install curl && curl --version
 
 WORKDIR /app
 
