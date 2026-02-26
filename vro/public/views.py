@@ -108,10 +108,10 @@ def browse_all():
     q = Q("bool", must=q_list)
 
     # Create Search object
-    s = Search(using=es, index="certificates").query(q)
+    s = Search(using=es, index=current_app.config["ELASTICSEARCH_INDEX"]).query(q)
 
     # Call Elasticsearch count API to get number of documents matching query
-    count = es.count(index="certificates", body=s.to_dict())["count"]
+    count = es.count(index=current_app.config["ELASTICSEARCH_INDEX"], body=s.to_dict())["count"]
 
     # Specify from/size parameters
     s = s[_from:size]

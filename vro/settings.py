@@ -14,6 +14,7 @@ env.read_env()
 ENV = env.str("FLASK_ENV", default="production")
 DEBUG = ENV == "development"
 ELASTICSEARCH_URL = env.str("ELASTICSEARCH_URL")
+ELASTICSEARCH_INDEX = env.str("ELASTICSEARCH_INDEX")
 
 # Database Settings
 SQLALCHEMY_DATABASE_URI = env.str("DATABASE_URL")
