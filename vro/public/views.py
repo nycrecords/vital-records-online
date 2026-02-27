@@ -268,3 +268,11 @@ def death_index_1949():
     1949 Death Index page
     """
     return render_template("public/1949_death_index.html")
+
+
+@blueprint.route("/1950-death-index", methods=["GET"])
+def death_index_1950():
+    """
+    1950 Death Index page
+    """
+    return render_template("public/1950_death_index.html")

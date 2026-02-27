@@ -65,3 +65,4 @@ __pycache__/
 
 # Application Specific Files
 vro/static/pdfs/1949_death_index.pdf
+vro/static/pdfs/1950_death_index.pdf
