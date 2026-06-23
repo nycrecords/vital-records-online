@@ -2,6 +2,20 @@
 
 {% block page_title %}Home{% endblock %}
 
+{% block head %}
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement(
+    {
+      pageLanguage: 'en'
+    },
+    'google_translate_element'
+  );
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <section class="py-3">
     <div class="container">
@@ -160,6 +174,34 @@
     <div class="container py-2 px-2 bg-light">
         <div class="row">
             <div class="col-lg mb-3 mb-lg-0">
+                <h2 class="pb-1">I speak...</h2>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="google_translate_element"></div>
+                        <div class="ispeak-widget">
+                            <div class="btn-group" role="group" aria-label="Language selection buttons">
+                                <button onclick="translateclick('es')" class="btn btn-outline-primary m-1">Español</button>
+                                <button onclick="translateclick('zh-CN')" class="btn btn-outline-primary m-1">中文</button>
+                                <button onclick="translateclick('ru')" class="btn btn-outline-primary m-1">Русский</button>
+                                <button onclick="translateclick('ko')" class="btn btn-outline-primary m-1">한국어</button>
+                                <button onclick="translateclick('ht')" class="btn btn-outline-primary m-1">Kreyòl Ayisyen</button>
+                                <button onclick="translateclick('ar')" class="btn btn-outline-primary m-1">العربية</button>
+                                <button onclick="translateclick('bn')" class="btn btn-outline-primary m-1">বাংলা</button>
+                                <button onclick="translateclick('pl')" class="btn btn-outline-primary m-1">Polski</button>
+                                <button onclick="translateclick('fr')" class="btn btn-outline-primary m-1">Français</button>
+                                <button onclick="translateclick('ur')" class="btn btn-outline-primary m-1">اردو</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="py-5">
+    <div class="container py-2 px-2 bg-light">
+        <div class="row">
+            <div class="col-lg mb-3 mb-lg-0">
                 <h2 class="pb-1">Research Assistance</h2>
                 <p><i>Learn about the collection</i><br>Read the
                         <a href="https://a860-collectionguides.nyc.gov/repositories/2/resources/74"
@@ -198,5 +240,14 @@
         $("#homepage-year-range").val($("#slider-range").slider("values", 0) +
             " to " + $("#slider-range").slider("values", 1));
     });
+</script>
+<script>
+    function translateclick(lang) {
+      var translateElement = document.querySelector('.goog-te-combo');
+      if (translateElement) {
+        translateElement.value = lang;
+        translateElement.dispatchEvent(new Event('change'));
+      }
+    }
 </script>
 {% endblock %}
