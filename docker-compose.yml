@@ -62,6 +62,7 @@ services:
       target: production
       args:
         <<: *build_args
+    platform: linux/amd64
     image: "vro-production"
     ports:
       - "8080:5000"
