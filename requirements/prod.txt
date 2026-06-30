@@ -34,7 +34,7 @@ MarkupSafe==3.0.2
 marshmallow==3.26.1
 packaging==24.2
 psycogreen==1.0.2
-psycopg2-binary==2.8.6
+psycopg2-binary==2.9.9
 pycparser==2.22
 python-dateutil==2.9.0.post0
 python-dotenv==1.1.0
